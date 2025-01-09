@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Loader\Loader.vcxproj", "{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D} = {7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kernel", "Kernel\Kernel.vcxproj", "{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,9 @@ Global
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.900Release|x64.Build.0 = 900Release|x64
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.900Release|x86.ActiveCfg = 900Release|Win32
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.900Release|x86.Build.0 = 900Release|Win32
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.900Release|x64.ActiveCfg = 900Release|x64
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.900Release|x64.Build.0 = 900Release|x64
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.900Release|x86.ActiveCfg = 900Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

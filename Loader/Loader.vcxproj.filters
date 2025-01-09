@@ -15,6 +15,9 @@
     <None Include="crt0.s" />
     <None Include="Linker" />
     <None Include="Makefile" />
+    <None Include="resources\Kernel.elf">
+      <Filter>resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\asm.s">

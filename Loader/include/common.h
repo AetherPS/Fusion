@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include <stdarg.h>
 
+#include "Offsets.h"
+
 #include "types.h"
 #include "asm.h"
 #include "dynlib.h"

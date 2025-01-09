@@ -12,18 +12,18 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
-    <ProjectGuid>{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}</ProjectGuid>
+    <ProjectGuid>{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|Win32'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
+    <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -38,22 +38,18 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'">
-	<AdditionalSourcesToCopyMapping />
-    <NMakeOutput>Fusion-900.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>VERSION_900</NMakePreprocessorDefinitions>
-    <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
-    <NMakeBuildCommandLine>wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl make VERSION=900 clean</NMakeCleanCommandLine>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <PublicIncludeDirectories>
-    </PublicIncludeDirectories>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|Win32'">
-    <NMakeOutput>Loader.exe</NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'">
+    <NMakePreprocessorDefinitions>VERSION=900;VERSION_900;</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>wsl make VERSION=900 &amp;&amp; xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl make clean &amp;&amp; wsl make VERSION=900 &amp;&amp; xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl make clean</NMakeCleanCommandLine>
+    <NMakeOutput>Kernel.elf</NMakeOutput>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)Kernel\source;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
@@ -61,22 +57,17 @@
     <None Include="crt0.s" />
     <None Include="Linker" />
     <None Include="Makefile" />
-    <None Include="resources\Kernel.elf" />
+    <None Include="source\Asm.s" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\asm.s" />
-    <ClCompile Include="source\dynlib.c" />
-    <ClCompile Include="source\elf.c" />
-    <ClCompile Include="source\kernel.c" />
-    <ClCompile Include="source\main.c" />
+    <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\Patches.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\asm.h" />
-    <ClInclude Include="include\common.h" />
-    <ClInclude Include="include\dynlib.h" />
-    <ClInclude Include="include\elf.h" />
-    <ClInclude Include="include\kernel.h" />
-    <ClInclude Include="include\types.h" />
+    <ClInclude Include="include\Asm.h" />
+    <ClInclude Include="include\Common.h" />
+    <ClInclude Include="include\Patches.h" />
+    <ClInclude Include="include\Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
