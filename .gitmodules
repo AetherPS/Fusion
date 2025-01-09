@@ -1,0 +1,3 @@
+[submodule "External/FusionShared"]
+	path = External/FusionShared
+	url = https://github.com/AetherPS/FusionShared
