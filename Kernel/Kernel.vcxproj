@@ -74,6 +74,7 @@
     <ClCompile Include="source\ProcessUtils.cpp" />
     <ClCompile Include="source\Resolver.cpp" />
     <ClCompile Include="source\SystemCalls.cpp" />
+    <ClCompile Include="source\Watcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Asm.h" />
@@ -97,6 +98,7 @@
     <ClInclude Include="include\SystemCalls.h" />
     <ClInclude Include="include\table64.h" />
     <ClInclude Include="include\Types.h" />
+    <ClInclude Include="include\Watcher.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

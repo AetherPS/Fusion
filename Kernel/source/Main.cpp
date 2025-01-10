@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "FakePkgs.h"
 #include "FakeSelfs.h"
+#include "Watcher.h"
 
 uint8_t* KernelBase;
 
@@ -14,6 +15,10 @@ extern "C" int _main(uint64_t* p)
 
 	kprintf("Hello, World! We are now $Root.\n");
 
+	kprintf("Initializing Watcher...");
+	Watcher::Init();
+	kprintf("Done.\n");
+
 	kprintf("Initializing Fake Packages...");
 	FakePkgs::Init();
 	kprintf("Done.\n");
@@ -24,7 +29,7 @@ extern "C" int _main(uint64_t* p)
 
 	kprintf("Starting Fuse...");
 	auto fuseResult = fuse_loader(NULL, 0, NULL);
-	kprintf("%d\n", fuseResult);
+	kprintf("Done. Result: %d\n", fuseResult);
 
 	NotifyCustom("https://imgur.com/y8JEqtu.png", "Fusion 3 Loaded\nMade by Master Odin & Faultz");
 

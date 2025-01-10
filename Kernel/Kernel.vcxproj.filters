@@ -77,6 +77,9 @@
     <ClCompile Include="source\hde64.cpp">
       <Filter>source\Utils\Detours</Filter>
     </ClCompile>
+    <ClCompile Include="source\Watcher.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Common.h">
@@ -140,6 +143,9 @@
       <Filter>include\Utils\Detours</Filter>
     </ClInclude>
     <ClInclude Include="include\elf.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Watcher.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>

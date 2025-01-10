@@ -352,6 +352,10 @@ TYPE_FIELD(uint64_t td_retval[2], 0x398);
 TYPE_FIELD(uint16_t td_priority, 0x380);
 TYPE_END();
 
+#define	EVENTHANDLER_PRI_FIRST	0
+#define	EVENTHANDLER_PRI_ANY	10000
+#define	EVENTHANDLER_PRI_LAST	20000
+
 struct eventhandler_list {
 	char* el_name;
 	int	 el_flags;
