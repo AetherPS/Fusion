@@ -11,6 +11,7 @@ extern vnode* rootvnode;
 extern int (*copyout)(const void* kaddr, void* udaddr, size_t len);
 extern int (*copyin)(const void* uaddr, void* kaddr, size_t len);
 extern int (*kern_open)(thread* td, const char* path, int pathseg, int flags, int mode);
+extern int (*kern_mkdir)(thread* td, char* path, int pathseg, int mode);
 extern vm_map_t kernel_map;
 extern vm_offset_t(*kmem_alloc)(vm_map_t map, vm_size_t size);
 extern void(*kmem_free)(void* map, void* addr, size_t size);

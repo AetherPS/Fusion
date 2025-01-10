@@ -11,6 +11,17 @@
 #define	TRACEBUF
 #define	TRASHIT(x)
 
+#define	STAILQ_HEAD(name, type)						\
+struct name {								\
+	struct type *stqh_first;/* first element */			\
+	struct type **stqh_last;/* addr of last next element */		\
+}
+
+#define	SLIST_HEAD(name, type)						\
+struct name {								\
+	struct type *slh_first;	/* first element */			\
+}
+
 #define	TAILQ_ENTRY(type)						\
 struct {								\
 	struct type *tqe_next;	/* next element */			\
@@ -261,6 +272,7 @@ typedef	char* caddr_t;	/* core address */
 typedef	uint16_t	au_event_t;
 typedef uint32_t gid_t;
 typedef uint32_t uid_t;
+typedef	__uint16_t	mode_t;
 
 #define	M_NOWAIT	0x0001		/* do not block */
 #define	M_WAITOK	0x0002		/* ok to block */
@@ -272,31 +284,28 @@ typedef uint32_t uid_t;
 
 #define	M_MAGIC		877983977	/* time when first defined :-) */
 
+#define	O_RDONLY	0x0000		/* open for reading only */
+#define	O_WRONLY	0x0001		/* open for writing only */
+#define	O_RDWR		0x0002		/* open for reading and writing */
+#define	O_ACCMODE	0x0003		/* mask for above modes */
+
 struct auditinfo_addr {
 	uint8_t useless[184];
 };
 
 struct ucred {
-	uint32_t cr_ref;
-	uid_t cr_uid;
-	uid_t cr_ruid;
-	uid_t cr_svuid;
-	int	cr_ngroups;
-	gid_t cr_rgid;
-	gid_t cr_svgid;
-	struct uidinfo* cr_uidinfo;
-	struct uidinfo* cr_ruidinfo;
-	struct prison* cr_prison;
-	struct loginclass* cr_loginclass;
-	uint32_t cr_flags;
-	void* cr_pspare2[2];
-	uint64_t cr_sceAuthID;          /* sony app authorization id */
-	uint64_t cr_sceCaps[0x04];		/* sony app capabilities */
-	uint64_t cr_sceAttr[0x04];		/* sony app attributes */
-	char cr_unk0A0[0x48];
-	struct auditinfo_addr cr_audit;
-	gid_t* cr_groups;
-	int	cr_agroups;
+	char pad1[4];
+	int cr_uid;
+	int cr_ruid;
+	char pad2[8];
+	int cr_rgid;
+	char pad3[20];
+	void* cr_prison;
+	char pad4[28];
+	long long cr_sceAuthID;
+	long long cr_sceCaps[4];
+	char pad5[152];
+	int* cr_groups;
 };
 
 struct prison
@@ -309,10 +318,20 @@ struct vnode
 
 };
 
-struct filedesc {
-	void* useless1[3];
-	void* fd_rdir;
-	vnode* fd_jdir;
+struct filedesc 
+{
+	void** fd_ofiles;	/* file structures for open files */
+	char* fd_ofileflags;		/* per-process open file flags */
+	vnode* fd_cdir;		/* current directory */
+	vnode* fd_rdir;		/* root directory */
+	vnode* fd_jdir;		/* jail root directory */
+	int	fd_nfiles;		/* number of open files allocated */
+	unsigned long* fd_map;		/* bitmap of free fds */
+	int	fd_lastfile;		/* high-water mark of fd_ofiles */
+	int	fd_freefile;		/* approx. next free file */
+	unsigned short	fd_cmask;		/* mask for file creation */
+	unsigned short	fd_refcnt;		/* thread reference count */
+	unsigned short	fd_holdcnt;		/* hold count on structure + mutex */
 };
 
 struct lock_object {
@@ -333,7 +352,7 @@ struct sx {
 	volatile uintptr_t sx_lock;
 };
 
-TYPE_BEGIN(struct proc, 0x800); // XXX: random, don't use directly without fixing it
+TYPE_BEGIN(struct proc, 0x1000); // XXX: random, don't use directly without fixing it
 TYPE_FIELD(LIST_ENTRY(proc) p_list, 0);
 TYPE_FIELD(TAILQ_HEAD(, thread) p_threads, 0x10);
 TYPE_FIELD(struct ucred* p_ucred, 0x40);
@@ -383,28 +402,28 @@ struct eventhandler_entry {
 
 typedef struct eventhandler_entry* eventhandler_tag;
 
+struct iovec {
+	void* iov_base;  // Pointer to the data
+	size_t iov_len;   // Length of the data
+};
+
 enum	uio_rw { UIO_READ, UIO_WRITE };
 
 /* Segment flag values. */
 enum uio_seg {
 	UIO_USERSPACE,		/* from user data space */
 	UIO_SYSSPACE,		/* from system space */
-	UIO_NOCOPY		/* don't copy, already in object */
+	UIO_NOCOPY			/* don't copy, already in object */
 };
 
 struct uio {
 	struct	iovec* uio_iov;		/* scatter/gather list */
-	int	uio_iovcnt;		/* length of scatter/gather list */
-	off_t	uio_offset;		/* offset in target object */
-	ssize_t	uio_resid;		/* remaining bytes to process */
+	int	uio_iovcnt;				/* length of scatter/gather list */
+	off_t	uio_offset;			/* offset in target object */
+	ssize_t	uio_resid;			/* remaining bytes to process */
 	enum	uio_seg uio_segflg;	/* address space */
 	enum	uio_rw uio_rw;		/* operation */
-	struct	thread* uio_td;		/* owner */
-};
-
-struct iovec {
-	void* iov_base;	/* Base address. */
-	size_t	 iov_len;	/* Length. */
+	thread* uio_td;				/* owner */
 };
 
 struct fpu_kern_ctx {
@@ -605,3 +624,91 @@ struct cdevsw {
 #pragma pack(pop)
 
 static_assert(sizeof(struct cdevsw) == 0xC0, "devsw size invalid.");
+
+typedef uint32_t devfs_rid;
+typedef uint16_t devfs_rsnum;
+
+struct devfs_rule {
+	uint32_t dr_magic;			/* Magic number. */
+	devfs_rid dr_id;			/* Identifier. */
+
+	/*
+	 * Conditions under which this rule should be applied.  These
+	 * are ANDed together since OR can be simulated by using
+	 * multiple rules.  dr_icond determines which of the other
+	 * variables we should process.
+	 */
+	int	dr_icond;
+#define	DRC_DSWFLAGS	0x001
+#define	DRC_PATHPTRN	0x002
+	int	dr_dswflags;			/* cdevsw flags to match. */
+#define	DEVFS_MAXPTRNLEN	200
+	char	dr_pathptrn[DEVFS_MAXPTRNLEN];	/* Pattern to match path. */
+
+	/*
+	 * Things to change.  dr_iacts determines which of the other
+	 * variables we should process.
+	 */
+	int	dr_iacts;
+#define	DRA_BACTS	0x001
+#define	DRA_UID		0x002
+#define	DRA_GID		0x004
+#define	DRA_MODE	0x008
+#define	DRA_INCSET	0x010
+	int	dr_bacts;			/* Boolean (on/off) action. */
+#define	DRB_HIDE	0x001			/* Hide entry (DE_WHITEOUT). */
+#define	DRB_UNHIDE	0x002			/* Unhide entry. */
+	uid_t	dr_uid;
+	gid_t	dr_gid;
+	mode_t	dr_mode;
+	devfs_rsnum dr_incset;			/* Included ruleset. */
+};
+
+#define	DEVFS_MAGIC	0xdb0a087a
+#define _PATH_DEV "/dev/"
+
+struct dynlib_get_obj_member {
+	uint32_t handle;
+	uint32_t index;
+	uint64_t value;
+};
+
+typedef STAILQ_HEAD(Struct_Objlist, Struct_Objlist_Entry) Objlist;
+
+// Thank you flatz for 1.62
+// Thank you ChendoChap for fixing newer fw's
+struct dynlib
+{
+	SLIST_HEAD(, dynlib_obj) objs;
+	struct dynlib* self;
+	struct dynlib_obj* main_obj;
+	struct dynlib_obj* libkernel_obj;
+	struct dynlib_obj* asan_obj;
+	uint32_t nmodules; // module count
+	char unk2C[0x4];
+	Objlist obj_list_0;
+	Objlist obj_list_1;
+	Objlist obj_list_2;
+	Objlist obj_list_3;
+	sx bind_lock;
+	char unk90[0x18];
+	uint8_t unkA8[0x8];
+	uint8_t unkB0[0x8];
+	uint8_t unkB8[0x8];
+	uint8_t unkC0[0x4]; // set to 1
+	uint8_t unkC4[0x4]; // set to 1, this and above optimized to one 0x100000001 (on creation)
+	void* procparam_seg_addr;
+	uint64_t procparam_seg_filesz;
+	void* unpatched_call_addr;
+	void* __freeze_pointer;
+	void* sysc_s00_pointer;
+	void* sysc_e00_pointer;
+	uint32_t restrict_flags; //flags of some kind, conditionally zeroes out some stuff in the dynlib  info_ex syscall and other places as well.
+	uint32_t no_dynamic_segment; //also flags, used to conditionally load the asan? other bit used for sys_mmap_dmem?
+	int is_sandboxed; //((proc->p_fd->fd_rdir != rootvnode) ? 1 : 0)   -> used to determine if it should use random path or system/ to load modules
+	uint8_t unk104[0x4];
+};
+
+struct stat {
+	
+};

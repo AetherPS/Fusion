@@ -3,6 +3,8 @@
 #include "FakeSelfs.h"
 #include "Watcher.h"
 #include "DirectMemory.h"
+#include "DevActSpoofer.h"
+#include "LibraryReplacer.h"
 
 uint8_t* KernelBase;
 
@@ -40,6 +42,18 @@ extern "C" int _main(uint64_t* p)
 #ifdef FF_Driver
 	kprintf("Initializing Driver...");
 	FusionDriver::Init();
+	kprintf("Done.\n");
+#endif
+
+#ifdef FF_DevAct
+	kprintf("Initializing Dev Activation Spoofer...");
+	DevActSpoofer::Init();
+	kprintf("Done.\n");
+#endif
+
+#ifdef FF_LibraryReplacer
+	kprintf("Initializing Library Replacer...");
+	LibraryReplacer::Init();
 	kprintf("Done.\n");
 #endif
 

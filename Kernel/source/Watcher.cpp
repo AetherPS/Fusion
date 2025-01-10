@@ -42,7 +42,9 @@ void Watcher::OnProcessStart(void* arg, struct proc* p)
     if (!p)
         return;
 
-    // UnHideDriver("Fusion");
+#ifdef FF_Driver
+    UnHideDriver("Fusion");
+#endif
 }
 
 void Watcher::OnProcessStartEnd(void* arg, struct proc* p)

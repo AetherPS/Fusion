@@ -54,3 +54,5 @@ int sys_munmap(thread* td, caddr_t addr, size_t len);
 int open(const char* path, int flags, int mode, struct thread* td = CurrentThread());
 ssize_t write(int fd, const void* buf, size_t count, struct thread* td = CurrentThread());
 int close(int fd, struct thread* td = CurrentThread());
+int stat(char* path, struct stat* buf);
+int ioctl(int fd, unsigned long com, caddr_t data, struct thread* td);

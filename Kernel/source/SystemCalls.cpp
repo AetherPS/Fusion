@@ -223,3 +223,61 @@ int close(int fd, struct thread* td)
 
 	return (int)td->td_retval[0];
 }
+
+int stat(char* path, struct stat* buf)
+{
+	struct stat_args {
+		char* path;         // Pointer to the file path
+		struct stat* ub;    // Pointer to a struct stat
+	};
+
+	stat_args uap;
+	auto sys_stat = (int(*)(thread*, stat_args*))sysvec->sv_table[188].sy_call;
+
+	// Use shellcore.
+	auto shellcore = GetProcByName("SceShellCore");
+	thread* td = shellcore->p_threads.tqh_first;
+
+	// clear errors
+	td->td_retval[0] = 0;
+
+	// Set up Params
+	uap.path = (char*)path;
+	uap.ub = buf;
+
+	// Call System call
+	int errorno = sys_stat(td, &uap);
+	if (errorno)
+		return -errorno;
+
+	// success
+	return td->td_retval[0];
+}
+
+int ioctl(int fd, unsigned long com, caddr_t data, struct thread* td)
+{
+	struct ioctl_args {
+		int fd;         // File descriptor
+		unsigned long com;     // IOCTL command
+		caddr_t data;   // Pointer to data
+	};
+
+	ioctl_args uap;
+	auto sys_ioctl = (int(*)(thread*, ioctl_args*))sysvec->sv_table[54].sy_call;
+
+	// clear errors
+	td->td_retval[0] = 0;
+
+	// Set up Params
+	uap.fd = fd;
+	uap.com = com;
+	uap.data = data;
+
+	// Call System call
+	int errorno = sys_ioctl(td, &uap);
+	if (errorno)
+		return -errorno;
+
+	// success
+	return td->td_retval[0];
+}

@@ -31,6 +31,12 @@
     <Filter Include="include\Driver">
       <UniqueIdentifier>{3989e886-3fc7-4c01-a9a4-29757f5d4d07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Misc">
+      <UniqueIdentifier>{509322ee-89f7-4fa0-b3b4-4490ffa3b0fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Misc">
+      <UniqueIdentifier>{cfcc5ec7-03de-49b3-bba3-8fdfd8177dee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Linker" />
@@ -83,9 +89,6 @@
     <ClCompile Include="source\hde64.cpp">
       <Filter>source\Utils\Detours</Filter>
     </ClCompile>
-    <ClCompile Include="source\Watcher.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="source\DriverKernel.cpp">
       <Filter>source\Driver</Filter>
     </ClCompile>
@@ -98,20 +101,20 @@
     <ClCompile Include="source\FeatureFlags.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\DirectMemory.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\DevActSpoofer.cpp">
-      <Filter>source</Filter>
+      <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DirectMemory.cpp">
+      <Filter>source\Misc</Filter>
     </ClCompile>
     <ClCompile Include="source\LibraryReplacer.cpp">
-      <Filter>source</Filter>
+      <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Watcher.cpp">
+      <Filter>source\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Common.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\Asm.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
@@ -172,9 +175,6 @@
     <ClInclude Include="include\elf.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Watcher.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="include\FeatureFlags.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -187,14 +187,20 @@
     <ClInclude Include="include\FusionDriver.h">
       <Filter>include\Driver</Filter>
     </ClInclude>
-    <ClInclude Include="include\DirectMemory.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\DevActSpoofer.h">
-      <Filter>include</Filter>
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DirectMemory.h">
+      <Filter>include\Misc</Filter>
     </ClInclude>
     <ClInclude Include="include\LibraryReplacer.h">
-      <Filter>include</Filter>
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Common.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Watcher.h">
+      <Filter>include\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -222,6 +222,12 @@ int DriverProc::Jailbreak(caddr_t data, thread* td)
 	auto cred = selectedProc->p_ucred;
 	auto fd = selectedProc->p_fd;
 
+	if (fd == nullptr || cred == nullptr)
+	{
+		kprintf("Jailbreak(): Failed to get jail info.\n");
+		return EINVAL;
+	}
+
 	// Backup the jail.
 	JailBackup backupJail;
 	backupJail.cr_uid = cred->cr_uid;

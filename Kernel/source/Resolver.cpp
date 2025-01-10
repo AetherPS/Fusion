@@ -10,6 +10,7 @@ vnode* rootvnode;
 int (*copyout)(const void* kaddr, void* udaddr, size_t len) = nullptr;
 int (*copyin)(const void* uaddr, void* kaddr, size_t len) = nullptr;
 int (*kern_open)(thread* td, const char* path, int pathseg, int flags, int mode) = nullptr;
+int (*kern_mkdir)(thread* td, char* path, int pathseg, int mode) = nullptr;
 vm_map_t kernel_map;
 vm_offset_t(*kmem_alloc)(vm_map_t map, vm_size_t size);
 void(*kmem_free)(void* map, void* addr, size_t size) = nullptr;
@@ -116,6 +117,7 @@ void ResolveFunctions()
     NATIVE_RESOLVE(copyin);
     NATIVE_RESOLVE(copyout);
     NATIVE_RESOLVE(kern_open);
+    NATIVE_RESOLVE(kern_mkdir);
     kernel_map = *(vm_map_t*)(KernelBase + addr_kernel_map);
     NATIVE_RESOLVE(kmem_alloc);
     NATIVE_RESOLVE(kmem_free);
