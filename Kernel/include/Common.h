@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 
+#include "FeatureFlags.h"
 #include "Settings.h"
 #include "Offsets.h"
 
@@ -27,5 +28,8 @@
 #include "FakePkgs.h"
 #include "FakeSelfTypes.h"
 #include "FakeSelfs.h"
+
+#include "DriverDefinitions.h"
+#include "FusionDriver.h"
 
 extern uint8_t* KernelBase;

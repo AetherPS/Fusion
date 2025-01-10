@@ -259,6 +259,8 @@ typedef	__off_t		off_t;		/* file offset */
 typedef	__size_t	size_t;
 typedef	char* caddr_t;	/* core address */
 typedef	uint16_t	au_event_t;
+typedef uint32_t gid_t;
+typedef uint32_t uid_t;
 
 #define	M_NOWAIT	0x0001		/* do not block */
 #define	M_WAITOK	0x0002		/* ok to block */
@@ -275,23 +277,26 @@ struct auditinfo_addr {
 };
 
 struct ucred {
-	uint32_t cr_ref;					// reference count		0x0000
-	uint32_t cr_uid;					// effective user id	0x0004
-	uint32_t cr_ruid;					// real user id			0x0008
-	uint32_t useless2;					// 						0x000C
-	uint32_t useless3;					//
-	uint32_t cr_rgid;					// real group id
-	uint32_t useless4;					//
-	void* useless5;						//
-	void* useless6;						//
-	void* cr_prison;					// jail(2)				0x0030
-	void* useless7;						//
-	uint32_t useless8;					//
-	void* useless9[2];					//
-	void* useless10;					//
-	struct auditinfo_addr cr_audit;		//
-	uint32_t* cr_groups;				// groups
-	uint32_t useless12;					//
+	uint32_t cr_ref;
+	uid_t cr_uid;
+	uid_t cr_ruid;
+	uid_t cr_svuid;
+	int	cr_ngroups;
+	gid_t cr_rgid;
+	gid_t cr_svgid;
+	struct uidinfo* cr_uidinfo;
+	struct uidinfo* cr_ruidinfo;
+	struct prison* cr_prison;
+	struct loginclass* cr_loginclass;
+	uint32_t cr_flags;
+	void* cr_pspare2[2];
+	uint64_t cr_sceAuthID;          /* sony app authorization id */
+	uint64_t cr_sceCaps[0x04];		/* sony app capabilities */
+	uint64_t cr_sceAttr[0x04];		/* sony app attributes */
+	char cr_unk0A0[0x48];
+	struct auditinfo_addr cr_audit;
+	gid_t* cr_groups;
+	int	cr_agroups;
 };
 
 struct prison
@@ -338,6 +343,9 @@ TYPE_FIELD(struct vmspace* p_vmspace, 0x168);
 TYPE_FIELD(struct dynlib* p_dynlib, 0x340);
 TYPE_FIELD(char titleId[10], 0x390);
 TYPE_FIELD(char p_comm[32], 0x454);
+TYPE_FIELD(char p_elfpath[1024], 0x474);
+TYPE_FIELD(int p_randomized_path_len, 0x7F4);
+TYPE_FIELD(char p_randomized_path[0x100], 0x7F8);
 TYPE_END();
 
 TYPE_BEGIN(struct thread, 0x3D8); // XXX: random, don't use directly without fixing it
@@ -492,3 +500,108 @@ typedef struct vm_map* vm_map_t;
 struct vmspace {
 	struct vm_map vm_map;	/* VM address map */
 };
+
+/*
+ * Types for d_flags.
+ */
+#define	D_TAPE	0x0001
+#define	D_DISK	0x0002
+#define	D_TTY	0x0004
+#define	D_MEM	0x0008
+
+#define	D_TYPEMASK	0xffff
+
+ /*
+  * Flags for d_flags which the drivers can set.
+  */
+#define	D_TRACKCLOSE	0x00080000	/* track all closes */
+#define D_MMAP_ANON	0x00100000	/* special treatment in vm_mmap.c */
+#define D_PSEUDO	0x00200000	/* make_dev() can return NULL */
+#define D_NEEDGIANT	0x00400000	/* driver want Giant */
+#define	D_NEEDMINOR	0x00800000	/* driver uses clone_create() */
+
+  /*
+   * Version numbers.
+   */
+#define D_VERSION_00	0x20011966
+#define D_VERSION_01	0x17032005	/* Add d_uid,gid,mode & kind */
+#define D_VERSION_02	0x28042009	/* Add d_mmap_single */
+#define D_VERSION_03	0x17122009	/* d_mmap takes memattr,vm_ooffset_t */
+#define D_VERSION	D_VERSION_03
+
+   /*
+	* Flags used for internal housekeeping
+	*/
+#define D_INIT		0x80000000	/* cdevsw initialized */
+
+#define	MAKEDEV_REF		0x01
+#define	MAKEDEV_WHTOUT		0x02
+#define	MAKEDEV_NOWAIT		0x04
+#define	MAKEDEV_WAITOK		0x08
+#define	MAKEDEV_ETERNAL		0x10
+#define	MAKEDEV_CHECKNAME	0x20
+
+#define		UID_ROOT	0
+#define		UID_BIN		3
+#define		UID_UUCP	66
+#define		UID_NOBODY	65534
+
+#define		GID_WHEEL	0
+#define		GID_KMEM	2
+#define		GID_TTY		4
+#define		GID_OPERATOR	5
+#define		GID_BIN		7
+#define		GID_GAMES	13
+#define		GID_DIALER	68
+#define		GID_NOBODY	65534
+
+#define	S_IRWXU	0000700			/* RWX mask for owner */
+#define	S_IRUSR	0000400			/* R for owner */
+#define	S_IWUSR	0000200			/* W for owner */
+#define	S_IXUSR	0000100			/* X for owner */
+
+#define	S_IRWXG	0000070			/* RWX mask for group */
+#define	S_IRGRP	0000040			/* R for group */
+#define	S_IWGRP	0000020			/* W for group */
+#define	S_IXGRP	0000010			/* X for group */
+
+#define	S_IRWXO	0000007			/* RWX mask for other */
+#define	S_IROTH	0000004			/* R for other */
+#define	S_IWOTH	0000002			/* W for other */
+#define	S_IXOTH	0000001			/* X for other */
+
+typedef int d_ioctl_t(struct cdev* dev, unsigned long cmd, caddr_t data, int fflag, struct thread* td);
+
+	/*
+	 * Character device switch table
+	 */
+#pragma pack(push, 1)
+struct cdevsw {
+	int			d_version;
+	unsigned int d_flags;
+	const char* d_name;
+	void* d_open;
+	void* d_fdopen;
+	void* d_close;
+	void* d_read;
+	void* d_write;
+	d_ioctl_t* d_ioctl;
+	void* d_poll;
+	void* d_mmap;
+	void* d_strategy;
+	void* d_dump;
+	void* d_kqfilter;
+	void* d_purge;
+	void* d_mmap_single;
+	
+	// PlayStation 4 Addition, credits: ChendoChap
+	void* d_mmap_single_ext;
+	
+	int32_t			d_spare0[3];
+	void* d_spare1[3];
+	
+	char pad[0x1C];
+};
+#pragma pack(pop)
+
+static_assert(sizeof(struct cdevsw) == 0xC0, "devsw size invalid.");

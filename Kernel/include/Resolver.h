@@ -2,6 +2,7 @@
 #include "Settings.h"
 #include "FakeSelfTypes.h"
 #include "FakePkgTypes.h"
+#include "Types.h"
 
 /* Util */
 extern sysentvec* sysvec;
@@ -128,5 +129,9 @@ extern void (*_mtx_unlock_flags)(mtx * mutex, int flags, const char* file, int l
 
 extern int (*sx_xlock)(struct sx* sx, int opts);
 extern int (*sx_xunlock)(struct sx* sx);
+
+/* Driver */
+extern int(*make_dev_p)(int _flags, cdev * *_cdev, cdevsw * _devsw, ucred * _cr, uid_t _uid, gid_t _gid, int _mode, const char* _fmt, ...);
+extern void(*destroy_dev)(cdev * _dev);
 
 void ResolveFunctions();

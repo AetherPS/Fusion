@@ -50,7 +50,9 @@ void Watcher::OnProcessStartEnd(void* arg, struct proc* p)
     if (!p)
         return;
 
+#ifdef FF_HomeBrew
     FakePkgs::OnProcessStart(arg, p);
+#endif
 }
 
 void Watcher::OnProcessExit(void* arg, struct proc* p)

@@ -103,6 +103,10 @@ void (*_mtx_unlock_flags)(mtx* mutex, int flags, const char* file, int line);
 int (*sx_xlock)(struct sx* sx, int opts);
 int (*sx_xunlock)(struct sx* sx);
 
+/* Driver */
+int(*make_dev_p)(int _flags, cdev** _cdev, cdevsw* _devsw, ucred* _cr, uid_t _uid, gid_t _gid, int _mode, const char* _fmt, ...) = nullptr;
+void(*destroy_dev)(cdev* _dev) = nullptr;
+
 void ResolveFunctions()
 {
     /* Util */
@@ -199,4 +203,8 @@ void ResolveFunctions()
 
     NATIVE_RESOLVE(sx_xlock);
     NATIVE_RESOLVE(sx_xunlock);
+
+    /* Driver */
+    NATIVE_RESOLVE(make_dev_p);
+    NATIVE_RESOLVE(destroy_dev);
 }

@@ -99,7 +99,10 @@ void FakePkgs::Term()
 
 void FakePkgs::InstallShellCorePatches()
 {
+#ifdef DEBUG
 	kprintf("Installing ShellCore Patches\n");
+#endif
+
 	auto p = GetProcByName("SceShellCore");
 
 	if (p == nullptr)
@@ -157,12 +160,16 @@ void FakePkgs::InstallShellCorePatches()
 	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck1), (void*)"\xEB", 1, true);
 	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck2), (void*)"\xEB", 1, true);
 
+#ifdef DEBUG
 	kprintf("InstallShellCorePatches(): Success\n");
+#endif
 }
 
 void FakePkgs::InstallShellUIPatches(proc* p)
 {
+#ifdef DEBUG
 	kprintf("Installing ShellUI Patches\n");
+#endif
 
 	// Find the shell UI process.
 	if (!p)
@@ -211,8 +218,9 @@ void FakePkgs::InstallShellUIPatches(proc* p)
 			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libKernelBase + sceKernelGetUtokenStoreModeForRcmgr), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
 		}
 	}
-
+#ifdef DEBUG
 	kprintf("InstallShellUIPatches(): Success\n");
+#endif
 }
 
 void FakePkgs::OnProcessStart(void* arg, proc* p)

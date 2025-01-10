@@ -25,6 +25,12 @@
     <Filter Include="source\Utils\Detours">
       <UniqueIdentifier>{bb4cd6fa-fa18-4f9b-b9bd-42d2b5d967a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\Driver">
+      <UniqueIdentifier>{ddf00d34-5a63-4f46-8545-77c2fb4de2d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Driver">
+      <UniqueIdentifier>{3989e886-3fc7-4c01-a9a4-29757f5d4d07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Linker" />
@@ -79,6 +85,27 @@
     </ClCompile>
     <ClCompile Include="source\Watcher.cpp">
       <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DriverKernel.cpp">
+      <Filter>source\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DriverProc.cpp">
+      <Filter>source\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FusionDriver.cpp">
+      <Filter>source\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FeatureFlags.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DirectMemory.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DevActSpoofer.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\LibraryReplacer.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +174,27 @@
     </ClInclude>
     <ClInclude Include="include\Watcher.h">
       <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FeatureFlags.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DriverKernel.h">
+      <Filter>include\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DriverProc.h">
+      <Filter>include\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FusionDriver.h">
+      <Filter>include\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DirectMemory.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DevActSpoofer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\LibraryReplacer.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
