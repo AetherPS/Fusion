@@ -108,22 +108,16 @@ void FakePkgs::InstallShellCorePatches()
 		return;
 	}
 
-	kprintf("ShellCore pid %d\n", p->p_pid);
-
 	// Get the module handles.
 	size_t numModules;
 	int handles[256];
 	sys_dynlib_get_list(p->p_threads.tqh_first, handles, 256, &numModules);
-
-	kprintf("numModules: %d\n", numModules);
 
 	// Get the info for the main executable.
 	struct dynlib_info_ex info;
 	info.size = sizeof(struct dynlib_info_ex);
 	sys_dynlib_get_info_ex(p->p_threads.tqh_first, handles[0], 1, &info);
 	uint64_t shellCoreBase = (uint64_t)info.segmentInfo[0].baseAddr;
-
-	kprintf("shellCoreBase: %llX\n", shellCoreBase);
 
 	// Make sure we found the address.
 	if (shellCoreBase == 0)
@@ -133,8 +127,6 @@ void FakePkgs::InstallShellCorePatches()
 	}
 
 	uint8_t xor__eax_eax[5] = { 0x31, 0xC0, 0x90, 0x90, 0x90 };
-
-	kprintf("Install Patches.\n");
 
 	// sceKernelIsGenuineCEX
 	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX1), xor__eax_eax, sizeof(xor__eax_eax), true);

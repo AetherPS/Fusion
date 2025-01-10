@@ -26,7 +26,9 @@ void Detour64::Create(void* address, void* destination)
 		}
 	}
 
+#ifdef DEBUG
 	kprintf("[Detour64] create: instructionLength = %i\n", instructionLength);
+#endif
 
 	Address = address;
 
@@ -54,12 +56,17 @@ void Detour64::Create(void* address, void* destination)
 	auto stub_jump = reinterpret_cast<uint64_t>(StubPtr) + instructionLength;
 	auto stub_return = reinterpret_cast<uint64_t>(Address) + instructionLength;
 
+#ifdef DEBUG
 	kprintf("[Detour64] create: writing detour jumps\n");
+#endif
 
 	WriteJump64(reinterpret_cast<void*>(stub_jump), reinterpret_cast<void*>(stub_return));
 	WriteJump64(Address, destination);
 
+#ifdef DEBUG
 	kprintf("[Detour64] Detour written from 0x%llX -> 0x%llX\n", address, destination);
+#endif
+
 	DetourSet = true;
 }
 
@@ -67,7 +74,10 @@ void Detour64::Restore()
 {
 	if (DetourSet)
 	{
+#ifdef DEBUG
 		kprintf("[Detour64] Restoring original function bytes.\n");
+#endif
+
 		MemcpyTextSeg((void*)Address, OriginalBytes, OriginalSize);
 
 		kmem_free(kernel_map, StubPtr, StubSize);
@@ -77,7 +87,10 @@ void Detour64::Restore()
 		OriginalSize = 0;
 		Address = 0;
 
+#ifdef DEBUG
 		kprintf("[Detour64] Detour Removed.\n");
+#endif
+
 		DetourSet = false;
 	}
 	else

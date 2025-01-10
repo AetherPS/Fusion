@@ -26,7 +26,9 @@ void Detour32::Create(void* address, void* destination)
 		}
 	}
 
+#ifdef DEBUG
 	kprintf("[Detour32] create: instructionLength = %i\n", instructionLength);
+#endif
 
 	Address = address;
 
@@ -35,7 +37,9 @@ void Detour32::Create(void* address, void* destination)
 	OriginalBytes = (uint8_t*)_malloc(OriginalSize);
 	memcpy(OriginalBytes, address, OriginalSize);
 
+#ifdef DEBUG
 	kprintf("[Detour32] create: Allocate trampoline memory.\n");
+#endif
 
 	// create the trampoline and jump to it
 	TrampolineSize = (JUMP_64SIZE + 0x3FFFull) & ~0x3FFFull;
@@ -46,7 +50,9 @@ void Detour32::Create(void* address, void* destination)
 		return;
 	}
 
+#ifdef DEBUG
 	kprintf("[Detour32] create: KernelBase: %llX, %llX %llX.\n", KernelBase, TrampolinePtr, TrampolineSize);
+#endif
 
 	// Make sure we can make the jump.
 	if (!IsRelativelyClose((void*)((uint64_t)address + JUMP_32SIZE), TrampolinePtr))
@@ -68,7 +74,9 @@ void Detour32::Create(void* address, void* destination)
 		return;
 	}
 
+#ifdef DEBUG
 	kprintf("[Detour32] create: Allocate stub memory.\n");
+#endif
 
 	// allocate the stub
 	StubSize = (instructionLength + JUMP_64SIZE + 0x3FFFull) & ~0x3FFFull;
@@ -91,14 +99,23 @@ void Detour32::Create(void* address, void* destination)
 	auto stubJump = reinterpret_cast<uint64_t>(StubPtr) + instructionLength;
 	auto stubReturn = reinterpret_cast<uint64_t>(Address) + instructionLength;
 
+#ifdef DEBUG
 	kprintf("[Detour32] create: writing trampoline jumps.\n");
+#endif
+
 	WriteJump64(reinterpret_cast<void*>(stubJump), reinterpret_cast<void*>(stubReturn));
 	WriteJump64(TrampolinePtr, destination);
 
+#ifdef DEBUG
 	kprintf("[Detour32] create: writing detour jump.\n");
+#endif
+
 	WriteJump32(address, TrampolinePtr);
 
+#ifdef DEBUG
 	kprintf("[Detour32] Detour written from 0x%llX -> 0x%llX\n", address, destination);
+#endif
+
 	DetourSet = true;
 }
 
@@ -106,13 +123,19 @@ void Detour32::Restore()
 {
 	if (DetourSet)
 	{
+#ifdef DEBUG
 		kprintf("[Detour32] Restoring original function bytes.\n");
+#endif
+
 		MemcpyTextSeg((void*)Address, OriginalBytes, OriginalSize);
 
 		kmem_free(kernel_map, TrampolinePtr, TrampolineSize);
 		kmem_free(kernel_map, StubPtr, StubSize);
 
+#ifdef DEBUG
 		kprintf("[Detour32] Detour Removed.\n");
+#endif
+
 		DetourSet = false;
 	}
 	else

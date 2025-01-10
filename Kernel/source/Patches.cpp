@@ -183,6 +183,77 @@ void InstallPatches()
 	kmem = (uint8_t*)KernelBase + 0x0028A75;
 	kmem[0] = 0xEB;
 
+	// skip devkit/testkit/dipsw check in fuse_loader
+	kmem = (uint8_t*)KernelBase + 0x049074E;
+	kmem[0] = 0xEB;
+	kmem[1] = 0x1B;
+
+	// Patch sceSblRcMgrIsAllowSLDebugger
+	kmem = (uint8_t*)KernelBase + 0x317D30;
+	kmem[0] = 0x48;
+	kmem[1] = 0xC7;
+	kmem[2] = 0xC0;
+	kmem[3] = 0x01;
+	kmem[4] = 0x00;
+	kmem[5] = 0x00;
+	kmem[6] = 0x00;
+	kmem[7] = 0xC3;
+
+	// Patch sceSblRcMgrIsAllowULDebugger
+	kmem = (uint8_t*)KernelBase + 0x318030;
+	kmem[0] = 0x48;
+	kmem[1] = 0xC7;
+	kmem[2] = 0xC0;
+	kmem[3] = 0x01;
+	kmem[4] = 0x00;
+	kmem[5] = 0x00;
+	kmem[6] = 0x00;
+	kmem[7] = 0xC3;
+
+	// Patch sceSblRcMgrIsSoftwagnerQafForAcmgr
+	kmem = (uint8_t*)KernelBase + 0x318110;
+	kmem[0] = 0x48;
+	kmem[1] = 0xC7;
+	kmem[2] = 0xC0;
+	kmem[3] = 0x01;
+	kmem[4] = 0x00;
+	kmem[5] = 0x00;
+	kmem[6] = 0x00;
+	kmem[7] = 0xC3;
+
+	char _mov_eax_1[] = { 0xB8, 0x01, 0x00, 0x00, 0x00 };
+
+	uint64_t kernelBase = (uint64_t)KernelBase;
+	uint64_t assistmode_patch_addrs[] = {
+		kernelBase + 0x75CD84,
+		kernelBase + 0x75CF68,
+		kernelBase + 0x75E146,
+		kernelBase + 0x75EE50,
+		kernelBase + 0x75EE76,
+		kernelBase + 0x75EE9C,
+		kernelBase + 0x75EEC2,
+		kernelBase + 0x75EEE8,
+		kernelBase + 0x75EF0E,
+		kernelBase + 0x75EF34,
+		kernelBase + 0x75EF5A,
+		kernelBase + 0x75EF80,
+		kernelBase + 0x75EFA6,
+		kernelBase + 0x75EFCC,
+		kernelBase + 0x75EFF2,
+		kernelBase + 0x75F018,
+		kernelBase + 0x75F03E,
+		kernelBase + 0x75F064,
+		kernelBase + 0x75F09A,
+		kernelBase + 0x75F0C0,
+		kernelBase + 0x75F0E6,
+		kernelBase + 0x75F10C,
+	};
+
+	for (int i = 0; i < sizeof(assistmode_patch_addrs) / sizeof(assistmode_patch_addrs[0]); i++)
+	{
+		memcpy((void*)assistmode_patch_addrs[i], _mov_eax_1, sizeof(_mov_eax_1));
+	}
+
 #elif defined(SOFTWARE_VERSION_1100)
 
 	// Disable ASLR

@@ -12,12 +12,19 @@ extern "C" int _main(uint64_t* p)
 	ResolveFunctions();
 	InstallPatches();
 
-	kprintf("Hello, World from Kernel ELF.\n");
+	kprintf("Hello, World! We are now $Root.\n");
 
+	kprintf("Initializing Fake Packages...");
 	FakePkgs::Init();
-	FakeSelf::Init();
+	kprintf("Done.\n");
 
-	kprintf("Homebrew is Enabled!\n");
+	kprintf("Initializing Fake Selfs...");
+	FakeSelf::Init();
+	kprintf("Done.\n");
+
+	kprintf("Starting Fuse...");
+	auto fuseResult = fuse_loader(NULL, 0, NULL);
+	kprintf("%d\n", fuseResult);
 
 	NotifyCustom("https://imgur.com/y8JEqtu.png", "Fusion 3 Loaded\nMade by Master Odin & Faultz");
 

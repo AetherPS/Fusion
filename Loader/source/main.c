@@ -69,7 +69,7 @@ int install_kernel(struct thread* td, struct installKernelArgs* args)
 		return r;
 	}
 
-	kernel_printf("Starting Kernel. (Shutdown: %llX, ELFBase: %llX, Size: %i)\n", payload_entry, payloadbase, s);
+	kernel_printf("Starting Kernel. (Entry: %llX, ELFBase: %llX, Size: %i)\n", payload_entry, payloadbase, s);
 
 	if (payload_entry(0))
 	{

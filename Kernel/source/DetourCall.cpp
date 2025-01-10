@@ -25,7 +25,9 @@ void DetourCall::Create(void* address, void* destination)
 	// Save the original function call.
 	StubPtr = (void*)((uint64_t)Address + CALL_32SIZE + *(int32_t*)((uint64_t)Address + 1));
 
+#ifdef DEBUG
 	kprintf("[DetourCall] create: Original absolute location -> %llX\n", (uint64_t)StubPtr - (uint64_t)KernelBase);
+#endif
 
 	// Create the trampoline and call it
 	TrampolineSize = ((uint64_t)JUMP_64SIZE + 0x3FFFull) & ~0x3FFFull;
@@ -48,12 +50,17 @@ void DetourCall::Create(void* address, void* destination)
 	// Set the protection for the trampoline.
 	vm_map_protect(kernel_map, (vm_offset_t)TrampolinePtr, (vm_offset_t)TrampolinePtr + TrampolineSize, VM_PROT_ALL, 0);
 	
+#ifdef DEBUG
 	kprintf("[DetourCall] create: writing trampoline jumps\n");
+#endif
 	
 	WriteJump64(TrampolinePtr, destination);
 	WriteCall32(address, TrampolinePtr);
 	
+#ifdef DEBUG
 	kprintf("[DetourCall] Detour written from 0x%llX -> 0x%llX\n", address, destination);
+#endif
+
 	DetourSet = true;
 }
 
@@ -61,12 +68,17 @@ void DetourCall::Restore()
 {
 	if (DetourSet)
 	{
+#ifdef DEBUG
 		kprintf("[DetourCall] Restoring original function bytes.\n");
+#endif
+
 		MemcpyTextSeg((void*)Address, OriginalBytes, OriginalSize);
 
 		kmem_free(kernel_map, TrampolinePtr, TrampolineSize);
 
+#ifdef DEBUG
 		kprintf("[DetourCall] Detour Removed.\n");
+#endif
 		DetourSet = false;
 	}
 	else
