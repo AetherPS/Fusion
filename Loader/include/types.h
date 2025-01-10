@@ -163,22 +163,22 @@ struct ucred {
 	uint32_t useless3;					//
 	uint32_t cr_rgid;					// real group id
 	uint32_t useless4;					//
-	void *useless5;						//
-	void *useless6;						//
-	void *cr_prison;					// jail(2)				0x0030
-	void *useless7;						//
+	void* useless5;						//
+	void* useless6;						//
+	void* cr_prison;					// jail(2)				0x0030
+	void* useless7;						//
 	uint32_t useless8;					//
-	void *useless9[2];					//
-	void *useless10;					//
+	void* useless9[2];					//
+	void* useless10;					//
 	struct auditinfo_addr cr_audit;		//
-	uint32_t *cr_groups;				// groups
+	uint32_t* cr_groups;				// groups
 	uint32_t useless12;					//
 };
 
 struct filedesc {
-	void *useless1[3];
-	void *fd_rdir;
-	void *fd_jdir;
+	void* useless1[3];
+	void* fd_rdir;
+	void* fd_jdir;
 };
 
 struct stat {
@@ -224,16 +224,16 @@ typedef mode_t SceKernelMode;
 #define SCE_KERNEL_O_RDWR          0x0002
 
 TYPE_BEGIN(struct proc, 0x800); // XXX: random, don't use directly without fixing it
-TYPE_FIELD(struct proc *p_forw, 0);
-TYPE_FIELD(struct ucred *p_ucred, 0x40);
-TYPE_FIELD(struct filedesc *p_fd, 0x48);
+TYPE_FIELD(struct proc* p_forw, 0);
+TYPE_FIELD(struct ucred* p_ucred, 0x40);
+TYPE_FIELD(struct filedesc* p_fd, 0x48);
 TYPE_FIELD(int pid, 0xB0);
-TYPE_FIELD(char p_comm[32], 0x44C);
+TYPE_FIELD(char p_comm[32], 0x454);
 TYPE_END();
 
 TYPE_BEGIN(struct thread, 0x3D8); // XXX: random, don't use directly without fixing it
-TYPE_FIELD(struct proc *td_proc, 8);
-TYPE_FIELD(struct ucred *td_ucred, 0x130);
+TYPE_FIELD(struct proc* td_proc, 8);
+TYPE_FIELD(struct ucred* td_ucred, 0x130);
 TYPE_FIELD(char td_name[32], 0x284);
 TYPE_END();
 
@@ -243,11 +243,11 @@ static inline __attribute__((always_inline)) uint64_t __readmsr(uint32_t __regis
 	uint32_t __edx, __eax;
 
 	__asm__ volatile (
-	    "rdmsr"
-	    : "=d"(__edx),
-	    "=a"(__eax)
-	    : "c"(__register)
-	);
+		"rdmsr"
+		: "=d"(__edx),
+		"=a"(__eax)
+		: "c"(__register)
+		);
 
 	return (((uint64_t)__edx) << 32) | (uint64_t)__eax;
 }
@@ -256,17 +256,17 @@ static inline __attribute__((always_inline)) uint64_t __readcr0(void) {
 	uint64_t cr0;
 
 	__asm__ volatile (
-	    "movq %0, %%cr0"
-	    : "=r" (cr0)
-	    : : "memory"
-	);
+		"movq %0, %%cr0"
+		: "=r" (cr0)
+		: : "memory"
+		);
 
 	return cr0;
 }
 static inline __attribute__((always_inline)) void __writecr0(uint64_t cr0) {
 	__asm__ volatile (
-	    "movq %%cr0, %0"
-	    : : "r" (cr0)
-	    : "memory"
-	);
+		"movq %%cr0, %0"
+		: : "r" (cr0)
+		: "memory"
+		);
 }

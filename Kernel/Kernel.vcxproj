@@ -60,13 +60,42 @@
     <None Include="source\Asm.s" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\BaseDetour.cpp" />
+    <ClCompile Include="source\Detour32.cpp" />
+    <ClCompile Include="source\Detour64.cpp" />
+    <ClCompile Include="source\DetourCall.cpp" />
+    <ClCompile Include="source\FakePkgs.cpp" />
+    <ClCompile Include="source\FakeSelfs.cpp" />
+    <ClCompile Include="source\hde64.cpp" />
+    <ClCompile Include="source\Heap.cpp" />
     <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\Misc.cpp" />
     <ClCompile Include="source\Patches.cpp" />
+    <ClCompile Include="source\ProcessUtils.cpp" />
+    <ClCompile Include="source\Resolver.cpp" />
+    <ClCompile Include="source\SystemCalls.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Asm.h" />
+    <ClInclude Include="include\BaseDetour.h" />
     <ClInclude Include="include\Common.h" />
+    <ClInclude Include="include\Detour32.h" />
+    <ClInclude Include="include\Detour64.h" />
+    <ClInclude Include="include\DetourCall.h" />
+    <ClInclude Include="include\elf.h" />
+    <ClInclude Include="include\FakePkgs.h" />
+    <ClInclude Include="include\FakePkgTypes.h" />
+    <ClInclude Include="include\FakeSelfs.h" />
+    <ClInclude Include="include\FakeSelfTypes.h" />
+    <ClInclude Include="include\hde64.h" />
+    <ClInclude Include="include\Heap.h" />
+    <ClInclude Include="include\Misc.h" />
     <ClInclude Include="include\Patches.h" />
+    <ClInclude Include="include\ProcessUtils.h" />
+    <ClInclude Include="include\Resolver.h" />
+    <ClInclude Include="include\Sparse.h" />
+    <ClInclude Include="include\SystemCalls.h" />
+    <ClInclude Include="include\table64.h" />
     <ClInclude Include="include\Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -13,6 +13,18 @@
     <Filter Include="include\Utils">
       <UniqueIdentifier>{b9e5c598-c3ed-425c-a687-619772e8adb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\Homebrew">
+      <UniqueIdentifier>{6d098163-a9c9-4b5c-81f4-563176f9e66c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Homebrew">
+      <UniqueIdentifier>{a05202f2-b05f-4c7a-a1c0-0dc222393e12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Utils\Detours">
+      <UniqueIdentifier>{6ae31d5c-9632-45aa-8fed-060799476bb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Utils\Detours">
+      <UniqueIdentifier>{bb4cd6fa-fa18-4f9b-b9bd-42d2b5d967a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Linker" />
@@ -29,6 +41,42 @@
     <ClCompile Include="source\Patches.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="source\Resolver.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FakePkgs.cpp">
+      <Filter>source\Homebrew</Filter>
+    </ClCompile>
+    <ClCompile Include="source\FakeSelfs.cpp">
+      <Filter>source\Homebrew</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ProcessUtils.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\SystemCalls.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Heap.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Misc.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Detour64.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\DetourCall.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseDetour.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Detour32.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\hde64.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Common.h">
@@ -41,6 +89,57 @@
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\Types.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Resolver.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FakePkgs.h">
+      <Filter>include\Homebrew</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FakePkgTypes.h">
+      <Filter>include\Homebrew</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FakeSelfs.h">
+      <Filter>include\Homebrew</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FakeSelfTypes.h">
+      <Filter>include\Homebrew</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ProcessUtils.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SystemCalls.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Heap.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sparse.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Detour32.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Detour64.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DetourCall.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BaseDetour.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hde64.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\table64.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\elf.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>

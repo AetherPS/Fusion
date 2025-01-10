@@ -15,7 +15,7 @@
 *.elf
 *.oelf
 *.7z
-Executables/
+Fusion-*.bin
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -40,8 +40,8 @@ bld/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
-900_Release/
-1100_Release/
+900Release/
+1100Release/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
