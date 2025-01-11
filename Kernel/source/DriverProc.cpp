@@ -57,9 +57,16 @@ int DriverProc::GetProccessModuleList(caddr_t data, thread* td)
 		return EINVAL;
 	}
 
+	auto selectedThread = selectedProc->p_threads.tqh_first;
+	if (selectedThread == nullptr)
+	{
+		kprintf("GetProccessModuleList(): Failed to find Thread for Process with the pid %i\n", args->ProcessId);
+		return EINVAL;
+	}
+
 	size_t numModules;
 	int handles[256];
-	sys_dynlib_get_list(selectedProc->p_threads.tqh_first, handles, 256, &numModules);
+	sys_dynlib_get_list(selectedThread, handles, 256, &numModules);
 
 	auto libTemp = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * numModules);
 	if (!libTemp)
@@ -129,7 +136,14 @@ int DriverProc::ProcessAlloc(caddr_t data, thread* td)
 		return EINVAL;
 	}
 
-	auto outAddress = AllocateMemory(selectedProc->p_threads.tqh_first, args->Length, args->Protection, args->Flags);
+	auto selectedThread = selectedProc->p_threads.tqh_first;
+	if (selectedThread == nullptr)
+	{
+		kprintf("ProcessAlloc(): Failed to find Thread for Process with the pid %i\n", args->ProcessId);
+		return EINVAL;
+	}
+
+	auto outAddress = AllocateMemory(selectedThread, args->Length, args->Protection, args->Flags);
 
 	// Copy the result out.
 	copyout(&outAddress, args->OutAddress, sizeof(outAddress));
@@ -153,7 +167,14 @@ int DriverProc::ProcessFree(caddr_t data)
 		return EINVAL;
 	}
 
-	return FreeMemory(selectedProc->p_threads.tqh_first, (caddr_t)args->ProcessAddress, args->Length);
+	auto selectedThread = selectedProc->p_threads.tqh_first;
+	if (selectedThread == nullptr)
+	{
+		kprintf("ProcessFree(): Failed to find Thread for Process with the pid %i\n", args->ProcessId);
+		return EINVAL;
+	}
+
+	return FreeMemory(selectedThread, (caddr_t)args->ProcessAddress, args->Length);
 }
 
 int DriverProc::StartThread(caddr_t data)
@@ -172,7 +193,14 @@ int DriverProc::StartThread(caddr_t data)
 		return EINVAL;
 	}
 
-	return CreateThread(selectedProc->p_threads.tqh_first, (void*)args->ThreadEntry, nullptr, (char*)args->StackMemory, args->StackSize);
+	auto selectedThread = selectedProc->p_threads.tqh_first;
+	if (selectedThread == nullptr)
+	{
+		kprintf("StartThread(): Failed to find Thread for Process with the pid %i\n", args->ProcessId);
+		return EINVAL;
+	}
+
+	return CreateThread(selectedThread, (void*)args->ThreadEntry, nullptr, (char*)args->StackMemory, args->StackSize);
 }
 
 int DriverProc::Resolve(caddr_t data)
@@ -191,8 +219,17 @@ int DriverProc::Resolve(caddr_t data)
 		return EINVAL;
 	}
 
+	auto selectedThread = selectedProc->p_threads.tqh_first;
+	if (selectedThread == nullptr)
+	{
+		kprintf("Resolve(): Failed to find Thread for Process with the pid %i\n", args->ProcessId);
+		return EINVAL;
+	}
+
 	uint64_t addr;
-	sys_dynlib_dlsym(selectedProc->p_threads.tqh_first, args->handle, args->Symbol, (void**)&addr);
+	sys_dynlib_dlsym(selectedThread, args->handle, args->Symbol, (void**)&addr);
+
+	kprintf("sys_dynlib_dlsym: %d, %s, %llX\n", args->handle, args->Symbol, addr);
 
 	if (addr <= 0)
 		return -1;

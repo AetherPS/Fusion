@@ -86,7 +86,7 @@ int sys_dynlib_get_info_ex(thread* td, int handle, int unk, dynlib_info_ex* pInf
 int sys_dynlib_dlsym(thread* td, int32_t handle, const char* symbol, void** addressOut)
 {
 	struct dynlib_dlsym_args {
-		int32_t handle;
+		uint64_t handle;
 		const char* symbol;
 		void** address_out;
 	};
@@ -113,12 +113,12 @@ int sys_dynlib_dlsym(thread* td, int32_t handle, const char* symbol, void** addr
 caddr_t sys_mmap(thread* td, caddr_t addr, size_t len, int prot, int flags, int fd, off_t pos)
 {
 	struct mmap_args {
-		caddr_t addr;  // Starting address for the memory map
-		size_t len;    // Length of the memory area
-		int prot;      // Memory protection
-		int flags;     // Mapping flags
-		int fd;        // File descriptor
-		off_t pos;     // Offset in the file
+		caddr_t addr;
+		uint64_t len;
+		uint64_t prot;
+		uint64_t flags;
+		uint64_t fd;
+		uint64_t pos;
 	};
 
 	// clear errors

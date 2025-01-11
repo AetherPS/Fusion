@@ -209,8 +209,7 @@ typedef	__int64_t	__int_least64_t;
 typedef	__int64_t	__ptrdiff_t;		/* ptr1 - ptr2 */
 typedef	__int64_t	__register_t;
 typedef	__int64_t	__segsz_t;		/* segment size (in pages) */
-typedef	__uint64_t	__size_t;		/* sizeof() */
-typedef	__int64_t	__ssize_t;		/* byte count or error */
+typedef	unsigned long long	__size_t;		/* sizeof() */
 typedef	__int64_t	__time_t;		/* time()... */
 typedef	__uint64_t	__uintfptr_t;
 typedef	__uint64_t	__uintmax_t;
@@ -266,7 +265,7 @@ typedef	__vm_size_t	vm_size_t;
 typedef	__uint32_t	__fixpt_t;	/* fixed point number */
 
 typedef	__ssize_t	ssize_t;
-typedef	__off_t		off_t;		/* file offset */
+typedef	long long	off_t;		/* file offset */
 typedef	__size_t	size_t;
 typedef	char* caddr_t;	/* core address */
 typedef	uint16_t	au_event_t;
@@ -289,23 +288,48 @@ typedef	__uint16_t	mode_t;
 #define	O_RDWR		0x0002		/* open for reading and writing */
 #define	O_ACCMODE	0x0003		/* mask for above modes */
 
+struct au_tid_addr {
+	uint32_t at_port;
+	uint32_t at_type;
+	uint32_t at_addr[4];
+};
+typedef	struct au_tid_addr	au_tid_addr_t;
+
+struct au_mask {
+	unsigned int am_success;
+	unsigned int am_failure;
+};
+typedef	struct au_mask	au_mask_t;
+
 struct auditinfo_addr {
-	uint8_t useless[184];
+	uint32_t ai_auid;
+	au_mask_t ai_mask;
+	au_tid_addr_t ai_termid;
+	int	ai_asid;
+	uint64_t ai_flags;
 };
 
 struct ucred {
-	char pad1[4];
-	int cr_uid;
-	int cr_ruid;
-	char pad2[8];
-	int cr_rgid;
-	char pad3[20];
+	uint32_t cr_ref;
+	uint32_t cr_uid;
+	uint32_t cr_ruid;
+	uint32_t cr_svuid;
+	int	cr_ngroups;
+	uint32_t cr_rgid;
+	uint32_t cr_svgid;
+	void* cr_uidinfo;
+	void* cr_ruidinfo;
 	void* cr_prison;
-	char pad4[28];
-	long long cr_sceAuthID;
-	long long cr_sceCaps[4];
-	char pad5[152];
-	int* cr_groups;
+	void* cr_loginclass;
+	uint32_t cr_flags;
+	void* cr_pspare2[2];
+	uint64_t cr_sceAuthID;
+	uint64_t cr_sceCaps[0x04];
+	uint64_t cr_sceAttr[0x04];
+	char     cr_unk0A0[0x48];
+	auditinfo_addr cr_audit;
+	uint32_t* cr_groups;
+	int	cr_agroups;
 };
 
 struct prison
@@ -417,12 +441,12 @@ enum uio_seg {
 };
 
 struct uio {
-	struct	iovec* uio_iov;		/* scatter/gather list */
+	iovec* uio_iov;		/* scatter/gather list */
 	int	uio_iovcnt;				/* length of scatter/gather list */
 	off_t	uio_offset;			/* offset in target object */
 	ssize_t	uio_resid;			/* remaining bytes to process */
-	enum	uio_seg uio_segflg;	/* address space */
-	enum	uio_rw uio_rw;		/* operation */
+	enum uio_seg uio_segflg;	/* address space */
+	enum uio_rw uio_rw;		/* operation */
 	thread* uio_td;				/* owner */
 };
 
