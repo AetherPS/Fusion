@@ -131,11 +131,15 @@ void FakePkgs::InstallShellCorePatches()
 
 	uint8_t xor__eax_eax[5] = { 0x31, 0xC0, 0x90, 0x90, 0x90 };
 
-	uint8_t checkData[1];
+	uint8_t checkData[5];
 	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x10722D1), checkData, sizeof(checkData), false);
+
+	hexdump(checkData, sizeof(checkData), true);
 
 	if (checkData[0] == 0x74 && checkData[1] == 0x2D)
 	{
+		kprintf("Patching for Devkit.\n");
+
 		// sceKernelIsGenuineCEX
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x174E94), xor__eax_eax, sizeof(xor__eax_eax), true);
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x866B44), xor__eax_eax, sizeof(xor__eax_eax), true);
@@ -166,6 +170,8 @@ void FakePkgs::InstallShellCorePatches()
 	}
 	else
 	{
+		kprintf("Patching for Retail.\n");
+
 		// sceKernelIsGenuineCEX
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX1), xor__eax_eax, sizeof(xor__eax_eax), true);
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX2), xor__eax_eax, sizeof(xor__eax_eax), true);
