@@ -9,7 +9,7 @@
 #define FF_HomeBrew
 #define FF_Driver
 #define FF_DirectMemory
-// #define FF_LibraryReplacer
+#define FF_LibraryReplacer
 #define FF_Fuse
 // #define FF_TrapHooks
 #define FF_DevAct

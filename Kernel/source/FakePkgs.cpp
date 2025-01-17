@@ -131,34 +131,69 @@ void FakePkgs::InstallShellCorePatches()
 
 	uint8_t xor__eax_eax[5] = { 0x31, 0xC0, 0x90, 0x90, 0x90 };
 
-	// sceKernelIsGenuineCEX
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX1), xor__eax_eax, sizeof(xor__eax_eax), true);
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX2), xor__eax_eax, sizeof(xor__eax_eax), true);
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX3), xor__eax_eax, sizeof(xor__eax_eax), true);
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX4), xor__eax_eax, sizeof(xor__eax_eax), true);
+	uint8_t checkData[1];
+	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x10722D1), checkData, sizeof(checkData), false);
 
-	// sceKernelIsAssistMode
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode1), xor__eax_eax, sizeof(xor__eax_eax), true);
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode2), xor__eax_eax, sizeof(xor__eax_eax), true);
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode3), xor__eax_eax, sizeof(xor__eax_eax), true);
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode4), xor__eax_eax, sizeof(xor__eax_eax), true);
+	if (checkData[0] == 0x74 && checkData[1] == 0x2D)
+	{
+		// sceKernelIsGenuineCEX
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x174E94), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x866B44), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x8B4532), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0xA2F434), xor__eax_eax, sizeof(xor__eax_eax), true);
 
-	// Enable fake pkg.
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_enableFpkg), (void*)"\xE9\x98\x00\x00\x00\x90\x90\x90", 8, true);
+		// sceKernelIsAssistMode
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x174EC2), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x866B72), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x24D96B), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0xA2F462), xor__eax_eax, sizeof(xor__eax_eax), true);
 
-	// fake to free.
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_fakeText), (void*)"free", 4, true);
+		// Enable fake pkg.
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x3DB1EF), (void*)"\xE9\x98\x00\x00\x00\x90\x90\x90", 8, true);
 
-	// Enable mounting data into sandboxes.
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_mountDataIntoSandbox), (void*)"\x31\xC0\xFF\xC0\x90", 5, true);
+		// fake to free.
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0xFDA211), (void*)"free", 4, true);
 
+		// Enable mounting data into sandboxes.
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x3241AB), (void*)"\x31\xC0\xFF\xC0\x90", 5, true);
 
-	// Disable Update Check.
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disableUpdateChecks), (void*)"\x48\x31\xC0\xC3", 4, true);
+		// Disable Update Check.
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x3CB4F0), (void*)"\x48\x31\xC0\xC3", 4, true);
 
-	// Patch Pkg Update Checks
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck1), (void*)"\xEB", 1, true);
-	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck2), (void*)"\xEB", 1, true);
+		// Patch Pkg Update Checks
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x3C95A7), (void*)"\xEB", 1, true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x13F970), (void*)"\xEB", 1, true);
+	}
+	else
+	{
+		// sceKernelIsGenuineCEX
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX1), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX2), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX3), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX4), xor__eax_eax, sizeof(xor__eax_eax), true);
+
+		// sceKernelIsAssistMode
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode1), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode2), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode3), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode4), xor__eax_eax, sizeof(xor__eax_eax), true);
+
+		// Enable fake pkg.
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_enableFpkg), (void*)"\xE9\x98\x00\x00\x00\x90\x90\x90", 8, true);
+
+		// fake to free.
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_fakeText), (void*)"free", 4, true);
+
+		// Enable mounting data into sandboxes.
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_mountDataIntoSandbox), (void*)"\x31\xC0\xFF\xC0\x90", 5, true);
+
+		// Disable Update Check.
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disableUpdateChecks), (void*)"\x48\x31\xC0\xC3", 4, true);
+
+		// Patch Pkg Update Checks
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck1), (void*)"\xEB", 1, true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck2), (void*)"\xEB", 1, true);
+	}
 
 #ifdef DEBUG
 	kprintf("InstallShellCorePatches(): Success\n");
@@ -198,6 +233,8 @@ void FakePkgs::InstallShellUIPatches(proc* p)
 		return;
 	}
 
+	uint8_t mov__eax_1__ret[6] = { 0xB8, 0x01, 0x00, 0x00, 0x00, 0xC3 };
+
 	// Find the text segment address for libkernel.
 	for (int i = 0; i < numModules; i++)
 	{
@@ -209,13 +246,22 @@ void FakePkgs::InstallShellUIPatches(proc* p)
 		{
 			auto libKernelBase = (uint64_t)info.segmentInfo[0].baseAddr;
 
-			uint8_t mov__eax_1__ret[6] = { 0xB8, 0x01, 0x00, 0x00, 0x00, 0xC3 };
-
 			// sceKernelGetDebugMenuModeForRcmgr
 			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libKernelBase + sceKernelGetDebugMenuModeForRcmgr), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
 
 			// sceKernelGetUtokenStoreModeForRcmgr
 			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libKernelBase + sceKernelGetUtokenStoreModeForRcmgr), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
+
+			// sceKernelIsDevKit
+			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libKernelBase + 0x1C640), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
+		}
+
+		if (strstr(info.name, "libSceDipsw.sprx"))
+		{
+			auto libSceDipswBase = (uint64_t)info.segmentInfo[0].baseAddr;
+
+			// sceKernelIsDevelopmentMode
+			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libSceDipswBase + 0x820), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
 		}
 	}
 #ifdef DEBUG
