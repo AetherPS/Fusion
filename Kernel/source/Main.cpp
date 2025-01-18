@@ -67,12 +67,6 @@ int sceRegMgrGetIntHook(int entry, int* valueOut)
 		return 0;
 	}
 
-	if (entry == 0x2800300)
-	{
-		*valueOut = 400;
-		return 0;
-	}
-
 	return sceRegMgrGetIntDetour->Invoke<int>(entry, valueOut);
 }
 

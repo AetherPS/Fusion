@@ -7,6 +7,10 @@ int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t d
 {
     auto res = OnDirectMemoryIoctlDetour->Invoke<int>(device, cmd, data, fflag, td);
 
+    // Skip ghosts for now since it is broken.
+    if (strstr(td->td_proc->titleId, "CUSA00018"))
+        return res;
+
     switch (cmd)
     {
     case 0x4008800A:

@@ -1,8 +1,6 @@
 #include "Common.h"
 #include "LibraryReplacer.h"
 
-#define DEBUG
-
 Detour32* LibraryReplacer::load_prxDetour;
 
 int LibraryReplacer::load_prxHook(dynlib* dyn, char* path, int32_t flags, int32_t* handleOut)

@@ -150,7 +150,10 @@ void FakePkgs::InstallShellCorePatches()
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x174EC2), xor__eax_eax, sizeof(xor__eax_eax), true);
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x866B72), xor__eax_eax, sizeof(xor__eax_eax), true);
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x24D96B), xor__eax_eax, sizeof(xor__eax_eax), true);
-		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0xA2F462), xor__eax_eax, sizeof(xor__eax_eax), true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0xA2F462), xor__eax_eax, sizeof(xor__eax_eax), true); 
+
+		// Dev_Flag patch
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x3E022F), (void*)"\x90\x90\x90\x90\x90\x90", 6, true);
 
 		// Enable fake pkg.
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x3DB1EF), (void*)"\xE9\x98\x00\x00\x00\x90\x90\x90", 8, true);
