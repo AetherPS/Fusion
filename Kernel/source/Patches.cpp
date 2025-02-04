@@ -183,10 +183,19 @@ void InstallPatches()
 	kmem = (uint8_t*)KernelBase + 0x0028A75;
 	kmem[0] = 0xEB;
 
-	// skip devkit/testkit/dipsw check in fuse_loader
+	// skip devkit/testkit/dipsw check in fuse_loader CreditL LM
 	kmem = (uint8_t*)KernelBase + 0x049074E;
 	kmem[0] = 0xEB;
 	kmem[1] = 0x1B;
+
+	// Mount Fuse filesystem as root. Credi: Z80 & Faultz
+	kmem = (uint8_t*)KernelBase + 0x306866;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+
+	kmem = (uint8_t*)KernelBase + 0x30687E;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
 
 	// Patch sceSblRcMgrIsAllowSLDebugger
 	kmem = (uint8_t*)KernelBase + 0x317D30;
