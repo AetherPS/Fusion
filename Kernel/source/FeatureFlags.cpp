@@ -25,4 +25,7 @@ void PrintFeatureFlags()
 #ifdef FF_DevAct
 	kprintf("   Dev Act Spoofer\n");
 #endif
+#ifdef FF_Dipsw
+	kprintf("   Dip Switch Spoofer\n");
+#endif
 }

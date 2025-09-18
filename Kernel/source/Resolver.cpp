@@ -43,7 +43,7 @@ void(*kprintf)(const char* fmt, ...) = nullptr;
 #ifdef SOFTWARE_VERSION_505 || SOFTWARE_VERSION_NA
 eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, void* arg, int priority);
 #endif
-#if defined(SOFTWARE_VERSION_672) || defined(SOFTWARE_VERSION_702) || defined(SOFTWARE_VERSION_755) || defined(SOFTWARE_VERSION_900) || defined(SOFTWARE_VERSION_1100) 
+#if defined(SOFTWARE_VERSION_672) || defined(SOFTWARE_VERSION_702) || defined(SOFTWARE_VERSION_755) || defined(SOFTWARE_VERSION_900) || defined(SOFTWARE_VERSION_1100) || defined(SOFTWARE_VERSION_1202) 
 eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, const char* unk, void* arg, int priority);
 #endif
 void (*eventhandler_deregister)(eventhandler_list* a, eventhandler_entry* b);
@@ -51,7 +51,6 @@ eventhandler_list* (*eventhandler_find_list)(const char* name);
 
 /* Proc */
 proc* allproc = 0;
-int (*proc_kill)(proc* p, char* why);
 int (*proc_rwmem)(proc* p, uio* uio) = 0;
 int (*create_thread)(thread* td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp) = 0;
 
@@ -91,16 +90,12 @@ int (*vm_map_findspace)(vm_map* map, uint64_t start, uint64_t length, uint64_t* 
 int (*vm_map_delete)(vm_map* map, uint64_t start, uint64_t end);
 int (*vm_map_insert)(vm_map* map, uint64_t object, uint64_t offset, uint64_t start, uint64_t end, int prot, int max, int cow);
 int (*vm_map_protect)(vm_map* map, uint64_t start, uint64_t end, int new_prot, bool set_max);
-void (*vmspace_free)(vmspace* vm);
 
 /* Mutex Locks */
-void (*mtx_init)(mtx* m, const char* name, const char* type, int opts);
-void (*mtx_destroy)(mtx* mutex);
 void (*mtx_lock_flags)(mtx* mutex, int flags);
 void (*mtx_unlock_flags)(mtx* mutex, int flags);
 void (*_mtx_lock_flags)(mtx* mutex, int flags, const char* file, int line);
 void (*_mtx_unlock_flags)(mtx* mutex, int flags, const char* file, int line);
-
 int (*sx_xlock)(struct sx* sx, int opts);
 int (*sx_xunlock)(struct sx* sx);
 
@@ -153,7 +148,6 @@ void ResolveFunctions()
 
     /* Proc */
     NATIVE_RESOLVE(allproc);
-    NATIVE_RESOLVE(proc_kill);
     NATIVE_RESOLVE(proc_rwmem);
     NATIVE_RESOLVE(create_thread);
 
@@ -187,22 +181,18 @@ void ResolveFunctions()
     NATIVE_RESOLVE(mini_syscore_self_binary);
 
     /* Virtual Memory */
-    NATIVE_RESOLVE(vmspace_free);
-    NATIVE_RESOLVE(vm_map_findspace);
-    NATIVE_RESOLVE(vm_map_insert);
     NATIVE_RESOLVE(vm_map_lock);
     NATIVE_RESOLVE(vm_map_unlock);
+    NATIVE_RESOLVE(vm_map_findspace);
     NATIVE_RESOLVE(vm_map_delete);
+    NATIVE_RESOLVE(vm_map_insert);
     NATIVE_RESOLVE(vm_map_protect);
 
     /* Mutex Locks */
-    NATIVE_RESOLVE(mtx_init);
-    NATIVE_RESOLVE(mtx_destroy);
     NATIVE_RESOLVE(mtx_lock_flags);
     NATIVE_RESOLVE(mtx_unlock_flags);
     _mtx_lock_flags = decltype(_mtx_lock_flags)(mtx_lock_flags);
     _mtx_unlock_flags = decltype(_mtx_unlock_flags)(mtx_unlock_flags);
-
     NATIVE_RESOLVE(sx_xlock);
     NATIVE_RESOLVE(sx_xunlock);
 

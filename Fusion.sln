@@ -12,19 +12,39 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kernel", "Kernel\Kernel.vcx
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		1100Release|x64 = 1100Release|x64
+		1100Release|x86 = 1100Release|x86
+		1200Release|x64 = 1200Release|x64
+		1200Release|x86 = 1200Release|x86
 		900Release|x64 = 900Release|x64
 		900Release|x86 = 900Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.1100Release|x64.ActiveCfg = 1100Release|x64
+		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.1100Release|x86.ActiveCfg = 900Release|Win32
+		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.1100Release|x86.Build.0 = 900Release|Win32
+		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.1200Release|x64.ActiveCfg = 1202Release|x64
+		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.1200Release|x64.Build.0 = 1202Release|x64
+		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.1200Release|x86.ActiveCfg = 900Release|Win32
+		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.1200Release|x86.Build.0 = 900Release|Win32
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.900Release|x64.ActiveCfg = 900Release|x64
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.900Release|x64.Build.0 = 900Release|x64
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.900Release|x86.ActiveCfg = 900Release|Win32
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.900Release|x86.Build.0 = 900Release|Win32
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.1100Release|x64.ActiveCfg = 1100Release|x64
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.1100Release|x64.Build.0 = 1100Release|x64
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.1100Release|x86.ActiveCfg = 900Release|Win32
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.1200Release|x64.ActiveCfg = 1202Release|x64
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.1200Release|x64.Build.0 = 1202Release|x64
+		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.1200Release|x86.ActiveCfg = 900Release|Win32
 		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.900Release|x64.ActiveCfg = 900Release|x64
 		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.900Release|x64.Build.0 = 900Release|x64
 		{7F7E2757-4CBA-4203-8EEB-5B317A8C2D4D}.900Release|x86.ActiveCfg = 900Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {409D54FA-D4FC-4E3B-8CD1-DD4A47CFC492}
 	EndGlobalSection
 EndGlobal

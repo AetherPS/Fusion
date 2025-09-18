@@ -5,6 +5,7 @@
 #include "DirectMemory.h"
 #include "DevActSpoofer.h"
 #include "LibraryReplacer.h"
+#include <DipSwitchSpoofer.h>
 
 uint8_t* KernelBase;
 
@@ -100,6 +101,13 @@ int sceRegMgrSetIntHook(int entry, int value)
 	return sceRegMgrSetIntDetour->Invoke<int>(entry, value);
 }
 
+Detour32* sceRegMgrNonSysGetIntDetour;
+int sceRegMgrNonSysGetInt(uint64_t key, int a2, int* valueOut)
+{
+	kprintf("sceRegMgrNonSysGetInt: %llX\n", key);
+	return sceRegMgrNonSysGetIntDetour->Invoke<int>(key, a2, valueOut);
+}
+
 extern "C" int _main(uint64_t* p)
 {
 	KernelBase = (uint8_t*)Readmsr(0xC0000082) - (addr_Xfast_syscall + 0xFFFFFFFF82200000);
@@ -111,8 +119,8 @@ extern "C" int _main(uint64_t* p)
 	kprintf("Hello, World! We are now #Root.\n");
 	PrintFeatureFlags();
 
-	sceRegMgrGetIntDetour = new Detour32(KernelBase + 0x4E9DD0, sceRegMgrGetIntHook);
-	sceRegMgrSetIntDetour = new Detour32(KernelBase + 0x4E8B10, sceRegMgrSetIntHook);
+	// sceRegMgrGetIntDetour = new Detour32(KernelBase + 0x4E9DD0, sceRegMgrGetIntHook);
+	// sceRegMgrSetIntDetour = new Detour32(KernelBase + 0x4E8B10, sceRegMgrSetIntHook);
 
 	kprintf("Initializing Watcher...");
 	Watcher::Init();
@@ -143,6 +151,12 @@ extern "C" int _main(uint64_t* p)
 #ifdef FF_DevAct
 	kprintf("Initializing Dev Activation Spoofer...");
 	DevActSpoofer::Init();
+	kprintf("Done.\n");
+#endif
+
+#ifdef FF_Dipsw
+	kprintf("Initializing Dip Switch Spoofer...");
+	DipSwitchSpoofer::Init();
 	kprintf("Done.\n");
 #endif
 

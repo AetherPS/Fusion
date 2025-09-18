@@ -13,5 +13,6 @@
 #define FF_Fuse
 // #define FF_TrapHooks
 #define FF_DevAct
+#define FF_Dipsw
 
 void PrintFeatureFlags();

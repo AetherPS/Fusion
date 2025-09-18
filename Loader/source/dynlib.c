@@ -31,7 +31,14 @@ void ResolveDynlib()
 	sys_dynlib_dlsym(handle, "vsprintf", &vsprintf);
 	sys_dynlib_dlsym(handle, "strcpy", &strcpy);
 
-	sys_dynlib_load_prx("libkernel_web.sprx", &handle);
+	if (sys_dynlib_load_prx("libkernel.sprx", &handle))
+	{
+		if (sys_dynlib_load_prx("libkernel_web.sprx", &handle))
+		{
+			sys_dynlib_load_prx("libkernel_sys.sprx", &handle);
+		}
+	}
+		
 	sys_dynlib_dlsym(handle, "sceKernelDebugOutText", &sceKernelDebugOutText);
 	sys_dynlib_dlsym(handle, "sceKernelOpen", &sceKernelOpen);
 	sys_dynlib_dlsym(handle, "sceKernelClose", &sceKernelClose);

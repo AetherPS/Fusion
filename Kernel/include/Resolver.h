@@ -44,7 +44,7 @@ extern void(*kprintf)(const char* fmt, ...);
 #ifdef SOFTWARE_VERSION_505 || SOFTWARE_VERSION_NA
 extern eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, void* arg, int priority);
 #endif
-#if defined(SOFTWARE_VERSION_672) || defined(SOFTWARE_VERSION_702) || defined(SOFTWARE_VERSION_755) || defined(SOFTWARE_VERSION_900) || defined(SOFTWARE_VERSION_1100)
+#if defined(SOFTWARE_VERSION_672) || defined(SOFTWARE_VERSION_702) || defined(SOFTWARE_VERSION_755) || defined(SOFTWARE_VERSION_900) || defined(SOFTWARE_VERSION_1100) || defined(SOFTWARE_VERSION_1202) 
 extern eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, const char* unk, void* arg, int priority);
 #endif
 extern void (*eventhandler_deregister)(eventhandler_list* a, eventhandler_entry* b);
@@ -63,7 +63,7 @@ extern eventhandler_list* (*eventhandler_find_list)(const char* name);
 #define EVENTHANDLER_REGISTER(name, func, arg, priority)		\
 	eventhandler_register(NULL, #name, func, arg, priority)
 #endif
-#if defined(SOFTWARE_VERSION_672) || defined(SOFTWARE_VERSION_702) || defined(SOFTWARE_VERSION_755)  || defined(SOFTWARE_VERSION_900) || defined(SOFTWARE_VERSION_1100)
+#if defined(SOFTWARE_VERSION_672) || defined(SOFTWARE_VERSION_702) || defined(SOFTWARE_VERSION_755)  || defined(SOFTWARE_VERSION_900) || defined(SOFTWARE_VERSION_1100) || defined(SOFTWARE_VERSION_1202) 
 #define EVENTHANDLER_REGISTER(name, func, arg, priority)		\
 	eventhandler_register(NULL, #name, func, "", arg, priority)
 #endif
@@ -78,7 +78,6 @@ do {									\
 
 /* Proc */
 extern proc* allproc;
-extern int (*proc_kill)(proc * p, char* why);
 extern int (*proc_rwmem)(proc * p, uio * uio);
 extern int (*create_thread)(thread * td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp);
 
@@ -118,16 +117,12 @@ extern int (*vm_map_findspace)(vm_map * map, uint64_t start, uint64_t length, ui
 extern int (*vm_map_delete)(vm_map * map, uint64_t start, uint64_t end);
 extern int (*vm_map_insert)(vm_map * map, uint64_t object, uint64_t offset, uint64_t start, uint64_t end, int prot, int max, int cow);
 extern int (*vm_map_protect)(vm_map * map, uint64_t start, uint64_t end, int new_prot, bool set_max);
-extern void (*vmspace_free)(vmspace * vm);
 
 /* Mutex Locks */
-extern void (*mtx_init)(mtx * m, const char* name, const char* type, int opts);
-extern void (*mtx_destroy)(mtx * mutex);
 extern void (*mtx_lock_flags)(mtx * mutex, int flags);
 extern void (*mtx_unlock_flags)(mtx * mutex, int flags);
 extern void (*_mtx_lock_flags)(mtx * mutex, int flags, const char* file, int line);
 extern void (*_mtx_unlock_flags)(mtx * mutex, int flags, const char* file, int line);
-
 extern int (*sx_xlock)(struct sx* sx, int opts);
 extern int (*sx_xunlock)(struct sx* sx);
 

@@ -298,7 +298,11 @@ int DriverProc::Jailbreak(caddr_t data, thread* td)
 	cred->cr_prison = *(prison**)prison0;
 	fd->fd_rdir = fd->fd_jdir = *(vnode**)rootvnode;
 	if (args->NullRandPath)
+	{
+		selectedProc->p_randomized_path_len = 0;
 		memset(selectedProc->p_randomized_path, 0, 0x100);
+	}
+		
 
 	return 0;
 }
@@ -333,6 +337,7 @@ int DriverProc::RestoreJail(caddr_t data, thread* td)
 	cred->cr_prison = (prison*)args->Jail.cr_prison;
 	fd->fd_jdir = (vnode*)args->Jail.fd_jdir;
 	fd->fd_rdir = (vnode*)args->Jail.fd_rdir;
+	selectedProc->p_randomized_path_len = strlen(selectedProc->p_randomized_path);
 	strcpy(selectedProc->p_randomized_path, args->Jail.RandomizedPath);
 
 	return 0;

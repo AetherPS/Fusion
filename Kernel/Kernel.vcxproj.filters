@@ -113,6 +113,9 @@
     <ClCompile Include="source\Watcher.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="source\DipSwitchSpoofer.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Asm.h">
@@ -200,6 +203,9 @@
       <Filter>include\Misc</Filter>
     </ClInclude>
     <ClInclude Include="include\Watcher.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DipSwitchSpoofer.h">
       <Filter>include\Misc</Filter>
     </ClInclude>
   </ItemGroup>

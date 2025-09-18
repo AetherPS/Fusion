@@ -385,10 +385,11 @@ TYPE_FIELD(int p_pid, 0xB0);
 TYPE_FIELD(struct vmspace* p_vmspace, 0x168);
 TYPE_FIELD(struct dynlib* p_dynlib, 0x340);
 TYPE_FIELD(char titleId[10], 0x390);
+TYPE_FIELD(char contentid[64], 0x3D4);
 TYPE_FIELD(char p_comm[32], 0x454);
 TYPE_FIELD(char p_elfpath[1024], 0x474);
-TYPE_FIELD(int p_randomized_path_len, 0x7F4);
-TYPE_FIELD(char p_randomized_path[0x100], 0x7F8);
+TYPE_FIELD(int p_randomized_path_len, 0x8A8);
+TYPE_FIELD(char p_randomized_path[0x100], 0x8AC);
 TYPE_END();
 
 TYPE_BEGIN(struct thread, 0x3D8); // XXX: random, don't use directly without fixing it

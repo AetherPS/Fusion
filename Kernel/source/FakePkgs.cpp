@@ -129,17 +129,13 @@ void FakePkgs::InstallShellCorePatches()
 		return;
 	}
 
-	uint8_t xor__eax_eax[5] = { 0x31, 0xC0, 0x90, 0x90, 0x90 };
+	uint8_t xor__eax_eax[5] = { 0x31, 0xC0, 0xEB, 0x01 };
 
 	uint8_t checkData[5];
 	ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x10722D1), checkData, sizeof(checkData), false);
 
-	hexdump(checkData, sizeof(checkData), true);
-
 	if (checkData[0] == 0x74 && checkData[1] == 0x2D)
 	{
-		kprintf("Patching for Devkit.\n");
-
 		// sceKernelIsGenuineCEX
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x174E94), xor__eax_eax, sizeof(xor__eax_eax), true);
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + 0x866B44), xor__eax_eax, sizeof(xor__eax_eax), true);
@@ -173,8 +169,6 @@ void FakePkgs::InstallShellCorePatches()
 	}
 	else
 	{
-		kprintf("Patching for Retail.\n");
-
 		// sceKernelIsGenuineCEX
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX1), xor__eax_eax, sizeof(xor__eax_eax), true);
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX2), xor__eax_eax, sizeof(xor__eax_eax), true);
@@ -188,7 +182,7 @@ void FakePkgs::InstallShellCorePatches()
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode4), xor__eax_eax, sizeof(xor__eax_eax), true);
 
 		// Enable fake pkg.
-		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_enableFpkg), (void*)"\xE9\x98\x00\x00\x00\x90\x90\x90", 8, true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_enableFpkg), (void*)"\xE9\x98\x00\x00\x00", 8, true);
 
 		// fake to free.
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_fakeText), (void*)"free", 4, true);
@@ -196,12 +190,10 @@ void FakePkgs::InstallShellCorePatches()
 		// Enable mounting data into sandboxes.
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_mountDataIntoSandbox), (void*)"\x31\xC0\xFF\xC0\x90", 5, true);
 
-		// Disable Update Check.
-		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disableUpdateChecks), (void*)"\x48\x31\xC0\xC3", 4, true);
-
 		// Patch Pkg Update Checks
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck1), (void*)"\xEB", 1, true);
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck2), (void*)"\xEB", 1, true);
+		// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck3), (void*)"\x48\x31\xC0\xC3", 1, true);
 	}
 
 #ifdef DEBUG
@@ -260,17 +252,6 @@ void FakePkgs::InstallShellUIPatches(proc* p)
 
 			// sceKernelGetUtokenStoreModeForRcmgr
 			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libKernelBase + sceKernelGetUtokenStoreModeForRcmgr), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
-
-			// sceKernelIsDevKit
-			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libKernelBase + 0x1C640), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
-		}
-
-		if (strstr(info.name, "libSceDipsw.sprx"))
-		{
-			auto libSceDipswBase = (uint64_t)info.segmentInfo[0].baseAddr;
-
-			// sceKernelIsDevelopmentMode
-			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libSceDipswBase + 0x820), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
 		}
 	}
 #ifdef DEBUG
