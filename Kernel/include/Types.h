@@ -700,6 +700,22 @@ struct dynlib_get_obj_member {
 
 typedef STAILQ_HEAD(Struct_Objlist, Struct_Objlist_Entry) Objlist;
 
+TYPE_BEGIN(struct dynlib_obj, 0x180);
+// SLISTHEAD @ 0x0
+TYPE_FIELD(char* path, 0x8);
+TYPE_FIELD(int ref_count, 0x20);
+TYPE_FIELD(int dl_ref_count, 0x24);
+TYPE_FIELD(int handle, 0x28);
+TYPE_FIELD(caddr_t map_base, 0x30);
+TYPE_FIELD(size_t map_size, 0x38);
+TYPE_FIELD(size_t text_size, 0x40);
+TYPE_FIELD(caddr_t database, 0x48);
+TYPE_FIELD(size_t data_size, 0x50);
+TYPE_FIELD(size_t vaddr_base, 0x68);
+TYPE_FIELD(caddr_t realloc_base, 0x70);
+TYPE_FIELD(caddr_t entry, 0x78);
+TYPE_END();
+
 // Thank you flatz for 1.62
 // Thank you ChendoChap for fixing newer fw's
 struct dynlib

@@ -3,6 +3,10 @@
 
 void PrintFeatureFlags()
 {
+#ifdef DEBUG
+	kprintf("\n!! DEBUG BUILD !!\n\n");
+#endif
+
 	kprintf("Features: \n");
 #ifdef FF_HomeBrew
 	kprintf("   Homebrew\n");
