@@ -6,6 +6,7 @@
 #include "DevActSpoofer.h"
 #include "LibraryReplacer.h"
 #include <DipSwitchSpoofer.h>
+#include <TTYRedirector.h>
 
 uint8_t* KernelBase;
 
@@ -68,6 +69,12 @@ extern "C" int _main(uint64_t* p)
 	kprintf("Starting Fuse...");
 	auto fuseResult = fuse_loader(NULL, 0, NULL);
 	kprintf("Done. Result: %d\n", fuseResult);
+#endif
+
+#ifdef FF_TTYRedirect
+	kprintf("Initializing TTY Redirector...");
+	TTYRedirector::Init();
+	kprintf("Done.\n");
 #endif
 
 	NotifyCustom("https://imgur.com/y8JEqtu.png", "Fusion 3 Loaded\nMade by Master Odin & Faultz");

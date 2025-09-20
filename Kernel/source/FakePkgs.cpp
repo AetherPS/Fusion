@@ -193,7 +193,7 @@ void FakePkgs::InstallShellCorePatches()
 		// Patch Pkg Update Checks
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck1), (void*)"\xEB", 1, true);
 		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck2), (void*)"\xEB", 1, true);
-		// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck3), (void*)"\x48\x31\xC0\xC3", 1, true);
+		ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck3), (void*)"\x48\x31\xC0\xC3", 4, true);
 	}
 
 #ifdef DEBUG

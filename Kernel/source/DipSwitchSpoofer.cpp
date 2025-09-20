@@ -23,7 +23,9 @@ int DipSwitchSpoofer::DipSwitchOnIoctlHook(cdev* dev, unsigned long cmd, caddr_t
 		switch (*(uint16_t*)data)
 		{
 		case 0:			// IsDevelopmentMode
-			// case 1:			// Don't use DEVLAN
+		case 1:			// Don't use DEVLAN
+		case 95:		// UNK - CP box
+		case 102:		// Disable DEV USB?
 			*(int*)(data + 4) = 1;
 			return 0;
 

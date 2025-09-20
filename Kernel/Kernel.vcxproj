@@ -156,6 +156,7 @@
     <ClCompile Include="source\ProcessUtils.cpp" />
     <ClCompile Include="source\Resolver.cpp" />
     <ClCompile Include="source\SystemCalls.cpp" />
+    <ClCompile Include="source\TTYRedirector.cpp" />
     <ClCompile Include="source\Watcher.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +188,7 @@
     <ClInclude Include="include\Sparse.h" />
     <ClInclude Include="include\SystemCalls.h" />
     <ClInclude Include="include\table64.h" />
+    <ClInclude Include="include\TTYRedirector.h" />
     <ClInclude Include="include\Types.h" />
     <ClInclude Include="include\Watcher.h" />
   </ItemGroup>

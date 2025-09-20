@@ -14,5 +14,6 @@
 // #define FF_TrapHooks
 #define FF_DevAct
 #define FF_Dipsw
+#define FF_TTYRedirect
 
 void PrintFeatureFlags();

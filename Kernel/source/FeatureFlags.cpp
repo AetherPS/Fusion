@@ -32,4 +32,7 @@ void PrintFeatureFlags()
 #ifdef FF_Dipsw
 	kprintf("   Dip Switch Spoofer\n");
 #endif
+#ifdef FF_TTYRedirect
+	kprintf("   TTY Redirector\n");
+#endif
 }
