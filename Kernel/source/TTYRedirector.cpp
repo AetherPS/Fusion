@@ -1,13 +1,15 @@
 #include "Common.h"
 #include "TTYRedirector.h"
 
+// Credits: https://github.com/OpenOrbis/mira-project
+
 void* TTYRedirector::DeciTTYWriteOriginal = 0;
 
 void TTYRedirector::Init()
 {
     cpu_disable_wp();
-    DeciTTYWriteOriginal = *(void**)(KernelBase + 0x01A7ED98);
-    *(void**)(KernelBase + 0x01A7ED98) = reinterpret_cast<void*>(OnDeciTTYWrite);
+    DeciTTYWriteOriginal = *(void**)(KernelBase + addr_DeciTTYWriteHook);
+    *(void**)(KernelBase + addr_DeciTTYWriteHook) = reinterpret_cast<void*>(OnDeciTTYWrite);
     cpu_enable_wp();
 }
 
@@ -21,11 +23,11 @@ int TTYRedirector::OnDeciTTYWrite(struct cdev* dev, struct uio* uio, int ioflag)
     struct uio* cloned_uio = NULL;
     int ret;
 
-    auto cloneuio = (struct uio* (*)(struct uio* uiop))(KernelBase + 0x44E7E0);
-    auto console_write = (int(*)(struct cdev* dev, struct uio* uio, int ioflag))(KernelBase + 0x2D6EB0);
-    auto deci_tty_write = (int(*)(struct cdev* dev, struct uio* uio, int ioflag))(KernelBase + 0x48CDE0);
-    auto M_IOV = (struct malloc_type*)(KernelBase + 0x1A792C0);
-    auto console_cdev = (struct cdev**)(KernelBase + 0x21F1128);
+    auto cloneuio = (struct uio* (*)(struct uio* uiop))(KernelBase + addr_cloneuio);
+    auto console_write = (int(*)(struct cdev* dev, struct uio* uio, int ioflag))(KernelBase + addr_console_write);
+    auto deci_tty_write = (int(*)(struct cdev* dev, struct uio* uio, int ioflag))(KernelBase + addr_deci_tty_write);
+    auto M_IOV = (struct malloc_type*)(KernelBase + addr_M_IOV);
+    auto console_cdev = (struct cdev**)(KernelBase + addr_console_cdev);
 
     cloned_uio = cloneuio(uio);
 
