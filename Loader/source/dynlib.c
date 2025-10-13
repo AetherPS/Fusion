@@ -42,6 +42,10 @@ void ResolveDynlib()
 	sys_dynlib_dlsym(handle, "sceKernelDebugOutText", &sceKernelDebugOutText);
 	sys_dynlib_dlsym(handle, "sceKernelOpen", &sceKernelOpen);
 	sys_dynlib_dlsym(handle, "sceKernelClose", &sceKernelClose);
+	sys_dynlib_dlsym(handle, "sceKernelWrite", &sceKernelWrite);
+	sys_dynlib_dlsym(handle, "sceKernelUnlink", &sceKernelUnlink);
+	sys_dynlib_dlsym(handle, "sceKernelMkdir", &sceKernelMkdir);
+	sys_dynlib_dlsym(handle, "sceKernelLoadStartModule", &sceKernelLoadStartModule);
 	sys_dynlib_dlsym(handle, "ioctl", &ioctl);
 	sys_dynlib_dlsym(handle, "sceKernelStat", &sceKernelStat);
 

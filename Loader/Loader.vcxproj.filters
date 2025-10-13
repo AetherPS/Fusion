@@ -18,6 +18,9 @@
     <None Include="resources\Kernel.elf">
       <Filter>resources</Filter>
     </None>
+    <None Include="resources\libFusionSidecar.sprx">
+      <Filter>resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\asm.s">
@@ -33,6 +36,9 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\kernel.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sidecar.c">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,6 +59,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\kernel.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sidecar.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -53,7 +53,6 @@ int LibraryReplacer::sys_dynlib_load_prxHook(thread* td, dynlib_load_prx_args* a
 
 void LibraryReplacer::Init()
 {
-	kern_mkdir(CurrentThread(), "/data/Fusion", 0, 0777);
 	kern_mkdir(CurrentThread(), "/data/Fusion/ReplacementLibs", 0, 0777);
 	kern_mkdir(CurrentThread(), "/data/Fusion/ReplacementLibs/Any", 0, 0777);
 

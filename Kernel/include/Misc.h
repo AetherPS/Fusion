@@ -22,30 +22,48 @@ enum SceNotificationRequestType
 	AddressingSystemNotificationWithUserName = 16,
 	AddressingSystemNotificationWithUserId = 17,
 
-	UNK_1 = 100,
+	Debug = 100,
 	TrcCheckNotificationRequest = 101,
 	NpDebugNotificationRequest = 102,
-	UNK_2 = 102,
+	WebDebug = 102,
+	UNK_103 = 103,
 };
 
-typedef struct
+#pragma pack(push, 1)
+struct SceNotificationRequest
 {
-	enum SceNotificationRequestType type;
-	int reqId;
-	int priority;
-	int msgId;
-	int targetId;
-	int userId;
-	int unk1;
-	int unk2;
-	int appId;
-	int errorNum;
-	int unk3;
-	unsigned char useIconImageUri;
-	char message[1024];
-	char iconUri[1024];
-	char unk[1024];
-} SceNotificationRequest;
+	enum SceNotificationRequestType Type;   // 0x00
+	uint32_t ReqId;            				// 0x04
+	uint32_t Priority;						// 0x08
+	uint32_t MsgId;            				// 0x0C
+	uint32_t TargetId;						// 0x10
+	uint32_t UserId;						// 0x14
+	uint32_t unk_18;						// 0x18
+	uint32_t unk_1C;						// 0x1C
+	uint32_t AppId;            				// 0x20
+	uint32_t ErrorNumber;					// 0x24
+	uint32_t Attribute;						// 0x28
+	uint8_t  HasIcon;						// 0x2C
+	union
+	{
+		struct
+		{
+			char Message[0x400];			// 0x2D
+			char IconImageUri[0x800];		// 0x42D
+			char padding[0x3];
+		};
+
+		struct
+		{
+			char unk1[180];					// 0x2D
+			char unk2[180];					// 0xE1
+			char unk3[180];					// 0x195
+
+		};
+	};
+};
+#pragma pack(pop)
+static_assert(sizeof(SceNotificationRequest) == 0xC30, "Size of SceNotificationRequest is not 0xC30");
 
 int isprint(int ch);
 void hexdump(void* ptr, int buflen, bool showAddress);

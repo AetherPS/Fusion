@@ -1,4 +1,5 @@
 #include "common.h"
+#include "sidecar.h"
 
 extern uint8_t _binary_resources_Kernel_elf_start[];
 extern uint8_t _binary_resources_Kernel_elf_end[];
@@ -114,6 +115,9 @@ int _main(void)
 
 	klog("Installing Kernel ELF\n");
 	syscall(11, install_kernel, _binary_resources_Kernel_elf_start, _binary_resources_Kernel_elf_end - _binary_resources_Kernel_elf_start);
+
+	klog("Starting Sidecar\n");
+	InitSidecar();
 
 	klog("All Done\n");
 

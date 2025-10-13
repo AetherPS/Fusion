@@ -168,6 +168,15 @@ void InstallPatches()
 	kmem[0] = 0x90;
 	kmem[1] = 0x90;
 
+	// TargetId of Devkit.
+	*(uint8_t*)(KernelBase + addr_QAFlags + 0x3D) = 0x81;
+	*(uint8_t*)(KernelBase + addr_QAFlags + 0x3E) = 0x02;
+
+	// Enable UL/SL debugger
+	*(uint8_t*)(KernelBase + addr_QAFlags + 0x36) |= 0x4;
+	*(uint8_t*)(KernelBase + addr_QAFlags + 0x59) |= 0x2;
+	*(uint8_t*)(KernelBase + addr_QAFlags + 0x59) |= 0x1;
+
 #if defined(SOFTWARE_VERSION_900)
 
 	// remove panic: mpage
@@ -207,15 +216,6 @@ void InstallPatches()
 	kmem[5] = 0x00;
 	kmem[6] = 0x00;
 	kmem[7] = 0xC3;
-
-	// TargetId of Devkit.
-	*(uint8_t*)(KernelBase + 0x0221688D) = 0x81;
-	*(uint8_t*)(KernelBase + 0x0221688E) = 0x02;
-
-	// Enable UL/SL debugger
-	*(uint8_t*)(KernelBase + 0x02216850 + 0x36) |= 0x4;
-	*(uint8_t*)(KernelBase + 0x02216850 + 0x59) |= 0x2;
-	*(uint8_t*)(KernelBase + 0x02216850 + 0x59) |= 0x1;
 
 #elif defined(SOFTWARE_VERSION_1100)
 
@@ -308,15 +308,6 @@ void InstallPatches()
 	kmem[5] = 0x00;
 	kmem[6] = 0x00;
 	kmem[7] = 0xC3;
-
-	// TargetId of Devkit.
-	*(uint8_t*)(KernelBase + 0x021CC60D) = 0x81;
-	*(uint8_t*)(KernelBase + 0x021CC60E) = 0x02;
-
-	// Enable UL/SL debugger
-	*(uint8_t*)(KernelBase + 0x21CC5D0 + 0x36) |= 0x4;
-	*(uint8_t*)(KernelBase + 0x21CC5D0 + 0x59) |= 0x2;
-	*(uint8_t*)(KernelBase + 0x21CC5D0 + 0x59) |= 0x1;
 
 #endif
 

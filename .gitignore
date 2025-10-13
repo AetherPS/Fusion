@@ -40,8 +40,7 @@ bld/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
-900Release/
-1100Release/
+*Release/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

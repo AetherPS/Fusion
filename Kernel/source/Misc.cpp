@@ -45,17 +45,16 @@ void NotifyCustom(char* icon, const char* fmt, ...)
 	//Create full string from va list.
 	va_list args;
 	va_start(args, fmt);
-	vsprintf(buffer.message, fmt, args);
+	vsprintf(buffer.Message, fmt, args);
 	va_end(args);
 
 	//Populate the notify buffer.
-	buffer.type = SceNotificationRequestType::NotificationRequest; //this one is just a standard one and will print what ever is stored at the buffer.Message.
-	buffer.unk3 = 0;
-	buffer.useIconImageUri = 1; //Bool to use a custom uri.
-	buffer.targetId = -1; //Not sure if name is correct but is always set to -1.
-	strcpy(buffer.iconUri, icon); //Copy the uri to the buffer.
+	buffer.Type = SceNotificationRequestType::Debug;
+	buffer.Attribute = 0;
+	buffer.HasIcon = 1;
+	buffer.TargetId = -1;
+	strcpy(buffer.IconImageUri, icon);
 
-	//From user land we can call int64_t sceKernelSendNotificationRequest(int64_t unk1, char* Buffer, size_t size, int64_t unk2) which is a libkernel import.
 	SendNotificationRequest(false, &buffer, 3120, false);
 }
 

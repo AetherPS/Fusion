@@ -223,6 +223,8 @@ typedef mode_t SceKernelMode;
 #define SCE_KERNEL_O_WRONLY        0x0001 
 #define SCE_KERNEL_O_RDWR          0x0002
 
+#define SCE_KERNEL_O_CREAT		   0x0200
+
 TYPE_BEGIN(struct proc, 0x800); // XXX: random, don't use directly without fixing it
 TYPE_FIELD(struct proc* p_forw, 0);
 TYPE_FIELD(struct ucred* p_ucred, 0x40);

@@ -18,8 +18,11 @@ extern "C" int _main(uint64_t* p)
 	ResolveFunctions();
 	InstallPatches();
 
-	kprintf("Hello, World! We are now #Root.\n");
+	kprintf("Hello, World!\n");
 	PrintFeatureFlags();
+
+	// Ensure the fusion dir is made.
+	kern_mkdir(CurrentThread(), "/data/Fusion", 0, 0777);
 
 	kprintf("Initializing Watcher...");
 	Watcher::Init();
@@ -77,7 +80,7 @@ extern "C" int _main(uint64_t* p)
 	kprintf("Done.\n");
 #endif
 
-	NotifyCustom("https://imgur.com/y8JEqtu.png", "Fusion 3 Loaded\nMade by Master Odin & Faultz");
+	NotifyCustom("https://imgur.com/y8JEqtu.png", "Fusion %s Loaded\n%s", "3", "Uber haxor edition.");
 
 	return 0;
 }

@@ -1,3 +1,12 @@
 [submodule "External/FusionShared"]
 	path = External/FusionShared
 	url = https://github.com/AetherPS/FusionShared
+[submodule "External/libFusionDriver"]
+	path = External/libFusionDriver
+	url = https://github.com/AetherPS/libFusionDriver
+[submodule "External/StubMaker"]
+	path = External/StubMaker
+	url = https://github.com/OSM-Made/StubMaker
+[submodule "External/OrbisUtils2"]
+	path = External/OrbisUtils2
+	url = https://github.com/OSM-Made/OrbisUtils2

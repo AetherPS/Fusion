@@ -91,7 +91,7 @@
     <NMakeOutput>Fusion-900.bin</NMakeOutput>
     <NMakePreprocessorDefinitions>VERSION_900</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
-    <NMakeBuildCommandLine>wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl make VERSION=900 clean</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
@@ -142,6 +142,7 @@
     <None Include="Linker" />
     <None Include="Makefile" />
     <None Include="resources\Kernel.elf" />
+    <None Include="resources\libFusionSidecar.sprx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\asm.s" />
@@ -149,6 +150,7 @@
     <ClCompile Include="source\elf.c" />
     <ClCompile Include="source\kernel.c" />
     <ClCompile Include="source\main.c" />
+    <ClCompile Include="source\sidecar.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\asm.h" />
@@ -156,6 +158,7 @@
     <ClInclude Include="include\dynlib.h" />
     <ClInclude Include="include\elf.h" />
     <ClInclude Include="include\kernel.h" />
+    <ClInclude Include="include\sidecar.h" />
     <ClInclude Include="include\types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
