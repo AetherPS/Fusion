@@ -180,6 +180,29 @@ int open(const char* path, int flags, int mode, struct thread* td)
 	return (int)td->td_retval[0];
 }
 
+ssize_t read(int fd, const void* buf, size_t count, struct thread* td)
+{
+	struct sys_read_args {
+		uint64_t fd;
+		uint64_t buf;
+		uint64_t count;
+	};
+
+	td->td_retval[0] = 0;
+
+	sys_read_args uap;
+	uap.fd = fd;
+	uap.buf = (uint64_t)buf;
+	uap.count = count;
+
+	int errorno = ((int(*)(thread* td, sys_read_args* uap))sysvec->sv_table[3].sy_call)(td, &uap);
+	if (errorno)
+		return -errorno;
+
+	return (ssize_t)td->td_retval[0];
+}
+
+
 ssize_t write(int fd, const void* buf, size_t count, struct thread* td)
 {
 	struct sys_write_args {
@@ -188,7 +211,7 @@ ssize_t write(int fd, const void* buf, size_t count, struct thread* td)
 		uint64_t count;
 	};
 
-	auto sys_write = (int(*)(thread * td, sys_write_args * uap))sysvec->sv_table[4].sy_call;
+	auto sys_write = (int(*)(thread* td, sys_write_args* uap))sysvec->sv_table[4].sy_call;
 
 	td->td_retval[0] = 0;
 

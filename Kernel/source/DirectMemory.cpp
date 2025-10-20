@@ -1,5 +1,6 @@
 #include "Common.h"
 #include "DirectMemory.h"
+#include "Misc.h"
 
 Detour64* DirectMemory::OnDirectMemoryIoctlDetour;
 
@@ -15,7 +16,8 @@ int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t d
     {
     case 0x4008800A:
     {
-        size_t allocationSpace = 50 * 1024 * 1024;
+        int dmemAmount = GetTempDmemConfig();
+        size_t allocationSpace = dmemAmount * 1024 * 1024;
 
         *(uint64_t*)data -= allocationSpace;
 
@@ -38,6 +40,7 @@ int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t d
 
 void DirectMemory::Init()
 {
+    MakeTempDmemConfig();
     OnDirectMemoryIoctlDetour = new Detour64(KernelBase + addr_DirectMemoryHook, OnDirectMemoryIoctl);
 }
 

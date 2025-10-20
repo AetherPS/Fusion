@@ -206,12 +206,6 @@ bool GetSandboxPath(thread* td, char* sandboxPath)
 	return true;
 }
 
-int fileExists(char* filename)
-{
-	struct stat buffer;
-	return (stat(filename, &buffer) == 0);
-}
-
 void UnHideDriver(char* deviceName)
 {
 	auto shellcore = GetProcByName("SceSysCore");
@@ -255,4 +249,32 @@ void UnHideDriver(char* deviceName)
 	}
 
 	close(deviceHandle, td);
+}
+
+#define DMEM_CONFIG_PATH "/data/Fusion/DmemAmount.cfg"
+
+void MakeTempDmemConfig()
+{
+	int fd = open(DMEM_CONFIG_PATH, O_CREAT | O_WRONLY, 0777);
+
+	if (fd < 0)
+		return;
+
+	int dmemDefault = 50;
+	write(fd, &dmemDefault, sizeof(int));
+
+	close(fd);
+}
+
+int GetTempDmemConfig()
+{
+	int fd = open(DMEM_CONFIG_PATH, O_RDONLY, 0);
+	if (fd < 0)
+		return 50;
+
+	int dmemSize = 50;
+	read(fd, &dmemSize, sizeof(int));
+
+	close(fd);
+	return dmemSize;
 }

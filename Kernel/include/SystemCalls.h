@@ -52,6 +52,7 @@ int sys_dynlib_dlsym(thread* td, int32_t handle, const char* symbol, void** addr
 caddr_t sys_mmap(thread* td, caddr_t addr, size_t len, int prot, int flags, int fd, off_t pos);
 int sys_munmap(thread* td, caddr_t addr, size_t len);
 int open(const char* path, int flags, int mode, struct thread* td = CurrentThread());
+ssize_t read(int fd, const void* buf, size_t count, struct thread* td = CurrentThread());
 ssize_t write(int fd, const void* buf, size_t count, struct thread* td = CurrentThread());
 int close(int fd, struct thread* td = CurrentThread());
 int stat(char* path, struct stat* buf);
