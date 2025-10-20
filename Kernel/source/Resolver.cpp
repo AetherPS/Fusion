@@ -15,7 +15,8 @@ vm_map_t kernel_map;
 vm_offset_t(*kmem_alloc)(vm_map_t map, vm_size_t size);
 void(*kmem_free)(void* map, void* addr, size_t size) = nullptr;
 int (*vn_fullpath)(struct thread* td, struct vnode* vp, char** retbuf, char** freebuf) = nullptr;
-int (*fuse_loader)(void* m, int op, void* arg);
+int (*fuse_loader)(void* m, int op, void* arg) = nullptr;
+void (*dmamini_initialize_ioctl)() = nullptr;
 
 /* STD Lib */
 void* M_TEMP = 0;
@@ -118,6 +119,7 @@ void ResolveFunctions()
     NATIVE_RESOLVE(kmem_free);
     NATIVE_RESOLVE(vn_fullpath);
     NATIVE_RESOLVE(fuse_loader);
+	NATIVE_RESOLVE(dmamini_initialize_ioctl);
 
     /* STD Lib */
     NATIVE_RESOLVE(M_TEMP);

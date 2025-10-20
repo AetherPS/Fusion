@@ -177,6 +177,15 @@ void InstallPatches()
 	*(uint8_t*)(KernelBase + addr_QAFlags + 0x59) |= 0x2;
 	*(uint8_t*)(KernelBase + addr_QAFlags + 0x59) |= 0x1;
 
+	// Patch to remove devkit check in dmamini_initialize_ioctl
+	kmem = (uint8_t*)KernelBase + patch_dmamini0;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+
+	kmem = (uint8_t*)KernelBase + patch_dmamini1;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+
 #if defined(SOFTWARE_VERSION_900)
 
 	// remove panic: mpage
@@ -263,38 +272,16 @@ void InstallPatches()
 	kmem[4] = 0x90;
 	kmem[5] = 0x90;
 
-	char _mov_eax_1[] = { 0xB8, 0x01, 0x00, 0x00, 0x00 };
-
-	uint64_t kernelBase = (uint64_t)KernelBase;
-	uint64_t assistmode_patch_addrs[] = {
-		kernelBase + 0x75BF54,
-		kernelBase + 0x75C138,
-		kernelBase + 0x75D316,
-		kernelBase + 0x75E020,
-		kernelBase + 0x75E046,
-		kernelBase + 0x75E06C,
-		kernelBase + 0x75E092,
-		kernelBase + 0x75E0B8,
-		kernelBase + 0x75E0DE,
-		kernelBase + 0x75E104,
-		kernelBase + 0x75E12A,
-		kernelBase + 0x75E150,
-		kernelBase + 0x75E176,
-		kernelBase + 0x75E19C,
-		kernelBase + 0x75E1C2,
-		kernelBase + 0x75E1E8,
-		kernelBase + 0x75E20E,
-		kernelBase + 0x75E234,
-		kernelBase + 0x75E26A,
-		kernelBase + 0x75E290,
-		kernelBase + 0x75E2B6,
-		kernelBase + 0x75E2DC,
-	};
-
-	for (int i = 0; i < sizeof(assistmode_patch_addrs) / sizeof(assistmode_patch_addrs[0]); i++)
-	{
-		memcpy((void*)assistmode_patch_addrs[i], _mov_eax_1, sizeof(_mov_eax_1));
-	}
+	// Set sceKernelIsAssistMode to return true
+	kmem = (uint8_t*)KernelBase + 0x655360;
+	kmem[0] = 0x48;
+	kmem[1] = 0xC7;
+	kmem[2] = 0xC0;
+	kmem[3] = 0x01;
+	kmem[4] = 0x00;
+	kmem[5] = 0x00;
+	kmem[6] = 0x00;
+	kmem[7] = 0xC3;
 
 #elif defined(SOFTWARE_VERSION_1202)
 

@@ -41,7 +41,7 @@ void InitSidecar()
 	}
 
 	klog("sceKernelLoadStartModule\n");
-	auto handle = sceKernelLoadStartModule(SIDECAR_PATH, 0, 0, 0, 0, 0);
+	int handle = sceKernelLoadStartModule(SIDECAR_PATH, 0, 0, 0, 0, 0);
 	if (handle <= 0)
 	{
 		klog("Failed to load the Sidecar prx. %llX\n", handle);

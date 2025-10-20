@@ -8,6 +8,9 @@ void PrintFeatureFlags()
 #endif
 
 	kprintf("Features: \n");
+#ifdef FF_BETA
+	kprintf("   Beta Features Active!\n");
+#endif
 #ifdef FF_HomeBrew
 	kprintf("   Homebrew\n");
 #endif

@@ -1,5 +1,14 @@
 #pragma once
 
+extern uint8_t _binary_resources_Kernel_elf_start[];
+extern uint8_t _binary_resources_Kernel_elf_end[];
+
+struct installKernelArgs {
+	uint64_t sycall;
+	void* payload;
+	size_t psize;
+};
+
 void* M_TEMP;
 
 uint64_t kernel_getbase();
@@ -17,3 +26,5 @@ void(*kmem_free)(void* map, void* addr, size_t size);
 vm_map_t kernel_map;
 
 void kernel_resolve(uint64_t kernbase);
+int install_kernel(struct thread* td, struct installKernelArgs* args);
+void LoadKernel();

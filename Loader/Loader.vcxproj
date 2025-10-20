@@ -90,9 +90,9 @@
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion-900.bin</NMakeOutput>
     <NMakePreprocessorDefinitions>VERSION_900</NMakePreprocessorDefinitions>
-    <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
-    <NMakeBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeReBuildCommandLine>
+    <OutDir>$(SolutionDir)Build\</OutDir>
+    <NMakeBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl make VERSION=900 clean</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
@@ -103,9 +103,9 @@
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion-1202.bin</NMakeOutput>
     <NMakePreprocessorDefinitions>VERSION_1202</NMakePreprocessorDefinitions>
-    <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
-    <NMakeBuildCommandLine>wsl make VERSION=1202 &amp;&amp; wsl make VERSION=1202 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-1202.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make VERSION=1202 clean &amp;&amp; wsl make VERSION=1202 &amp;&amp; wsl make VERSION=1202 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-1202.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeReBuildCommandLine>
+    <OutDir>$(SolutionDir)Build\</OutDir>
+    <NMakeBuildCommandLine>wsl make VERSION=1202 &amp;&amp; wsl make VERSION=1202 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-1202.bin" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl make VERSION=1202 clean &amp;&amp; wsl make VERSION=1202 &amp;&amp; wsl make VERSION=1202 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-1202.bin" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl make VERSION=1202 clean</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
@@ -115,7 +115,7 @@
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion-900.bin</NMakeOutput>
     <NMakePreprocessorDefinitions>VERSION_900</NMakePreprocessorDefinitions>
-    <OutDir>$(SolutionDir)Build\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl make VERSION=900 clean</NMakeCleanCommandLine>

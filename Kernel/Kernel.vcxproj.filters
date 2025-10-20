@@ -119,6 +119,9 @@
     <ClCompile Include="source\TTYRedirector.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="source\Fusion.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Asm.h">
@@ -213,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="include\TTYRedirector.h">
       <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Fusion.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -31,5 +31,4 @@
 
 #include "DriverDefinitions.h"
 #include "FusionDriver.h"
-
-extern uint8_t* KernelBase;
+#include "Fusion.h"

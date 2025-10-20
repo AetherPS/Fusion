@@ -11,25 +11,17 @@
 #include <queue>
 #include <video_out.h>
 #include <map>
-#include <7z/7zExtractor.h>
-
 #include <KernelExt.h>
 
-// Orbis Utils
-#include <StringUtils.h>
+// libUtils
+#include <StringExt.h>
 #include <Logging.h>
 #include <Logger.h>
-#include <Detour.h>
-#include <DetourManager.h>
-#include <Patcher.h>
-#include <PatchManager.h>
-#include <Utilities.h>
-#include <SystemInterface.h>
-#include <Symbol.h>
+#include <FileUtils.h>
 #include <FileSystem.h>
+
+// lib7z
+#include <7zExtractor.h>
+
+// libAppCtrl
 #include <AppControl.h>
-
-using namespace OrbisUtils;
-
-#include "Embed.h"
-#include "Settings.h"
