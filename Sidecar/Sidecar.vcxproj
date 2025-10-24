@@ -147,6 +147,10 @@ if not exist "$(SolutionDir)External\libFusionDriver\Build\libFusionDriver.a" (
     $(SolutionDir)Scripts\BuildSolution.bat "$(SolutionDir)External\libFusionDriver\libFusionDriver.sln" "$(MSBuildBinPath)\MSBuild.exe"
 )
 
+if not exist "$(SolutionDir)External\StubMaker\libkernel_gen_stub.a" (
+    $(SolutionDir)External\StubMaker\build.bat"
+)
+
 
 </Command>
     </PreBuildEvent>

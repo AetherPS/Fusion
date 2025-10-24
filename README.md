@@ -1,4 +1,4 @@
-# Fusion
+# 🌀 Fusion
 
 Fusion is a lightweight HEN (Homebrew ENabler) and research utility designed for the PlayStation 4. It provides a minimal kernel driver that exposes essential kernel functionality such as jailbreaking and system modifications to userland processes.
 
