@@ -5,7 +5,7 @@ ODIR	:=	build
 SDIR	:=	source
 RDIR	:=  resources
 IDIRS	:=  -I../External/FusionShared -Iinclude
-CFLAGS	:=	$(IDIRS) -Os -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -DVERSION_$(VERSION)
+CFLAGS	:=	$(IDIRS) -Os -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -DSOFTWARE_VERSION=$(SOFTWARE_VERSION)
 SFLAGS	:=	-nostartfiles -nostdlib -march=btver2 -mtune=btver2
 LFLAGS	:=	-Xlinker -T Linker -Wl,--build-id=none -Wl,--gc-sections
 CFILES	:=	$(wildcard $(SDIR)/*.c)
@@ -13,7 +13,7 @@ SFILES	:=	$(wildcard $(SDIR)/*.s)
 RFILES  :=  $(shell find $(RDIR) -name \*)
 OBJS	:=	$(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(CFILES)) $(patsubst $(SDIR)/%.s, $(ODIR)/%.o, $(SFILES)) $(patsubst $(RDIR)/%, $(ODIR)/%.o, $(RFILES))
 
-TARGET = Fusion-$(VERSION).bin
+TARGET = Fusion-$(SOFTWARE_VERSION).bin
 
 $(TARGET): $(ODIR) $(OBJS)
 	$(CC) crt0.s $(ODIR)/*.o -o $(TARGET) $(CFLAGS) $(LFLAGS)

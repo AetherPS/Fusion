@@ -186,7 +186,7 @@ void InstallPatches()
 	kmem[0] = 0x90;
 	kmem[1] = 0x90;
 
-#if defined(VERSION_900)
+#if SOFTWARE_VERSION == 900
 
 	// remove panic: mpage
 	kmem = (uint8_t*)KernelBase + 0x884BE;

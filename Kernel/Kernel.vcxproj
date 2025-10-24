@@ -96,7 +96,7 @@
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'">
-    <NMakePreprocessorDefinitions>VERSION=900;VERSION_900;</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=900</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 
@@ -112,7 +112,7 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <IncludePath>$(ProjectDir)source;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'">
-    <NMakePreprocessorDefinitions>VERSION=1202;VERSION_1202;</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1202</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 
@@ -128,7 +128,7 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <IncludePath>$(SolutionDir)Kernel\source;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|x64'">
-    <NMakePreprocessorDefinitions>VERSION=1100;VERSION_1100;</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1100</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 

@@ -89,7 +89,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'">
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion-900.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>VERSION=900;VERSION_900</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=900</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
@@ -110,7 +110,7 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'">
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion-1202.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>VERSION=1202;VERSION_1202</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1202</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
@@ -131,7 +131,7 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|x64'">
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion-1100.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>VERSION=1100;VERSION_1100</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1100</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)

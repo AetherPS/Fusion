@@ -41,10 +41,9 @@ char* (*realloc)(void* addr, unsigned long size, void* mtp, int flags) = 0;
 void(*kprintf)(const char* fmt, ...) = nullptr;
 
 /* Event Handling */
-#ifdef VERSION_505 || VERSION_NA
+#if SOFTWARE_VERSION <= 505
 eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, void* arg, int priority);
-#endif
-#if defined(VERSION_672) || defined(VERSION_702) || defined(VERSION_755) || defined(VERSION_900) || defined(VERSION_1100) || defined(VERSION_1202) 
+#elif SOFTWARE_VERSION >= 672
 eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, const char* unk, void* arg, int priority);
 #endif
 void (*eventhandler_deregister)(eventhandler_list* a, eventhandler_entry* b);

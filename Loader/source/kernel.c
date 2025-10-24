@@ -70,11 +70,11 @@ int install_kernel(struct thread* td, struct installKernelArgs* args)
 
 	cpu_disable_wp();
 
-#if defined(VERSION_900)
+#if SOFTWARE_VERSION == 900
 	* (uint8_t*)(kernbase + 0x002714BD) = 0xEB;
 	*(uint8_t*)(kernbase + 0x0037BF3C) = VM_PROT_ALL;
 	*(uint8_t*)(kernbase + 0x0037BF44) = VM_PROT_ALL;
-#elif defined(VERSION_1202)
+#elif SOFTWARE_VERSION == 1202
 	* (uint8_t*)(kernbase + 0x002BD48D) = 0xEB;
 	*(uint8_t*)(kernbase + 0x00465AAC) = VM_PROT_ALL;
 	*(uint8_t*)(kernbase + 0x00465AB4) = VM_PROT_ALL;
