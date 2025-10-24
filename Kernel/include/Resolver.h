@@ -1,5 +1,4 @@
 #pragma once
-#include "Settings.h"
 #include "FakeSelfTypes.h"
 #include "FakePkgTypes.h"
 #include "Types.h"
@@ -42,10 +41,10 @@ extern char* (*realloc)(void* addr, unsigned long size, void* mtp, int flags);
 extern void(*kprintf)(const char* fmt, ...);
 
 /* Event Handling */
-#ifdef SOFTWARE_VERSION_505 || SOFTWARE_VERSION_NA
+#ifdef VERSION_505 || VERSION_NA
 extern eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, void* arg, int priority);
 #endif
-#if defined(SOFTWARE_VERSION_672) || defined(SOFTWARE_VERSION_702) || defined(SOFTWARE_VERSION_755) || defined(SOFTWARE_VERSION_900) || defined(SOFTWARE_VERSION_1100) || defined(SOFTWARE_VERSION_1202) 
+#if defined(VERSION_672) || defined(VERSION_702) || defined(VERSION_755) || defined(VERSION_900) || defined(VERSION_1100) || defined(VERSION_1202) 
 extern eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, const char* unk, void* arg, int priority);
 #endif
 extern void (*eventhandler_deregister)(eventhandler_list* a, eventhandler_entry* b);
@@ -60,11 +59,11 @@ extern eventhandler_list* (*eventhandler_find_list)(const char* name);
 	shutdown_pre_sync
 */
 
-#ifdef SOFTWARE_VERSION_505
+#ifdef VERSION_505
 #define EVENTHANDLER_REGISTER(name, func, arg, priority)		\
 	eventhandler_register(NULL, #name, func, arg, priority)
 #endif
-#if defined(SOFTWARE_VERSION_672) || defined(SOFTWARE_VERSION_702) || defined(SOFTWARE_VERSION_755)  || defined(SOFTWARE_VERSION_900) || defined(SOFTWARE_VERSION_1100) || defined(SOFTWARE_VERSION_1202) 
+#if defined(VERSION_672) || defined(VERSION_702) || defined(VERSION_755)  || defined(VERSION_900) || defined(VERSION_1100) || defined(VERSION_1202) 
 #define EVENTHANDLER_REGISTER(name, func, arg, priority)		\
 	eventhandler_register(NULL, #name, func, "", arg, priority)
 #endif

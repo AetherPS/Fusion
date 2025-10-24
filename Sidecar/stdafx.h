@@ -19,9 +19,15 @@
 #include <Logger.h>
 #include <FileUtils.h>
 #include <FileSystem.h>
+#include <Notify.h>
 
 // lib7z
 #include <7zExtractor.h>
 
 // libAppCtrl
 #include <AppControl.h>
+
+// libSysInt
+#include <SystemInterface.h>
+
+#include "Version.h"

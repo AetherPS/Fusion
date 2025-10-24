@@ -32,6 +32,3 @@ rebuild:
 
 clean:
 	rm -f $(TARGET) $(ODIR)/*.o
-
-copy:
-	objcopy -S -O binary $(TARGET) Fusion.bin

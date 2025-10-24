@@ -33,8 +33,8 @@ int _main(void)
 	klog("Installing Kernel ELF\n");
 	LoadKernel();
 
-	//klog("Starting Sidecar\n");
-	//InitSidecar();
+	klog("Starting Sidecar\n");
+	InitSidecar();
 
 	klog("All Done\n");
 

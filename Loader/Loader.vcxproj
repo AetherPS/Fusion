@@ -89,11 +89,19 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'">
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion-900.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>VERSION_900</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>VERSION=900;VERSION_900</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
-    <NMakeBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl make VERSION=900 clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
+
+xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
+
+xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories>
@@ -102,23 +110,40 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'">
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion-1202.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>VERSION_1202</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>VERSION=1202;VERSION_1202</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
-    <NMakeBuildCommandLine>wsl make VERSION=1202 &amp;&amp; wsl make VERSION=1202 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-1202.bin" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make VERSION=1202 clean &amp;&amp; wsl make VERSION=1202 &amp;&amp; wsl make VERSION=1202 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-1202.bin" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl make VERSION=1202 clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
+
+xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
+
+xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|x64'">
     <AdditionalSourcesToCopyMapping />
-    <NMakeOutput>Fusion-900.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>VERSION_900</NMakePreprocessorDefinitions>
+    <NMakeOutput>Fusion-1100.bin</NMakeOutput>
+    <NMakePreprocessorDefinitions>VERSION=1100;VERSION_1100</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
-    <NMakeBuildCommandLine>wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make VERSION=900 clean &amp;&amp; wsl make VERSION=900 &amp;&amp; wsl make VERSION=900 copy &amp;&amp; xcopy "$(ProjectDir)Fusion-900.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl make VERSION=900 clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
+
+xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
+
+xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />

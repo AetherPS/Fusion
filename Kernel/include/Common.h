@@ -4,7 +4,6 @@
 #include <stdarg.h>
 
 #include "FeatureFlags.h"
-#include "Settings.h"
 #include "Offsets.h"
 
 #include "Sparse.h"

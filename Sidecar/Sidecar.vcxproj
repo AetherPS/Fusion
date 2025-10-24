@@ -104,14 +104,14 @@
       <PreprocessorDefinitions>NDEBUG;VERSION_1202;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;$(SolutionDir)External\libUtils\libSysInt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStd>Cpp17</CppLanguageStd>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Link>
-      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lSysInt;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>py $(SolutionDir)Scripts\make_fself-3.py   $(OutputPath)$(TargetName).prx  $(OutputPath)$(TargetName).sprx
@@ -124,14 +124,14 @@ xcopy "$(OutputPath)$(TargetName).sprx" "$(SolutionDir)Loader\resources\" /K /D 
       <PreprocessorDefinitions>NDEBUG;VERSION_900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;$(SolutionDir)External\libUtils\libSysInt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStd>Cpp17</CppLanguageStd>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Link>
-      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lSysInt;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>py $(SolutionDir)Scripts\make_fself-3.py   $(OutputPath)$(TargetName).prx  $(OutputPath)$(TargetName).sprx
@@ -156,14 +156,14 @@ if not exist "$(SolutionDir)External\libFusionDriver\Build\libFusionDriver.a" (
       <PreprocessorDefinitions>NDEBUG;VERSION_1100;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\OrbisUtils2\OrbisUtils2;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;$(SolutionDir)External\libUtils\libSysInt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStd>Cpp17</CppLanguageStd>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Link>
-      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lSysInt;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>py $(SolutionDir)Scripts\make_fself-3.py   $(OutputPath)$(TargetName).prx  $(OutputPath)$(TargetName).sprx
@@ -185,6 +185,7 @@ xcopy "$(OutputPath)$(TargetName).sprx" "$(SolutionDir)Loader\resources\" /K /D 
     <ClInclude Include="Embed.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Embed.s">

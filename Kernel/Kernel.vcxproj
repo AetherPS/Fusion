@@ -97,9 +97,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'">
     <NMakePreprocessorDefinitions>VERSION=900;VERSION_900;</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>wsl make VERSION=900 &amp;&amp; xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make clean &amp;&amp; wsl make VERSION=900 &amp;&amp; xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl make clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+
+xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+
+xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
@@ -107,9 +113,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'">
     <NMakePreprocessorDefinitions>VERSION=1202;VERSION_1202;</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>wsl make VERSION=1202 &amp;&amp; xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make clean &amp;&amp; wsl make VERSION=1202 &amp;&amp; xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl make clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+
+xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+
+xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
@@ -117,9 +129,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|x64'">
     <NMakePreprocessorDefinitions>VERSION=1100;VERSION_1100;</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>wsl make VERSION=1100 &amp;&amp; wsl make copy VERSION=1100 &amp;&amp;  xcopy "$(ProjectDir)Fusion.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make clean &amp;&amp; wsl make VERSION=1100 &amp;&amp;  wsl make copy VERSION=1100 &amp;&amp;  xcopy "$(ProjectDir)Fusion.bin" "$(SolutionDir)Build\$(Configuration)" /K /D /H /Y</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl make clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+
+xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+
+xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>

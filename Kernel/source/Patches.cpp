@@ -186,7 +186,7 @@ void InstallPatches()
 	kmem[0] = 0x90;
 	kmem[1] = 0x90;
 
-#if defined(SOFTWARE_VERSION_900)
+#if defined(VERSION_900)
 
 	// remove panic: mpage
 	kmem = (uint8_t*)KernelBase + 0x884BE;
@@ -226,7 +226,7 @@ void InstallPatches()
 	kmem[6] = 0x00;
 	kmem[7] = 0xC3;
 
-#elif defined(SOFTWARE_VERSION_1100)
+#elif defined(VERSION_1100)
 
 	// remove panic: mpage
 	kmem = (uint8_t*)KernelBase + 0x36434E;
@@ -283,7 +283,7 @@ void InstallPatches()
 	kmem[6] = 0x00;
 	kmem[7] = 0xC3;
 
-#elif defined(SOFTWARE_VERSION_1202)
+#elif defined(VERSION_1202)
 
 	// Set sceKernelIsAssistMode to return true
 	kmem = (uint8_t*)KernelBase + 0x655620;
