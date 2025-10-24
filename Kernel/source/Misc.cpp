@@ -255,7 +255,15 @@ void UnHideDriver(char* deviceName)
 
 void MakeTempDmemConfig()
 {
-	int fd = open(DMEM_CONFIG_PATH, O_CREAT | O_WRONLY, 0777);
+	int fd = open(DMEM_CONFIG_PATH, O_RDONLY, 0);
+
+	if (fd)
+	{
+		close(fd);
+		return;
+	}
+
+	fd = open(DMEM_CONFIG_PATH, O_CREAT | O_WRONLY, 0777);
 
 	if (fd < 0)
 		return;

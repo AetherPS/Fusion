@@ -12,6 +12,22 @@
 
 uint8_t* KernelBase;
 
+Detour32* sceKernelCheckDipswDetour = nullptr;
+int sceKernelCheckDipswHook(unsigned int dipswitch)
+{
+	switch (dipswitch)
+	{
+	case 0:			// IsDevelopmentMode
+		return 1;
+
+	case 2:			// IsAssistMode
+		return 0;
+		
+	default:
+		return sceKernelCheckDipswDetour->Invoke<int>(dipswitch);
+	}
+}
+
 void InitFusion()
 {
 	// Resolve the Kernel Base.
@@ -29,6 +45,7 @@ void InitFusion()
 	kprintf("Done.\n");
 
 #ifdef FF_BETA
+	sceKernelCheckDipswDetour = new Detour32(&sceKernelCheckDipswDetour, KernelBase + 0x0655B80, sceKernelCheckDipswHook);
 	dmamini_initialize_ioctl();
 #endif
 

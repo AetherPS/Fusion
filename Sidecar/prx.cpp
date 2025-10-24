@@ -3,8 +3,6 @@
 
 #include "Embed.h"
 
-#define FUSION_WELCOME_MSG "Fusion %s Loaded\n%s"
-#define FUSION_EDITION "Uber haxor edition."
 
 #define ORBIS_TITLEID "ORBS30000"
 #define FTP_TITLEID "OFTP10000"
@@ -47,7 +45,7 @@ extern "C"
 		// Remove the temp prx.
 		sceKernelUnlink("/data/Fusion/libFusionSidecar.sprx");
 
-		Notify(FUSION_WELCOME_MSG, "3", FUSION_EDITION);
+		Notify("Fusion 3 Loaded\n%s", "Uber haxor edition.");
 		
 		// Exit the Web Browser/Bluray Player
 		// ExitGraceful();
