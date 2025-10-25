@@ -3,7 +3,7 @@ AS        	:=    g++
 OBJCOPY   	:=    objcopy
 ODIR    	:=    build
 SDIR    	:=    source
-IDIRS    	:=    -I../External/FusionShared -Iinclude
+IDIRS    	:=    -I../Shared -Iinclude -I../External/FusionShared
 CFLAGS    	:=    $(IDIRS) -O3 -s -w -std=gnu++11 -ffunction-sections -fdata-sections -fno-builtin -fno-exceptions -fno-asynchronous-unwind-tables -nostdlib -w -masm=intel -march=btver2 -m64 -mabi=sysv -mcmodel=small -mstackrealign -fPIE -DSOFTWARE_VERSION=$(SOFTWARE_VERSION) -DKERNELDRIVER -D_KERNEL
 LFLAGS    	:=    -Xlinker -T Linker -Wl,--build-id=none -mstackrealign -pie -Wl,--gc-sections
 SFLAGS  	:=    -nostdlib -masm=intel -march=btver2 -m64 -mabi=sysv

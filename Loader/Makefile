@@ -4,7 +4,7 @@ OBJCOPY	:=	objcopy
 ODIR	:=	build
 SDIR	:=	source
 RDIR	:=  resources
-IDIRS	:=  -I../External/FusionShared -Iinclude
+IDIRS	:=  -I../Shared -Iinclude -I../External/FusionShared
 CFLAGS	:=	$(IDIRS) -Os -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -DSOFTWARE_VERSION=$(SOFTWARE_VERSION)
 SFLAGS	:=	-nostartfiles -nostdlib -march=btver2 -mtune=btver2
 LFLAGS	:=	-Xlinker -T Linker -Wl,--build-id=none -Wl,--gc-sections

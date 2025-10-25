@@ -7,16 +7,16 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 {
 	switch (cmd)
 	{
-	case CMD_PROC_MODULE_LIST:
+	case CMD_PROC_MODULE_LIST: // Deprecated, use sceDebugGetModuleList
 		return GetProccessModuleList(data, td);
 
-	case CMD_PROC_READ_WRITE_MEMORY:
+	case CMD_PROC_READ_WRITE_MEMORY: // Deprecated, use sceDebugReadProcessMemory or sceDebugWriteProcessMemory
 		return ProcessReadWrite(data, td);
 
-	case CMD_PROC_ALLOC_MEMORY:
+	case CMD_PROC_ALLOC_MEMORY: // Deprecated, use sceDebugCreateScratchExecutableArea or sceDebugDestroyScratchDataArea
 		return ProcessAlloc(data, td);
 
-	case CMD_PROC_FREE_MEMORY:
+	case CMD_PROC_FREE_MEMORY: // Deprecated, use sceDebugDestroyScratchExecutableArea or sceDebugDestroyScratchDataArea
 		return ProcessFree(data);
 
 	case CMD_PROC_START_THREAD:
@@ -31,7 +31,7 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 	case CMD_PROC_JAIL:
 		return RestoreJail(data, td);
 
-	case CMD_PROC_SANDBOX_PATH:
+	case CMD_PROC_SANDBOX_PATH: // Can probably be removed.
 		return SandBoxPath(data, td);
 
 	default:

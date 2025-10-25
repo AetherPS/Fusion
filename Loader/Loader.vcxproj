@@ -102,7 +102,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
 
 xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories>
     </PublicIncludeDirectories>
@@ -124,7 +124,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
 xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 </NMakeCleanCommandLine>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
   </PropertyGroup>
@@ -144,7 +144,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
 
 xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
   </PropertyGroup>

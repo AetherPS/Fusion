@@ -154,6 +154,8 @@ void InstallPatches()
 	kmem[0] = 0xEB;
 	kmem[1] = 0x3B;
 
+	// ============================== DECI Patches ==============================
+
 	// skip devkit/testkit/dipsw check in fuse_loader CreditL LM
 	kmem = (uint8_t*)KernelBase + patch_fuseLoader;
 	kmem[0] = 0xEB;
@@ -186,6 +188,31 @@ void InstallPatches()
 	kmem[0] = 0x90;
 	kmem[1] = 0x90;
 
+	// Patch sceSblACMgrIsDebuggerProcess to always return true
+	kmem = (uint8_t*)KernelBase + patch_isDebuggerProcess;
+	kmem[0] = 0x48;
+	kmem[1] = 0xC7;
+	kmem[2] = 0xC0;
+	kmem[3] = 0x01;
+	kmem[4] = 0x00;
+	kmem[5] = 0x00;
+	kmem[6] = 0x00;
+	kmem[7] = 0xC3;
+
+	// patch sceKernelIsAssistMode to always return true in mdbg_basic_callback
+	uint64_t mdbgAssistModePatches[] = offsets_mdbgAssistMode;
+	for (int i = 0; i < sizeof(mdbgAssistModePatches) / sizeof(uint64_t); i++)
+	{
+		kmem = (uint8_t*)KernelBase + patch_isAssistMode + mdbgAssistModePatches[i];
+		kmem[0] = 0xB8;
+		kmem[1] = 0x01;
+		kmem[2] = 0x00;
+		kmem[3] = 0x00;
+		kmem[4] = 0x00;
+	}
+
+	// ==========================================================================
+
 #if SOFTWARE_VERSION == 900
 
 	// remove panic: mpage
@@ -214,17 +241,6 @@ void InstallPatches()
 	kmem[3] = 0x90;
 	kmem[4] = 0x90;
 	kmem[5] = 0x90;
-
-	// Set sceKernelIsAssistMode to return true
-	kmem = (uint8_t*)KernelBase + 0x656170;
-	kmem[0] = 0x48;
-	kmem[1] = 0xC7;
-	kmem[2] = 0xC0;
-	kmem[3] = 0x01;
-	kmem[4] = 0x00;
-	kmem[5] = 0x00;
-	kmem[6] = 0x00;
-	kmem[7] = 0xC3;
 
 #elif defined(VERSION_1100)
 
@@ -271,30 +287,6 @@ void InstallPatches()
 	kmem[3] = 0x90;
 	kmem[4] = 0x90;
 	kmem[5] = 0x90;
-
-	// Set sceKernelIsAssistMode to return true
-	kmem = (uint8_t*)KernelBase + 0x655360;
-	kmem[0] = 0x48;
-	kmem[1] = 0xC7;
-	kmem[2] = 0xC0;
-	kmem[3] = 0x01;
-	kmem[4] = 0x00;
-	kmem[5] = 0x00;
-	kmem[6] = 0x00;
-	kmem[7] = 0xC3;
-
-#elif defined(VERSION_1202)
-
-	// Set sceKernelIsAssistMode to return true
-	kmem = (uint8_t*)KernelBase + 0x655620;
-	kmem[0] = 0x48;
-	kmem[1] = 0xC7;
-	kmem[2] = 0xC0;
-	kmem[3] = 0x01;
-	kmem[4] = 0x00;
-	kmem[5] = 0x00;
-	kmem[6] = 0x00;
-	kmem[7] = 0xC3;
 
 #endif
 

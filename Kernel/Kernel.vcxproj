@@ -107,7 +107,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IncludePath>$(ProjectDir)source;$(IncludePath)</IncludePath>
   </PropertyGroup>
@@ -123,7 +123,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IncludePath>$(SolutionDir)Kernel\source;$(IncludePath)</IncludePath>
   </PropertyGroup>
@@ -139,7 +139,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IncludePath>$(SolutionDir)Kernel\source;$(IncludePath)</IncludePath>
   </PropertyGroup>
