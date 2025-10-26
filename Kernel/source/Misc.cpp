@@ -251,19 +251,28 @@ void UnHideDriver(char* deviceName)
 	close(deviceHandle, td);
 }
 
+bool DoesFileExist(const char* path)
+{
+	int fd = open(path, O_RDONLY, 0);
+	if (fd < 0)
+		return false;
+	close(fd);
+	return true;
+}
+
+int MkDir(const char* path, int mode)
+{
+	return kern_mkdir(CurrentThread(), (char*)path, 0, mode);
+}
+
 #define DMEM_CONFIG_PATH "/data/Fusion/DmemAmount.cfg"
 
 void MakeTempDmemConfig()
 {
-	int fd = open(DMEM_CONFIG_PATH, O_RDONLY, 0);
-
-	if (fd)
-	{
-		close(fd);
+	if (DoesFileExist(DMEM_CONFIG_PATH))
 		return;
-	}
 
-	fd = open(DMEM_CONFIG_PATH, O_CREAT | O_WRONLY, 0777);
+	int fd = open(DMEM_CONFIG_PATH, O_CREAT | O_WRONLY, 0777);
 
 	if (fd < 0)
 		return;

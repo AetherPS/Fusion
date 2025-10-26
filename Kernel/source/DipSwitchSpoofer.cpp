@@ -2,6 +2,7 @@
 #include "DipSwitchSpoofer.h"
 
 Detour64* DipSwitchSpoofer::DipSwitchOnIoctlDetour;
+Detour32* DipSwitchSpoofer::sceKernelCheckDipswDetour;
 
 int DipSwitchSpoofer::DipSwitchOnIoctlHook(cdev* dev, unsigned long cmd, caddr_t data, int fflag, thread* td)
 {
@@ -54,12 +55,33 @@ int DipSwitchSpoofer::DipSwitchOnIoctlHook(cdev* dev, unsigned long cmd, caddr_t
 	return DipSwitchOnIoctlDetour->Invoke<int>(dev, cmd, data, fflag, td);
 }
 
+int DipSwitchSpoofer::sceKernelCheckDipswHook(unsigned int dipswitch)
+{
+	switch (dipswitch)
+	{
+	case 0:			// IsDevelopmentMode
+	case 95:		// UNK - CP box
+	case 102:		// Disable DEV USB?
+		return 1;
+
+	case 1:			// Don't use DEVLAN
+	case 2:			// IsAssistMode
+
+		return 0;
+
+	default:
+		return sceKernelCheckDipswDetour->Invoke<int>(dipswitch);
+	}
+}
+
 void DipSwitchSpoofer::Init()
 {
-	DipSwitchOnIoctlDetour = new Detour64(KernelBase + addr_dipsw_onioctl_hook, DipSwitchOnIoctlHook);
+	sceKernelCheckDipswDetour = new Detour32(&sceKernelCheckDipswDetour, KernelBase + addr_sceKernelCheckDipsw_Hook, sceKernelCheckDipswHook);
+	//DipSwitchOnIoctlDetour = new Detour64(KernelBase + addr_dipsw_onioctl_hook, DipSwitchOnIoctlHook);
 }
 
 void DipSwitchSpoofer::Term()
 {
-	delete DipSwitchOnIoctlDetour;
+	delete sceKernelCheckDipswDetour;
+	//delete DipSwitchOnIoctlDetour;
 }

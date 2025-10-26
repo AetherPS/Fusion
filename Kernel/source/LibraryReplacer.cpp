@@ -53,8 +53,8 @@ int LibraryReplacer::sys_dynlib_load_prxHook(thread* td, dynlib_load_prx_args* a
 
 void LibraryReplacer::Init()
 {
-	kern_mkdir(CurrentThread(), "/data/Fusion/ReplacementLibs", 0, 0777);
-	kern_mkdir(CurrentThread(), "/data/Fusion/ReplacementLibs/Any", 0, 0777);
+	MkDir("/data/Fusion/ReplacementLibs", 0777);
+	MkDir("/data/Fusion/ReplacementLibs/Any", 0777);
 
 	sys_dynlib_load_prx = decltype(sys_dynlib_load_prx)((void*)sysvec->sv_table[594].sy_call);
 	sysvec->sv_table[594].sy_call = (sy_call_t*)sys_dynlib_load_prxHook;

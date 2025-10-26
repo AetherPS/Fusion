@@ -75,5 +75,7 @@ void* KmemAllocAt(vm_map_t map, vm_ooffset_t offset, vm_offset_t size);
 char* FileNameFromPath(char* path);
 bool GetSandboxPath(thread* td, char* sandboxPath);
 void UnHideDriver(char* deviceName);
+bool DoesFileExist(const char* path);
+int MkDir(const char* path, int mode);
 void MakeTempDmemConfig();
 int GetTempDmemConfig();

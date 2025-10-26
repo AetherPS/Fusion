@@ -19,6 +19,7 @@
 #define addr_DirectMemoryHook					0x0011D250
 #define addr_devact_onioctl_hook				0x006397A0
 #define addr_dipsw_onioctl_hook					0x00656490
+#define addr_sceKernelCheckDipsw_Hook			0x00655B80
 #define addr_dmamini_initialize_ioctl			0x005D1EC0
 #define addr_trapHook                           0x0
 #define addr_trap_fatalHook                     0x002DF710

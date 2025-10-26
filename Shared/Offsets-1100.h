@@ -19,6 +19,7 @@
 #define addr_fuse_loader						0x494970
 #define addr_devact_onioctl_hook				0x638630
 #define addr_dipsw_onioctl_hook					0x0
+#define addr_sceKernelCheckDipsw_Hook			0x0
 #define addr_dmamini_initialize_ioctl			0x5CF7C0
 #define addr_trapHook                           0x0
 #define addr_trap_fatalHook                     0x3C60A0

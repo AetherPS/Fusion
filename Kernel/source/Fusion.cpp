@@ -12,40 +12,21 @@
 
 uint8_t* KernelBase;
 
-Detour32* sceKernelCheckDipswDetour = nullptr;
-int sceKernelCheckDipswHook(unsigned int dipswitch)
-{
-	switch (dipswitch)
-	{
-	case 0:			// IsDevelopmentMode
-		return 1;
-
-	case 2:			// IsAssistMode
-		return 0;
-		
-	default:
-		return sceKernelCheckDipswDetour->Invoke<int>(dipswitch);
-	}
-}
-
 void InitFusion()
 {
 	// Resolve the Kernel Base.
 	KernelBase = (uint8_t*)Readmsr(0xC0000082) - addr_Xfast_syscall;
 
-	ResolveFunctions();		// Resolve all needed functions.
-	InstallPatches();		// Install all needed patches.
-	PrintFeatureFlags();	// Print the active feature flags.
-
-	// Ensure the fusion dir is made.
-	kern_mkdir(CurrentThread(), "/data/Fusion", 0, 0777);
+	ResolveFunctions();				// Resolve all needed functions.
+	InstallPatches();				// Install all needed patches.
+	PrintFeatureFlags();			// Print the active feature flags.
+	MkDir("/data/Fusion", 0777);	// Ensure the fusion dir is made.
 
 	kprintf("Initializing Watcher...");
 	Watcher::Init();
 	kprintf("Done.\n");
 
 #ifdef FF_BETA
-	sceKernelCheckDipswDetour = new Detour32(&sceKernelCheckDipswDetour, KernelBase + 0x0655B80, sceKernelCheckDipswHook);
 	dmamini_initialize_ioctl();
 #endif
 
