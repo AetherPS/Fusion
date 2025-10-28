@@ -33,8 +33,10 @@ int _main(void)
 	klog("Installing Kernel ELF\n");
 	LoadKernel();
 
-	klog("Starting Sidecar\n");
-	InitSidecar();
+	// TODO: Add 7z extraction code.
+	// TODO: Unpack and load the Daemon here.
+	//		 I have added a driver definition for resolving symbols from embeded libs in one PRX.
+	//		 We can use that to load the Daemon from here using Lnc.
 
 	klog("All Done\n");
 

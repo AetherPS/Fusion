@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="1100Release|Win32">
-      <Configuration>1100Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="1100Release|x64">
-      <Configuration>1100Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="1202Release|Win32">
       <Configuration>1202Release</Configuration>
       <Platform>Win32</Platform>
@@ -42,22 +34,12 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|Win32'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -73,16 +55,10 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -90,9 +66,6 @@
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|Win32'">
-    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|Win32'">
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'">
@@ -107,7 +80,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IncludePath>$(ProjectDir)source;$(IncludePath)</IncludePath>
   </PropertyGroup>
@@ -123,23 +96,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
-    <OutDir>$(SolutionDir)Build\</OutDir>
-    <IncludePath>$(SolutionDir)Kernel\source;$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|x64'">
-    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1100</NMakePreprocessorDefinitions>
-    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-
-xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-
-xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
-    <NMakeOutput>Kernel.elf</NMakeOutput>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <IncludePath>$(SolutionDir)Kernel\source;$(IncludePath)</IncludePath>
   </PropertyGroup>

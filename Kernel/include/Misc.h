@@ -79,3 +79,4 @@ bool DoesFileExist(const char* path);
 int MkDir(const char* path, int mode);
 void MakeTempDmemConfig();
 int GetTempDmemConfig();
+int dlsym(proc* p, int handle, char* symbol, char* library, unsigned int flags, void* addr);

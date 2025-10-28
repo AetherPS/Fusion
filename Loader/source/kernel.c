@@ -46,9 +46,7 @@ int install_kernel(struct thread* td, struct installKernelArgs* args)
 	uint64_t kernbase = kernel_getbase();
 	kernel_resolve(kernbase);
 
-	kernel_printf("Hello from kernel escalation!\n");
-
-	//Jailbreak
+	/* ############################ Jailbreak ############################ */
 	struct ucred* cred = td->td_proc->p_ucred;
 	struct filedesc* fd = td->td_proc->p_fd;
 
@@ -65,25 +63,17 @@ int install_kernel(struct thread* td, struct installKernelArgs* args)
 	*(uint64_t*)(((char*)td_ucred) + 96) = 0xffffffffffffffff;
 	*(uint64_t*)(((char*)td_ucred) + 88) = 0x3801000000000013;
 	*(uint64_t*)(((char*)td_ucred) + 104) = 0xffffffffffffffff;
+	/* ################################################################### */
 
-	kernel_printf("Thread jailbroken!\n");
-
+	/* ############################# Patches ############################# */
 	cpu_disable_wp();
-
-#if SOFTWARE_VERSION == 900
-	* (uint8_t*)(kernbase + 0x002714BD) = 0xEB;
-	*(uint8_t*)(kernbase + 0x0037BF3C) = VM_PROT_ALL;
-	*(uint8_t*)(kernbase + 0x0037BF44) = VM_PROT_ALL;
-#elif SOFTWARE_VERSION == 1202
-	* (uint8_t*)(kernbase + 0x002BD48D) = 0xEB;
-	*(uint8_t*)(kernbase + 0x00465AAC) = VM_PROT_ALL;
-	*(uint8_t*)(kernbase + 0x00465AB4) = VM_PROT_ALL;
-#endif
-
+	*(uint8_t*)(kernbase + patch_memcpy) = 0xEB;
+	*(uint8_t*)(kernbase + patch_kmem_alloc1) = VM_PROT_ALL;
+	*(uint8_t*)(kernbase + patch_kmem_alloc2) = VM_PROT_ALL;
 	cpu_enable_wp();
+	/* ################################################################### */
 
-	kernel_printf("Patches Applied!\n");
-
+	/* ######################## Load Kernel Payload ###################### */
 	size_t msize = 0;
 	if (elf_mapped_size(args->payload, &msize))
 	{
@@ -111,6 +101,7 @@ int install_kernel(struct thread* td, struct installKernelArgs* args)
 	{
 		return 1;
 	}
+	/* ################################################################### */
 
 	return 0;
 }

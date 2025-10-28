@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="1100Release|ORBIS">
-      <Configuration>1100Release</Configuration>
-      <Platform>ORBIS</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="1200Release|ORBIS">
       <Configuration>1200Release</Configuration>
       <Platform>ORBIS</Platform>
@@ -13,25 +9,15 @@
       <Configuration>900Release</Configuration>
       <Platform>ORBIS</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Debug|ORBIS">
-      <Configuration>Debug</Configuration>
-      <Platform>ORBIS</Platform>
-    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{21fa45a3-62aa-4b4b-bbc3-45f404aab2ff}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1200Release|ORBIS'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|ORBIS'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|ORBIS'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -61,16 +47,10 @@
     <Import Condition="Exists('$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.props')" Project="$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.props" />
     <Import Condition="Exists('$(VCTargetsPath)\BuildCustomizations\SCU.props')" Project="$(VCTargetsPath)\BuildCustomizations\SCU.props" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1200Release|ORBIS'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='900Release|ORBIS'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|ORBIS'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -84,21 +64,6 @@
     <IntDir>$(Configuration)\</IntDir>
     <TargetName>libFusionSidecar</TargetName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|ORBIS'">
-    <OutDir>$(SolutionDir)build\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
-    <TargetName>libFusionSidecar</TargetName>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
-    <ClCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-    </ClCompile>
-    <Link>
-      <Addressing>NonAslr</Addressing>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='1200Release|ORBIS'">
     <ClCompile>
       <PreprocessorDefinitions>NDEBUG;VERSION_1202;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -155,34 +120,12 @@ if not exist "$(SolutionDir)External\StubMaker\libkernel_gen_stub.a" (
 </Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|ORBIS'">
-    <ClCompile>
-      <PreprocessorDefinitions>NDEBUG;VERSION_1100;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <OptimizationLevel>Level2</OptimizationLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;$(SolutionDir)External\libUtils\libSysInt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <CppLanguageStd>Cpp17</CppLanguageStd>
-    </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
-    <Link>
-      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lSysInt;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <PostBuildEvent>
-      <Command>py $(SolutionDir)Scripts\make_fself-3.py   $(OutputPath)$(TargetName).prx  $(OutputPath)$(TargetName).sprx
-del /Q "$(SolutionDir)Loader\resources\$(TargetName).sprx"
-xcopy "$(OutputPath)$(TargetName).sprx" "$(SolutionDir)Loader\resources\" /K /D /H /Y</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="prx.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='1200Release|ORBIS'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='900Release|ORBIS'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='1100Release|ORBIS'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

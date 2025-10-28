@@ -9,6 +9,7 @@
 #define addr_rootvnode                          0x02136E90
 #define addr_copyout							0x002BD580
 #define addr_copyin								0x002BD670
+#define addr_copyinstr							0x002BDB20
 #define addr_kern_open                          0x00343570
 #define addr_kern_mkdir                         0x003486B0
 #define addr_kernel_map                         0x022D1D50
@@ -19,7 +20,7 @@
 #define addr_DirectMemoryHook					0x00283CE0
 #define addr_devact_onioctl_hook				0x006388F0
 #define addr_dipsw_onioctl_hook					0x00655940
-#define addr_sceKernelCheckDipsw_Hook			0x0
+#define addr_sceKernelCheckDipsw_Hook			0x00655030
 #define addr_dmamini_initialize_ioctl			0x005C96B0
 #define addr_trapHook                           0x0
 #define addr_trap_fatalHook                     0x0
@@ -57,6 +58,8 @@
 #define addr_allproc						    0x01B28538
 #define addr_proc_rwmem							0x00365FA0
 #define addr_create_thread                      0x0004C6C0
+#define addr_do_dlsym							0x003BAF00
+#define addr_find_obj_by_handle					0x003BC080
 
 /* Virtual Memory */
 #define addr_vm_map_lock						0x002F6F60
@@ -150,6 +153,9 @@
 #define sceKernelGetUtokenStoreModeForRcmgr		0x0001D460
 
 /* Kernel Patches */
+#define patch_memcpy			0x002BD48D
+#define patch_kmem_alloc1		0x00465AAC
+#define patch_kmem_alloc2		0x00465AB4
 #define patch_ASLR				0x00477C54
 #define patch_copyin1			0x002BD6C7
 #define patch_copyin2			0x002BD6D3
@@ -186,7 +192,7 @@
 #define patch_dmamini0			0x005C96CB
 #define patch_dmamini1			0x005C96CF
 #define patch_isDebuggerProcess 0x003B24D0
-#define patch_isAssistMode	    0x0
+#define patch_isAssistMode	    0x0075CBA4
 #define offsets_mdbgAssistMode  { 0x1E4, 0x13C2, 0x20CC, 0x20F2, 0x2118, 0x213E, 0x2164, 0x218A, 0x21B0, 0x21D6, 0x21FC, 0x2222, 0x2248, 0x226E, 0x2294, 0x22BA, 0x22E0, 0x2316, 0x233C, 0x2362, 0x2388 };
 
 #endif

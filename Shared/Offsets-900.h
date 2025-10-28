@@ -9,6 +9,7 @@
 #define addr_rootvnode                          0x021EFF20
 #define addr_copyout							0x002715B0
 #define addr_copyin								0x002716A0
+#define addr_copyinstr							0x00271B50
 #define addr_kern_open                          0x001D9EE0
 #define addr_kern_mkdir                         0x001DF020
 #define addr_kernel_map                         0x02268D48
@@ -57,6 +58,8 @@
 #define addr_allproc						    0x01B946E0
 #define addr_proc_rwmem							0x0041EB00
 #define addr_create_thread                      0x001ED670
+#define addr_do_dlsym							0x0021F1E0
+#define addr_find_obj_by_handle					0x00220360
 
 /* Virtual Memory */
 #define addr_vm_map_lock						0x0007BA30
@@ -150,6 +153,9 @@
 #define sceKernelGetUtokenStoreModeForRcmgr		0x0001D520
 
 /* Kernel Patches */
+#define patch_memcpy			0x002714BD
+#define patch_kmem_alloc1		0x0037BF3C
+#define patch_kmem_alloc2		0x0037BF44
 #define patch_ASLR				0x0005F824
 #define patch_copyin1			0x002716F7
 #define patch_copyin2			0x00271703

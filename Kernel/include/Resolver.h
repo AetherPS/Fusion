@@ -9,6 +9,7 @@ extern prison* prison0;
 extern vnode* rootvnode;
 extern int (*copyout)(const void* kaddr, void* udaddr, size_t len);
 extern int (*copyin)(const void* uaddr, void* kaddr, size_t len);
+extern int (*copyinstr)(const void* uaddr, void* kaddr, size_t len, size_t*);
 extern int (*kern_open)(thread* td, const char* path, int pathseg, int flags, int mode);
 extern int (*kern_mkdir)(thread* td, char* path, int pathseg, int mode);
 extern vm_map_t kernel_map;
@@ -78,6 +79,8 @@ do {									\
 extern proc* allproc;
 extern int (*proc_rwmem)(proc * p, uio * uio);
 extern int (*create_thread)(thread * td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp);
+extern void* (*do_dlsym)(dynlib * dl, dynlib_obj * obj, char* name, char* libName, unsigned int flags);
+extern dynlib_obj* (*find_obj_by_handle)(dynlib * dl, int handle);
 
 /* Fake Selfs */
 extern int (*sceSblAuthMgrGetSelfInfo)(SelfContext * ctx, void* exInfo);

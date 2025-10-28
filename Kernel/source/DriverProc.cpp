@@ -7,11 +7,11 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 {
 	switch (cmd)
 	{
-	case CMD_PROC_MODULE_LIST: // Deprecated, use sceDebugGetModuleList
-		return GetProccessModuleList(data, td);
+	case CMD_PROC_JAILBREAK:
+		return Jailbreak(data, td);
 
-	case CMD_PROC_READ_WRITE_MEMORY: // Deprecated, use sceDebugReadProcessMemory or sceDebugWriteProcessMemory
-		return ProcessReadWrite(data, td);
+	case CMD_PROC_JAIL:
+		return RestoreJail(data, td);
 
 	case CMD_PROC_ALLOC_MEMORY: // Deprecated, use sceDebugCreateScratchExecutableArea or sceDebugDestroyScratchDataArea
 		return ProcessAlloc(data, td);
@@ -25,99 +25,16 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 	case CMD_PROC_RESOLVE:
 		return Resolve(data);
 
-	case CMD_PROC_JAILBREAK:
-		return Jailbreak(data, td);
+	case CMD_PROC_GET_AUTHID:
+		return GetAuthId(data, td);
 
-	case CMD_PROC_JAIL:
-		return RestoreJail(data, td);
-
-	case CMD_PROC_SANDBOX_PATH: // Can probably be removed.
-		return SandBoxPath(data, td);
+	case CMD_PROC_SET_AUTHID:
+		return SetAuthId(data, td);
 
 	default:
 		kprintf("[Proc] Not Implemented. :(\n");
 		break;
 	}
-}
-
-int DriverProc::GetProccessModuleList(caddr_t data, thread* td)
-{
-	auto args = (Input_LibraryList*)data;
-	if (args == nullptr)
-	{
-		kprintf("GetProccessModuleList(): Data pointer invalid...\n");
-		return EINVAL;
-	}
-
-	proc* selectedProc = GetProcByPid(args->ProcessId);
-
-	if (selectedProc == nullptr)
-	{
-		kprintf("GetProccessModuleList(): Failed to find Process with the pid %i\n", args->ProcessId);
-		return EINVAL;
-	}
-
-	auto selectedThread = selectedProc->p_threads.tqh_first;
-	if (selectedThread == nullptr)
-	{
-		kprintf("GetProccessModuleList(): Failed to find Thread for Process with the pid %i\n", args->ProcessId);
-		return EINVAL;
-	}
-
-	size_t numModules;
-	int handles[256];
-	sys_dynlib_get_list(selectedThread, handles, 256, &numModules);
-
-	auto libTemp = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * numModules);
-	if (!libTemp)
-	{
-		kprintf("GetProccessModuleList(): Failed to allocate memory for libTemp.\n");
-		return -1;
-	}
-
-	for (int i = 0; i < numModules; i++)
-	{
-		struct dynlib_info_ex info;
-		info.size = sizeof(struct dynlib_info_ex);
-		sys_dynlib_get_info_ex(selectedProc->p_threads.tqh_first, handles[i], 1, &info);
-
-		libTemp[i].Handle = handles[i];
-		strncpy(libTemp[i].Path, info.name, 256);
-		libTemp[i].MapBase = (uint64_t)info.segmentInfo[0].baseAddr;
-		libTemp[i].MapSize = info.segmentInfo[0].size + info.segmentInfo[1].size;
-		libTemp[i].TextSize = info.segmentInfo[0].size;
-		libTemp[i].DataBase = (uint64_t)info.segmentInfo[1].baseAddr;
-		libTemp[i].DataSize = info.segmentInfo[1].size;
-	}
-
-	// Write the data out to userland.
-	copyout(libTemp, args->LibraryListOut, sizeof(OrbisLibraryInfo) * numModules);
-	copyout(&numModules, args->LibraryCount, sizeof(int));
-
-	// Free our memory.
-	_free(libTemp);
-
-	return 0;
-}
-
-int DriverProc::ProcessReadWrite(caddr_t data, thread* td)
-{
-	auto args = (Input_ReadWriteMemory*)data;
-	if (args == nullptr)
-	{
-		kprintf("ProcessReadWrite(): Data pointer invalid...\n");
-		return EINVAL;
-	}
-
-	proc* selectedProc = GetProcByPid(args->ProcessId);
-
-	if (selectedProc == nullptr)
-	{
-		kprintf("ProcessReadWrite(): Failed to find Process with the pid %i\n", args->ProcessId);
-		return EINVAL;
-	}
-
-	return ReadWriteProcessMemory(td, selectedProc, (void*)args->ProcessAddress, (void*)args->DataAddress, args->Length, args->IsWrite);
 }
 
 int DriverProc::ProcessAlloc(caddr_t data, thread* td)
@@ -219,20 +136,11 @@ int DriverProc::Resolve(caddr_t data)
 		return EINVAL;
 	}
 
-	auto selectedThread = selectedProc->p_threads.tqh_first;
-	if (selectedThread == nullptr)
-	{
-		kprintf("Resolve(): Failed to find Thread for Process with the pid %i\n", args->ProcessId);
-		return EINVAL;
-	}
-
-	uint64_t addr;
-	sys_dynlib_dlsym(selectedThread, args->handle, args->Symbol, (void**)&addr);
-
-	kprintf("sys_dynlib_dlsym: %d, %s, %llX\n", args->handle, args->Symbol, addr);
+	uint64_t addr = 0;
+	dlsym(selectedProc, args->Handle, args->Symbol, (*args->Library != '\0') ? args->Library : NULL, args->Flags, (void**)&addr);
 
 	if (addr <= 0)
-		return -1;
+		return EINVAL;
 
 	// Copy the result out.
 	copyout(&addr, args->Result, sizeof(addr));
@@ -302,7 +210,6 @@ int DriverProc::Jailbreak(caddr_t data, thread* td)
 		selectedProc->p_randomized_path_len = 0;
 		memset(selectedProc->p_randomized_path, 0, 0x100);
 	}
-		
 
 	return 0;
 }
@@ -343,30 +250,46 @@ int DriverProc::RestoreJail(caddr_t data, thread* td)
 	return 0;
 }
 
-int DriverProc::SandBoxPath(caddr_t data, thread* td)
+int DriverProc::GetAuthId(caddr_t data, thread* td)
 {
-	auto args = (Input_SandboxPath*)data;
+	auto args = (Input_AuthId*)data;
 	if (args == nullptr)
 	{
-		kprintf("SandBoxPath(): Data pointer invalid...\n");
+		kprintf("GetAuthId(): Data pointer invalid...\n");
 		return EINVAL;
 	}
 
 	proc* selectedProc = GetProcByPid(args->ProcessId);
 	if (selectedProc == nullptr)
 	{
-		kprintf("SandBoxPath(): Failed to find Process with the pid %i\n", args->ProcessId);
+		kprintf("GetAuthId(): Failed to find Process with the pid %i\n", args->ProcessId);
 		return EINVAL;
 	}
 
-	char sandBoxPath[0x400];
-	if (!GetSandboxPath(selectedProc->p_threads.tqh_first, sandBoxPath))
+	auto cred = selectedProc->p_ucred;
+	args->AuthId = cred->cr_sceAuthID;
+
+	return 0;
+}
+
+int DriverProc::SetAuthId(caddr_t data, thread* td)
+{
+	auto args = (Input_AuthId*)data;
+	if (args == nullptr)
 	{
-		kprintf("SandBoxPath(): Failed to get the sandbox path.\n");
+		kprintf("SetAuthId(): Data pointer invalid...\n");
 		return EINVAL;
 	}
 
-	copyout(sandBoxPath, args->Buffer, args->BufferSize);
+	proc* selectedProc = GetProcByPid(args->ProcessId);
+	if (selectedProc == nullptr)
+	{
+		kprintf("SetAuthId(): Failed to find Process with the pid %i\n", args->ProcessId);
+		return EINVAL;
+	}
+
+	auto cred = selectedProc->p_ucred;
+	cred->cr_sceAuthID = args->AuthId;
 
 	return 0;
 }

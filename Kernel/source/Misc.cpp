@@ -295,3 +295,40 @@ int GetTempDmemConfig()
 	close(fd);
 	return dmemSize;
 }
+
+int dlsym(proc* p, int handle, char* symbol, char* library, unsigned int flags, void* addr)
+{
+	dynlib* dynlib = p->p_dynlib;
+	if (!dynlib)
+	{
+		kprintf("this is not dynamic linked program.\n");
+		return EPERM;
+	}
+
+	sx_xlock(&dynlib->bind_lock, 0);
+	{
+		dynlib_obj* main_obj = dynlib->main_obj;
+		if (!main_obj)
+		{
+			sx_xunlock(&dynlib->bind_lock);
+
+			kprintf("this is not dynamic linked program.\n");
+			return EPERM;
+		}
+
+		dynlib_obj* obj = find_obj_by_handle(dynlib, handle);
+		if (!obj) {
+			sx_xunlock(&dynlib->bind_lock);
+			return ESRCH;
+		}
+
+		addr = do_dlsym(dynlib, obj, symbol, library, flags);
+		if (!addr) {
+			sx_xunlock(&dynlib->bind_lock);
+			return ESRCH;
+		}
+	}
+	sx_xunlock(&dynlib->bind_lock);
+
+	return 0;
+}

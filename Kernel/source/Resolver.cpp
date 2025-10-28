@@ -9,6 +9,7 @@ prison* prison0;
 vnode* rootvnode;
 int (*copyout)(const void* kaddr, void* udaddr, size_t len) = nullptr;
 int (*copyin)(const void* uaddr, void* kaddr, size_t len) = nullptr;
+int (*copyinstr)(const void* uaddr, void* kaddr, size_t len, size_t*) = nullptr;
 int (*kern_open)(thread* td, const char* path, int pathseg, int flags, int mode) = nullptr;
 int (*kern_mkdir)(thread* td, char* path, int pathseg, int mode) = nullptr;
 vm_map_t kernel_map;
@@ -53,6 +54,8 @@ eventhandler_list* (*eventhandler_find_list)(const char* name);
 proc* allproc = 0;
 int (*proc_rwmem)(proc* p, uio* uio) = 0;
 int (*create_thread)(thread* td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp) = 0;
+void* (*do_dlsym)(dynlib* dl, dynlib_obj* obj, char* name, char* libName, unsigned int flags) = 0;
+dynlib_obj* (*find_obj_by_handle)(dynlib* dl, int handle) = 0;
 
 /* Fake Selfs */
 int (*sceSblAuthMgrGetSelfInfo)(SelfContext* ctx, void* exInfo) = nullptr;
@@ -111,6 +114,7 @@ void ResolveFunctions()
     NATIVE_RESOLVE(rootvnode);
     NATIVE_RESOLVE(copyin);
     NATIVE_RESOLVE(copyout);
+	NATIVE_RESOLVE(copyinstr);
     NATIVE_RESOLVE(kern_open);
     NATIVE_RESOLVE(kern_mkdir);
     kernel_map = *(vm_map_t*)(KernelBase + addr_kernel_map);
@@ -151,6 +155,8 @@ void ResolveFunctions()
     NATIVE_RESOLVE(allproc);
     NATIVE_RESOLVE(proc_rwmem);
     NATIVE_RESOLVE(create_thread);
+    NATIVE_RESOLVE(do_dlsym);
+    NATIVE_RESOLVE(find_obj_by_handle);
 
     /* Fake Selfs */
     NATIVE_RESOLVE(sceSblAuthMgrGetSelfInfo);

@@ -9,8 +9,6 @@ struct installKernelArgs {
 	size_t psize;
 };
 
-
-
 uint64_t kernel_getbase();
 void* kernel_alloc(uint32_t size);
 void kernel_dealloc(void* addr);
