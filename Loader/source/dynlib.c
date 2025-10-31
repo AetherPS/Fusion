@@ -1,8 +1,11 @@
 #include "common.h"
 #include "dynlib.h"
 
+// libSceLibcInternal
 int(*vsprintf)(char* s, const char* format, va_list arg);
 char* (*strcpy)(char* destination, const char* source);
+
+// libkernel
 int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
 int (*sceKernelOpen)(const char* path, int flags, SceKernelMode mode);
 int (*sceKernelClose)(int fd);
@@ -60,5 +63,4 @@ void ResolveDynlib()
 	sys_dynlib_dlsym(handle, "sceKernelLoadStartModule", &sceKernelLoadStartModule);
 	sys_dynlib_dlsym(handle, "ioctl", &ioctl);
 	sys_dynlib_dlsym(handle, "sceKernelStat", &sceKernelStat);
-
 }

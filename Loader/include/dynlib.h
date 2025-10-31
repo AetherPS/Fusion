@@ -1,7 +1,10 @@
 #pragma once
 
+// libSceLibcInternal
 extern int(*vsprintf)(char* s, const char* format, va_list arg);
 extern char* (*strcpy)(char* destination, const char* source);
+
+// libkernel
 extern int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
 extern int (*sceKernelOpen)(const char* path, int flags, SceKernelMode mode);
 extern int (*sceKernelClose)(int fd);
