@@ -5,6 +5,7 @@ class DriverProc
 private:
     static int Jailbreak(caddr_t data, thread* td);
     static int RestoreJail(caddr_t data, thread* td);
+    static int GetProccessModuleList(caddr_t data, thread* td);
     static int ProcessReadWrite(caddr_t data, thread* td);
     static int ProcessAlloc(caddr_t data, thread* td);
     static int ProcessFree(caddr_t data);

@@ -52,6 +52,7 @@ eventhandler_list* (*eventhandler_find_list)(const char* name);
 
 /* Proc */
 proc* allproc = 0;
+proc* (*pfind)(int pid);
 int (*proc_rwmem)(proc* p, uio* uio) = 0;
 int (*create_thread)(thread* td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp) = 0;
 void* (*do_dlsym)(dynlib* dl, dynlib_obj* obj, char* name, char* libName, unsigned int flags) = 0;
@@ -153,6 +154,7 @@ void ResolveFunctions()
 
     /* Proc */
     NATIVE_RESOLVE(allproc);
+    NATIVE_RESOLVE(pfind);
     NATIVE_RESOLVE(proc_rwmem);
     NATIVE_RESOLVE(create_thread);
     NATIVE_RESOLVE(do_dlsym);

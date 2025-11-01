@@ -56,6 +56,7 @@
 
 /* Proc */
 #define addr_allproc						    0x01B946E0
+#define addr_pfind								0x00178960
 #define addr_proc_rwmem							0x0041EB00
 #define addr_create_thread                      0x001ED670
 #define addr_do_dlsym							0x0021F1E0

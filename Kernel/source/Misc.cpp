@@ -26,38 +26,6 @@ void hexdump(void* ptr, int buflen, bool showAddress)
 	}
 }
 
-void SendNotificationRequest(bool bank, SceNotificationRequest* req, size_t size, bool ReadWrite)
-{
-	int fd = open((bank == true ? "/dev/notification1" : "/dev/notification0"), (ReadWrite == true ? 5 : 1), 0);
-
-	if (fd < 0)
-		return;
-
-	write(fd, req, size);
-	close(fd);
-}
-
-void NotifyCustom(char* icon, const char* fmt, ...)
-{
-	SceNotificationRequest buffer;
-	memset(&buffer, 0, sizeof(SceNotificationRequest));
-
-	//Create full string from va list.
-	va_list args;
-	va_start(args, fmt);
-	vsprintf(buffer.Message, fmt, args);
-	va_end(args);
-
-	//Populate the notify buffer.
-	buffer.Type = SceNotificationRequestType::Debug;
-	buffer.Attribute = 0;
-	buffer.HasIcon = 1;
-	buffer.TargetId = -1;
-	strcpy(buffer.IconImageUri, icon);
-
-	SendNotificationRequest(false, &buffer, 3120, false);
-}
-
 void MemcpyTextSeg(void* dst, void* src, size_t len)
 {
 	cpu_disable_wp();
@@ -294,41 +262,4 @@ int GetTempDmemConfig()
 
 	close(fd);
 	return dmemSize;
-}
-
-int dlsym(proc* p, int handle, char* symbol, char* library, unsigned int flags, void* addr)
-{
-	dynlib* dynlib = p->p_dynlib;
-	if (!dynlib)
-	{
-		kprintf("this is not dynamic linked program.\n");
-		return EPERM;
-	}
-
-	sx_xlock(&dynlib->bind_lock, 0);
-	{
-		dynlib_obj* main_obj = dynlib->main_obj;
-		if (!main_obj)
-		{
-			sx_xunlock(&dynlib->bind_lock);
-
-			kprintf("this is not dynamic linked program.\n");
-			return EPERM;
-		}
-
-		dynlib_obj* obj = find_obj_by_handle(dynlib, handle);
-		if (!obj) {
-			sx_xunlock(&dynlib->bind_lock);
-			return ESRCH;
-		}
-
-		addr = do_dlsym(dynlib, obj, symbol, library, flags);
-		if (!addr) {
-			sx_xunlock(&dynlib->bind_lock);
-			return ESRCH;
-		}
-	}
-	sx_xunlock(&dynlib->bind_lock);
-
-	return 0;
 }

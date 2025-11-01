@@ -29,32 +29,6 @@ int sys_dynlib_get_list(thread* td, int* handlesOut, size_t handlesOutCount, siz
 	return td->td_retval[0];
 }
 
-int sys_dynlib_get_info(thread* td, int handle, SceDbgModuleInfo* pInfo)
-{
-	struct dynlib_get_info_args
-	{
-		uint64_t handle;
-		uint64_t pInfo;
-	};
-
-	// clear errors
-	td->td_retval[0] = 0;
-
-	// Set up Params
-	dynlib_get_info_args uap;
-	uap.handle = handle;
-	uap.pInfo = (uint64_t)pInfo;
-
-	// Call System call
-	auto _sys_dynlib_get_list = (int(*)(thread*, dynlib_get_info_args*))sysvec->sv_table[593].sy_call;
-	auto errorno = _sys_dynlib_get_list(td, &uap);
-	if (errorno)
-		return -errorno;
-
-	// success
-	return td->td_retval[0];
-}
-
 int sys_dynlib_get_info_ex(thread* td, int handle, int unk, dynlib_info_ex* pInfo)
 {
 	struct dynlib_get_info_ex_args
@@ -76,33 +50,6 @@ int sys_dynlib_get_info_ex(thread* td, int handle, int unk, dynlib_info_ex* pInf
 	// Call System call
 	auto _sys_dynlib_get_info_ex = (int(*)(thread*, dynlib_get_info_ex_args*))sysvec->sv_table[608].sy_call;
 	auto errorno = _sys_dynlib_get_info_ex(td, &uap);
-	if (errorno)
-		return -errorno;
-
-	// success
-	return td->td_retval[0];
-}
-
-int sys_dynlib_dlsym(thread* td, int32_t handle, const char* symbol, void** addressOut)
-{
-	struct dynlib_dlsym_args {
-		uint64_t handle;
-		const char* symbol;
-		void** address_out;
-	};
-
-	// clear errors
-	td->td_retval[0] = 0;
-
-	// Set up Params
-	dynlib_dlsym_args uap;
-	uap.handle = handle;
-	uap.symbol = symbol;
-	uap.address_out = addressOut;
-
-	// Call System call
-	auto _sys_munmap = (int(*)(thread*, dynlib_dlsym_args*))sysvec->sv_table[591].sy_call;
-	auto errorno = _sys_munmap(td, &uap);
 	if (errorno)
 		return -errorno;
 

@@ -8,6 +8,7 @@
 
 #include "Sparse.h"
 #include "Types.h"
+#include "DriverDefinitions.h"
 #include "Asm.h"
 #include "Patches.h"
 #include "Resolver.h"
@@ -28,6 +29,5 @@
 #include "FakeSelfTypes.h"
 #include "FakeSelfs.h"
 
-#include "DriverDefinitions.h"
 #include "FusionDriver.h"
 #include "Fusion.h"

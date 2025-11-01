@@ -22,6 +22,19 @@ struct name {								\
 	struct type *slh_first;	/* first element */			\
 }
 
+#define SLIST_ENTRY(type)                               \
+struct {                                                \
+    struct type *sle_next;  /* Pointer to the next item */  \
+}
+
+#define	SLIST_FIRST(head)	((head)->slh_first)
+#define	SLIST_NEXT(elm, field)	((elm)->field.sle_next)
+
+#define	SLIST_FOREACH(var, head, field)					\
+	for ((var) = SLIST_FIRST((head));				\
+	    (var);							\
+	    (var) = SLIST_NEXT((var), field))
+
 #define	TAILQ_ENTRY(type)						\
 struct {								\
 	struct type *tqe_next;	/* next element */			\
@@ -704,7 +717,7 @@ struct dynlib_get_obj_member {
 typedef STAILQ_HEAD(Struct_Objlist, Struct_Objlist_Entry) Objlist;
 
 TYPE_BEGIN(struct dynlib_obj, 0x180);
-// SLISTHEAD @ 0x0
+TYPE_FIELD(SLIST_ENTRY(dynlib_obj) entries, 0x0);
 TYPE_FIELD(char* path, 0x8);
 TYPE_FIELD(int ref_count, 0x20);
 TYPE_FIELD(int dl_ref_count, 0x24);

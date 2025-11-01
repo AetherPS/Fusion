@@ -2,23 +2,6 @@
 #include "ProcessUtils.h"
 #include "SystemCalls.h"
 
-proc* GetProcByPid(int pid)
-{
-	proc* currentProc = allproc;
-
-	while (currentProc != nullptr)
-	{
-		if (currentProc->p_pid == pid)
-		{
-			return currentProc;
-		}
-
-		currentProc = currentProc->p_list.le_next;
-	}
-
-	return nullptr;
-}
-
 proc* GetProcByName(const char* name)
 {
 	proc* currentProc = allproc;
@@ -94,4 +77,115 @@ caddr_t AllocateMemory(thread* td, size_t len, int prot, int flags)
 int FreeMemory(thread* td, caddr_t addr, size_t len)
 {
 	return sys_munmap(td, addr, len);
+}
+
+int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int flags, void* addr)
+{
+	dynlib* dynlib = p->p_dynlib;
+	if (!dynlib)
+	{
+		kprintf("this is not dynamic linked program.\n");
+		return EPERM;
+	}
+
+	sx_xlock(&dynlib->bind_lock, 0);
+	{
+		dynlib_obj* main_obj = dynlib->main_obj;
+		if (!main_obj)
+		{
+			sx_xunlock(&dynlib->bind_lock);
+
+			kprintf("this is not dynamic linked program.\n");
+			return EPERM;
+		}
+
+		dynlib_obj* obj = find_obj_by_handle(dynlib, handle);
+		if (!obj) {
+			sx_xunlock(&dynlib->bind_lock);
+			return ESRCH;
+		}
+
+		addr = do_dlsym(dynlib, obj, symbol, library, flags);
+		if (!addr) {
+			sx_xunlock(&dynlib->bind_lock);
+			return ESRCH;
+		}
+	}
+	sx_xunlock(&dynlib->bind_lock);
+
+	return 0;
+}
+
+int dynlib_get_list(proc* p, int* handles, int max_handles, int* handle_count)
+{
+	dynlib* dynlib = p->p_dynlib;
+	if (!dynlib)
+	{
+		kprintf("this is not dynamic linked program.\n");
+		return EPERM;
+	}
+
+	sx_xlock(&dynlib->bind_lock, 0);
+	{
+		dynlib_obj* main_obj = dynlib->main_obj;
+		if (!main_obj)
+		{
+			sx_xunlock(&dynlib->bind_lock);
+			kprintf("this is not dynamic linked program.\n");
+			return EPERM;
+		}
+
+		int count = 0;
+		dynlib_obj* obj;
+		SLIST_FOREACH(obj, &dynlib->objs, entries)
+		{
+			if (count < max_handles)
+			{
+				handles[count] = obj->handle;
+			}
+			count++;
+		}
+		*handle_count = count;
+	}
+	sx_xunlock(&dynlib->bind_lock);
+	return 0;
+}
+
+int dynlib_get_info(proc* p, int handle, OrbisLibraryInfo* info)
+{
+	dynlib* dynlib = p->p_dynlib;
+	if (!dynlib)
+	{
+		kprintf("this is not dynamic linked program.\n");
+		return EPERM;
+	}
+
+	sx_xlock(&dynlib->bind_lock, 0);
+	{
+		dynlib_obj* main_obj = dynlib->main_obj;
+		if (!main_obj)
+		{
+			sx_xunlock(&dynlib->bind_lock);
+
+			kprintf("this is not dynamic linked program.\n");
+			return EPERM;
+		}
+
+		dynlib_obj* obj = find_obj_by_handle(dynlib, handle);
+		if (!obj) {
+			sx_xunlock(&dynlib->bind_lock);
+			return ESRCH;
+		}
+
+		info->Handle = obj->handle;
+		strcpy(info->Path, obj->path);
+		info->MapBase = (uint64_t)obj->map_base;
+		info->MapSize = obj->map_size;
+		info->TextSize = obj->text_size;
+		info->DataBase = (uint64_t)obj->database;
+		info->DataSize = obj->data_size;
+	}
+	sx_xunlock(&dynlib->bind_lock);
+
+	return 0;
 }
