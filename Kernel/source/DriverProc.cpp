@@ -176,14 +176,14 @@ int DriverProc::GetProccessModuleList(caddr_t data, thread* td)
 		return res;
 	}
 
-	auto libTemp = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * numModules);
+	auto libTemp = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * input.MaxOutCount);
 	if (!libTemp)
 	{
 		kprintf("%s: Failed to allocate memory for libTemp.\n", __FUNCTION__);
 		return -1;
 	}
 
-	for (int i = 0; i < numModules; i++)
+	for (int i = 0; i < input.MaxOutCount; i++)
 	{
 		int res = dynlib_get_info(selectedProc, handles[i], &libTemp[i]);
 		if (res != 0)
@@ -195,7 +195,7 @@ int DriverProc::GetProccessModuleList(caddr_t data, thread* td)
 	}
 
 	// Write the data out to userland.
-	copyout(libTemp, input.LibraryListOut, sizeof(OrbisLibraryInfo) * numModules);
+	copyout(libTemp, input.LibraryListOut, sizeof(OrbisLibraryInfo) * input.MaxOutCount);
 	copyout(&numModules, input.LibraryCount, sizeof(int));
 
 	// Free our memory.
