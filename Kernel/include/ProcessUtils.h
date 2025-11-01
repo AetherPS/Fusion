@@ -8,3 +8,4 @@ int FreeMemory(thread* td, caddr_t addr, size_t len);
 int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int flags, void* addr);
 int dynlib_get_list(proc* p, int* handles, int max_handles, int* handle_count);
 int dynlib_get_info(proc* p, int handle, OrbisLibraryInfo* info);
+int GetLibraries(proc* p, OrbisLibraryInfo* libInfos, int maxLibs, int* libCount);

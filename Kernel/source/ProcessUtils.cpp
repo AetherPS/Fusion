@@ -189,3 +189,31 @@ int dynlib_get_info(proc* p, int handle, OrbisLibraryInfo* info)
 
 	return 0;
 }
+
+int GetLibraries(proc* p, OrbisLibraryInfo* libInfos, int maxLibs, int* libCount)
+{
+	int handles[256];
+	int numModules = 0;
+	auto res = dynlib_get_list(p, handles, 256, &numModules);
+	if (res != 0)
+	{
+		kprintf("%s: dynlib_get_list failed with the error %llX\n", __FUNCTION__, res);
+		return res;
+	}
+
+	if (numModules > maxLibs)
+		numModules = maxLibs;
+
+	for (int i = 0; i < numModules; i++)
+	{
+		res = dynlib_get_info(p, handles[i], &libInfos[i]);
+		if (res != 0)
+		{
+			kprintf("%s: dynlib_get_info failed with the error %llX\n", __FUNCTION__, res);
+			return res;
+		}
+	}
+
+	*libCount = (int)numModules;
+	return 0;
+}

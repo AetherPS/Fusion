@@ -8,16 +8,16 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 	switch (cmd)
 	{
 	case CMD_PROC_JAILBREAK:
-		return Jailbreak(data, td);
+		return Jailbreak(data);
 
 	case CMD_PROC_JAIL:
-		return RestoreJail(data, td);
+		return RestoreJail(data);
 
 	case CMD_PROC_READ_WRITE_MEMORY:
-		return ProcessReadWrite(data, td);
+		return ProcessReadWrite(data);
 
 	case CMD_PROC_ALLOC_MEMORY: // Deprecated, use sceDebugCreateScratchExecutableArea or sceDebugDestroyScratchDataArea
-		return ProcessAlloc(data, td);
+		return ProcessAlloc(data);
 
 	case CMD_PROC_FREE_MEMORY: // Deprecated, use sceDebugDestroyScratchExecutableArea or sceDebugDestroyScratchDataArea
 		return ProcessFree(data);
@@ -29,10 +29,10 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 		return Resolve(data);
 
 	case CMD_PROC_GET_AUTHID:
-		return GetAuthId(data, td);
+		return GetAuthId(data);
 
 	case CMD_PROC_SET_AUTHID:
-		return SetAuthId(data, td);
+		return SetAuthId(data);
 
 	default:
 		kprintf("[Proc] Not Implemented. :(\n");
@@ -40,25 +40,18 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 	}
 }
 
-int DriverProc::Jailbreak(caddr_t data, thread* td)
+int DriverProc::Jailbreak(caddr_t data)
 {
 	Input_Jailbreak input;
-	int res = copyin(data, &input, sizeof(Input_Jailbreak));
+	thread* td = nullptr;
+	proc* p = nullptr;
+
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	auto cred = selectedProc->p_ucred;
-	auto fd = selectedProc->p_fd;
+	auto cred = p->p_ucred;
+	auto fd = p->p_fd;
 
 	if (fd == nullptr || cred == nullptr)
 	{
@@ -78,7 +71,7 @@ int DriverProc::Jailbreak(caddr_t data, thread* td)
 	backupJail.cr_prison = cred->cr_prison;
 	backupJail.fd_jdir = fd->fd_jdir;
 	backupJail.fd_rdir = fd->fd_rdir;
-	strcpy(backupJail.RandomizedPath, selectedProc->p_randomized_path);
+	strcpy(backupJail.RandomizedPath, p->p_randomized_path);
 
 	// Copy the jail out to userland.
 	copyout(&backupJail, input.Jail, sizeof(JailBackup));
@@ -100,32 +93,25 @@ int DriverProc::Jailbreak(caddr_t data, thread* td)
 	fd->fd_rdir = fd->fd_jdir = *(vnode**)rootvnode;
 	if (input.NullRandPath)
 	{
-		selectedProc->p_randomized_path_len = 0;
-		memset(selectedProc->p_randomized_path, 0, 0x100);
+		p->p_randomized_path_len = 0;
+		memset(p->p_randomized_path, 0, 0x100);
 	}
 
 	return 0;
 }
 
-int DriverProc::RestoreJail(caddr_t data, thread* td)
+int DriverProc::RestoreJail(caddr_t data)
 {
 	Input_RestoreJail input;
-	int res = copyin(data, &input, sizeof(Input_RestoreJail));
+	thread* td = nullptr;
+	proc* p = nullptr;
+
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	auto cred = selectedProc->p_ucred;
-	auto fd = selectedProc->p_fd;
+	auto cred = p->p_ucred;
+	auto fd = p->p_fd;
 
 	if (fd == nullptr || cred == nullptr)
 	{
@@ -144,37 +130,21 @@ int DriverProc::RestoreJail(caddr_t data, thread* td)
 	cred->cr_prison = (prison*)input.Jail.cr_prison;
 	fd->fd_jdir = (vnode*)input.Jail.fd_jdir;
 	fd->fd_rdir = (vnode*)input.Jail.fd_rdir;
-	selectedProc->p_randomized_path_len = strlen(selectedProc->p_randomized_path);
-	strcpy(selectedProc->p_randomized_path, input.Jail.RandomizedPath);
+	p->p_randomized_path_len = strlen(p->p_randomized_path);
+	strcpy(p->p_randomized_path, input.Jail.RandomizedPath);
 
 	return 0;
 }
 
-int DriverProc::GetProccessModuleList(caddr_t data, thread* td)
+int DriverProc::GetProccessModuleList(caddr_t data)
 {
 	Input_LibraryList input;
-	int res = copyin(data, &input, sizeof(Input_LibraryList));
-	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
-		return res;
-	}
+	thread* td = nullptr;
+	proc* p = nullptr;
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	int numModules;
-	int handles[256];
-	res = dynlib_get_list(selectedProc, handles, 256, &numModules);
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: dynlib_get_list failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
 	auto libTemp = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * input.MaxOutCount);
 	if (!libTemp)
@@ -183,72 +153,51 @@ int DriverProc::GetProccessModuleList(caddr_t data, thread* td)
 		return -1;
 	}
 
-	for (int i = 0; i < input.MaxOutCount; i++)
+	int realCount = 0;
+	res = GetLibraries(p, libTemp, input.MaxOutCount, &realCount);
+	if (res != 0)
 	{
-		int res = dynlib_get_info(selectedProc, handles[i], &libTemp[i]);
-		if (res != 0)
-		{
-			kprintf("%s: dynlib_get_info failed with error %d for handle %d\n", __FUNCTION__, res, handles[i]);
-			_free(libTemp);
-			return res;
-		}
+		kprintf("%s: GetLibraries failed with the error %d\n", __FUNCTION__, res);
+		_free(libTemp);
+		return res;
 	}
 
-	// Write the data out to userland.
 	copyout(libTemp, input.LibraryListOut, sizeof(OrbisLibraryInfo) * input.MaxOutCount);
-	copyout(&numModules, input.LibraryCount, sizeof(int));
-
-	// Free our memory.
 	_free(libTemp);
+
+	// Copy the number of modules out if the pointer is valid.
+	if (input.LibraryCount != nullptr)
+	{
+		copyout(&realCount, input.LibraryCount, sizeof(int));
+	}
 
 	return 0;
 }
 
-int DriverProc::ProcessReadWrite(caddr_t data, thread* td)
+int DriverProc::ProcessReadWrite(caddr_t data)
 {
 	Input_ReadWriteMemory input;
-	int res = copyin(data, &input, sizeof(Input_ReadWriteMemory));
+	thread* td = nullptr;
+	proc* p = nullptr;
+
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	return ReadWriteProcessMemory(td, selectedProc, (void*)input.ProcessAddress, (void*)input.DataAddress, input.Length, input.IsWrite);
+	return ReadWriteProcessMemory(td, p, (void*)input.ProcessAddress, (void*)input.DataAddress, input.Length, input.IsWrite);
 }
 
-int DriverProc::ProcessAlloc(caddr_t data, thread* td)
+int DriverProc::ProcessAlloc(caddr_t data)
 {
 	Input_AllocMemory input;
-	int res = copyin(data, &input, sizeof(Input_AllocMemory));
+	thread* td = nullptr;
+	proc* p = nullptr;
+
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	auto selectedThread = selectedProc->p_threads.tqh_first;
-	if (selectedThread == nullptr)
-	{
-		kprintf("%s: Failed to find Thread for Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	auto outAddress = AllocateMemory(selectedThread, input.Length, input.Protection, input.Flags);
+	auto outAddress = AllocateMemory(td, input.Length, input.Protection, input.Flags);
 
 	// Copy the result out.
 	copyout(&outAddress, input.OutAddress, sizeof(outAddress));
@@ -259,76 +208,41 @@ int DriverProc::ProcessAlloc(caddr_t data, thread* td)
 int DriverProc::ProcessFree(caddr_t data)
 {
 	Input_FreeMemory input;
-	int res = copyin(data, &input, sizeof(Input_FreeMemory));
+	thread* td = nullptr;
+	proc* p = nullptr;
+
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	auto selectedThread = selectedProc->p_threads.tqh_first;
-	if (selectedThread == nullptr)
-	{
-		kprintf("%s: Failed to find Thread for Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	return FreeMemory(selectedThread, (caddr_t)input.ProcessAddress, input.Length);
+	return FreeMemory(td, (caddr_t)input.ProcessAddress, input.Length);
 }
 
 int DriverProc::StartThread(caddr_t data)
 {
 	Input_StartThreadInfo input;
-	int res = copyin(data, &input, sizeof(Input_StartThreadInfo));
+	thread* td = nullptr;
+	proc* p = nullptr;
+
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	auto selectedThread = selectedProc->p_threads.tqh_first;
-	if (selectedThread == nullptr)
-	{
-		kprintf("%s: Failed to find Thread for Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	return CreateThread(selectedThread, (void*)input.ThreadEntry, nullptr, (char*)input.StackMemory, input.StackSize);
+	return CreateThread(td, (void*)input.ThreadEntry, nullptr, (char*)input.StackMemory, input.StackSize);
 }
 
 int DriverProc::Resolve(caddr_t data)
 {
 	Input_ResolveInfo input;
-	int res = copyin(data, &input, sizeof(Input_ResolveInfo));
-	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
-		return res;
-	}
+	thread* td = nullptr;
+	proc* p = nullptr;
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
+	int res = GetProcessThreadInput(data, &input, &td, &p);
+	if (res != 0)
+		return res;
 
 	uint64_t addr = 0;
-	res = dynlib_dlsym(selectedProc, input.Handle, input.Symbol, (*input.Library != '\0') ? input.Library : NULL, input.Flags, (void**)&addr);
+	res = dynlib_dlsym(p, input.Handle, input.Symbol, (*input.Library != '\0') ? input.Library : NULL, input.Flags, (void**)&addr);
 
 	if (addr <= 0)
 		return EINVAL;
@@ -339,50 +253,34 @@ int DriverProc::Resolve(caddr_t data)
 	return res;
 }
 
-int DriverProc::GetAuthId(caddr_t data, thread* td)
+int DriverProc::GetAuthId(caddr_t data)
 {
 	Input_AuthId input;
-	int res = copyin(data, &input, sizeof(Input_AuthId));
+	thread* td = nullptr;
+	proc* p = nullptr;
+
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	auto cred = selectedProc->p_ucred;
-	input.AuthId = cred->cr_sceAuthID;
+	input.AuthId = p->p_ucred->cr_sceAuthID;
 
 	copyout(&input, data, sizeof(Input_AuthId));
 
 	return 0;
 }
 
-int DriverProc::SetAuthId(caddr_t data, thread* td)
+int DriverProc::SetAuthId(caddr_t data)
 {
 	Input_AuthId input;
-	int res = copyin(data, &input, sizeof(Input_AuthId));
+	thread* td = nullptr;
+	proc* p = nullptr;
+
+	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
-	{
-		kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
 		return res;
-	}
 
-	proc* selectedProc = pfind(input.ProcessId);
-	if (selectedProc == nullptr)
-	{
-		kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input.ProcessId);
-		return EINVAL;
-	}
-
-	auto cred = selectedProc->p_ucred;
-	cred->cr_sceAuthID = input.AuthId;
+	p->p_ucred->cr_sceAuthID = input.AuthId;
 
 	return 0;
 }
