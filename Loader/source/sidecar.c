@@ -32,6 +32,8 @@ int WriteFile(const char* path, uint8_t* data, size_t len)
 
 void InitSidecar() 
 {
+	sceKernelUnlink(SIDECAR_PATH);
+
 	klog("Write File.\n");
 	int result = WriteFile(SIDECAR_PATH, _binary_resources_libFusionSidecar_sprx_start, (size_t)(_binary_resources_libFusionSidecar_sprx_end - _binary_resources_libFusionSidecar_sprx_start));
 	if (result != 0)

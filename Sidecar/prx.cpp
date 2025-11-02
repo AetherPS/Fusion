@@ -28,35 +28,37 @@ extern "C"
 {
 	int __cdecl module_start(size_t argc, const void* args)
 	{
-		Logger::Init(true, Logger::LogLevelAll);
-		Logger::Info("Hello World.");
+		ScePthread thr;
+		scePthreadCreate(&thr, 0, [](void* arg) -> void*
+		{
+			Logger::Init(true, Logger::LogLevelAll);
+			Logger::Info("Hello World...");
 
-		Logger::Info("Jailbreak.");
-		Jailbreak(-1, false);
+			Logger::Info("Jailbreak.");
+			Jailbreak(-1, false);
 
-		Logger::Info("Mount system as R/W");
-		// Mount system as R/W
-		RemountReadWrite("/dev/da0x4.crypt", "/system");
+			Logger::Info("Mount system as R/W");
+			// Mount system as R/W
+			RemountReadWrite("/dev/da0x4.crypt", "/system");
+
+			// Disable the anoying system updates.
+			DisableUpdates();
+			
+			// Installs and loads the FTP.
+			InstallFtpDaemon();
+
+			// Remove the temp prx.
+			sceKernelUnlink("/data/Fusion/libFusionSidecar.sprx");
 		
-		// Logger::Info("FileSystem::Write");
-		// FileSystem::Write("/data/OFTP10000.7z", ftp_archive, ftp_archive_Size);
-		// 
-		// Logger::Info("Extract7zFile");
-		// Extract7zFile("/data/OFTP10000.7z", "/data/app");
-
-		// // Disable the anoying system updates.
-		// DisableUpdates();
-		// 
-		// // Installs and loads the FTP.
-		// InstallFtpDaemon();
-
-		// Remove the temp prx.
-		sceKernelUnlink("/data/Fusion/libFusionSidecar.sprx");
+			Notify("Fusion 3 Loaded\nUber haxor edition.");
 		
-		Notify("Fusion 3 Loaded\n%s", "Uber haxor edition.");
-		
-		// Exit the Web Browser/Bluray Player
-		// ExitGraceful();
+			// Exit the Web Browser/Bluray Player
+			// ExitGraceful();
+
+			scePthreadExit(0);
+			return 0;
+		}, 0, "Init");
+		scePthreadJoin(thr, nullptr);
 
 		return 0;
 	}
