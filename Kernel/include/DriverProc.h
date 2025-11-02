@@ -41,6 +41,7 @@ private:
         if (*td == nullptr)
         {
             kprintf("%s: Failed to find Thread for Process with the pid %i\n", __FUNCTION__, input->ProcessId);
+			mtx_unlock_flags(&(*p)->p_lock, 0);
             return ESRCH;
         }
 

@@ -31,13 +31,13 @@ extern "C"
 		Logger::Init(true, Logger::LogLevelAll);
 		Logger::Info("Hello World.");
 
-		//Logger::Info("Jailbreak.");
-		//Jailbreak(-1, false);
+		Logger::Info("Jailbreak.");
+		Jailbreak(-1, false);
 
-		// Logger::Info("Mount system as R/W");
-		// // Mount system as R/W
-		// RemountReadWrite("/dev/da0x4.crypt", "/system");
-		// 
+		Logger::Info("Mount system as R/W");
+		// Mount system as R/W
+		RemountReadWrite("/dev/da0x4.crypt", "/system");
+		
 		// Logger::Info("FileSystem::Write");
 		// FileSystem::Write("/data/OFTP10000.7z", ftp_archive, ftp_archive_Size);
 		// 
@@ -49,14 +49,14 @@ extern "C"
 		// 
 		// // Installs and loads the FTP.
 		// InstallFtpDaemon();
-		// 
-		// // Remove the temp prx.
-		// sceKernelUnlink("/data/Fusion/libFusionSidecar.sprx");
-		// 
-		// Notify("Fusion 3 Loaded\n%s", "Uber haxor edition.");
-		// 
-		// // Exit the Web Browser/Bluray Player
-		// // ExitGraceful();
+
+		// Remove the temp prx.
+		sceKernelUnlink("/data/Fusion/libFusionSidecar.sprx");
+		
+		Notify("Fusion 3 Loaded\n%s", "Uber haxor edition.");
+		
+		// Exit the Web Browser/Bluray Player
+		// ExitGraceful();
 
 		return 0;
 	}

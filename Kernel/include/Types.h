@@ -398,6 +398,7 @@ TYPE_FIELD(TAILQ_HEAD(, thread) p_threads, 0x10);
 TYPE_FIELD(struct ucred* p_ucred, 0x40);
 TYPE_FIELD(struct filedesc* p_fd, 0x48);
 TYPE_FIELD(int p_pid, 0xB0);
+TYPE_FIELD(mtx p_lock, 0xF8);
 TYPE_FIELD(struct vmspace* p_vmspace, 0x168);
 TYPE_FIELD(struct dynlib* p_dynlib, 0x340);
 TYPE_FIELD(char titleId[10], 0x390);

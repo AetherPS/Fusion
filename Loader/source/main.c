@@ -34,7 +34,7 @@ int _main(void)
 	LoadKernel();
 
 	klog("Initialize Sidecar\n");
-	// InitSidecar();
+	InitSidecar();
 
 	return 0;
 }
