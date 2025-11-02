@@ -1,8 +1,5 @@
 #include "stdafx.h"
-#include <FusionDriver.h>
-
 #include "Embed.h"
-
 
 #define ORBIS_TITLEID "ORBS30000"
 #define FTP_TITLEID "OFTP10000"
@@ -32,20 +29,21 @@ extern "C"
 		scePthreadCreate(&thr, 0, [](void* arg) -> void*
 		{
 			Logger::Init(true, Logger::LogLevelAll);
-			Logger::Info("Hello World...");
 
-			Logger::Info("Jailbreak.");
 			Jailbreak(-1, false);
 
-			Logger::Info("Mount system as R/W");
 			// Mount system as R/W
 			RemountReadWrite("/dev/da0x4.crypt", "/system");
 
-			// Disable the anoying system updates.
+			// Disable the annoying system updates.
 			DisableUpdates();
+
+			// Initialize the Settings.
+			Settings::Init();
 			
 			// Installs and loads the FTP.
-			InstallFtpDaemon();
+			if (Settings::EnableFTP)
+				InstallFtpDaemon();
 		
 			Notify("Fusion 3 Loaded\nUber haxor edition.");
 		

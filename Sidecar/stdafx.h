@@ -11,7 +11,10 @@
 #include <queue>
 #include <video_out.h>
 #include <map>
+#include <vector>
 #include <KernelExt.h>
+#include <json2.h>
+#include <libsysmodule.h>
 
 // libUtils
 #include <StringExt.h>
@@ -30,4 +33,8 @@
 // libSysInt
 #include <SystemInterface.h>
 
+// lubFusionDriver
+#include <FusionDriver.h>
+
 #include "Version.h"
+#include "Settings.h"

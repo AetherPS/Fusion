@@ -76,7 +76,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Link>
-      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lSysInt;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>py $(SolutionDir)Scripts\make_fself.py   $(OutputPath)$(TargetName).prx  $(OutputPath)$(TargetName).sprx
@@ -96,7 +96,7 @@ xcopy "$(OutputPath)$(TargetName).sprx" "$(SolutionDir)Loader\resources\" /K /D 
       <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Link>
-      <AdditionalDependencies>-lSceLibcInternal_gen_stub_weak;-lkernel_stub_weak;-lkernel_gen_stub_weak;-lScePad_stub_weak;-lSceRtc_gen_stub_weak;-lSceNet_stub_weak;-lSceHttp_stub_weak;-lSceSystemStateMgr_gen_stub_weak;-lSceSystemService_gen_stub_weak;-lSceSysCore_gen_stub_weak;-lSceUserService_gen_stub_weak;-lSceNet_gen_stub_weak;-lSceLncUtil_gen_stub_weak;-lSceVideoOut_stub_weak;-lSceShellCoreUtil_gen_stub_weak;-lUtils;-l7z;-lAppCtrl;-lSysInt;-lFusionDriver;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>$(SolutionDir)Scripts\make_fself.exe $(OutputPath)$(TargetName).prx $(OutputPath)$(TargetName).sprx
