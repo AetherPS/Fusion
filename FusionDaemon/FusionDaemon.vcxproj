@@ -7,11 +7,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{21fa45a3-62aa-4b4b-bbc3-45f404aab2ff}</ProjectGuid>
+    <ProjectGuid>{e93827b7-2511-47a1-9190-032a66e72a82}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <PlatformToolset>v143</PlatformToolset>
@@ -20,15 +20,6 @@
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1200Release|Win32'" Label="Configuration">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|Win32'" Label="Configuration">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1100Release|Win32'" Label="Configuration">
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -43,65 +34,40 @@
     <Import Condition="Exists('$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.props')" Project="$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.props" />
     <Import Condition="Exists('$(VCTargetsPath)\BuildCustomizations\SCU.props')" Project="$(VCTargetsPath)\BuildCustomizations\SCU.props" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
-    <OutDir>$(SolutionDir)build\</OutDir>
+    <OutDir>$(SolutionDir)Build\</OutDir>
     <IntDir>$(Configuration)\</IntDir>
-    <TargetName>libFusionSidecar</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
     <ClCompile>
-      <PreprocessorDefinitions>NDEBUG;VERSION_900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;$(SolutionDir)External\libUtils\libSysInt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CppExceptions>true</CppExceptions>
       <CppLanguageStd>Cpp17</CppLanguageStd>
     </ClCompile>
+    <PostBuildEvent>
+      <Command>py "$(SolutionDir)Scripts\make_fself.py" "$(OutputPath)$(TargetName).elf" "$(OutputPath)FUSN00000\eboot.bin" --paid 0x3800000000010003 --auth-info 070000000000003800000000001C004000FF000000000080000000000000000000000000000000000000008000400040000000000000008000000000000000080040FFFF000000F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+"C:\Program Files\7-Zip\7z.exe" a -t7z "$(OutputPath)FUSN00000.7z" "$(OutputPath)FUSN00000"</Command>
+    </PostBuildEvent>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
-    <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>$(Configuration)\FusionDaemon.o %(AdditionalOptions)</AdditionalOptions>
-    </Link>
-    <PostBuildEvent>
-      <Command>py "$(SolutionDir)Scripts\make_fself.py" $(OutputPath)$(TargetName).prx $(OutputPath)$(TargetName).sprx
-del /Q "$(SolutionDir)Loader\resources\$(TargetName).sprx"
-xcopy "$(OutputPath)$(TargetName).sprx" "$(SolutionDir)Loader\resources\" /K /D /H /Y</Command>
-    </PostBuildEvent>
-    <PreBuildEvent>
-      <Command>if not exist "$(SolutionDir)External\libUtils\Build\lib7z.a" (
-    $(SolutionDir)Scripts\BuildSolution.bat "$(SolutionDir)External\libUtils\libUtils.sln" "$(MSBuildBinPath)\MSBuild.exe"
-)
-
-if not exist "$(SolutionDir)External\libFusionDriver\Build\libFusionDriver.a" (
-    $(SolutionDir)Scripts\BuildSolution.bat "$(SolutionDir)External\libFusionDriver\libFusionDriver.sln" "$(MSBuildBinPath)\MSBuild.exe"
-)
-
-if not exist "$(SolutionDir)External\StubMaker\libkernel_gen_stub.a" (
-    $(SolutionDir)External\StubMaker\build.bat"
-)
-
-"$(SCE_ORBIS_SDK_DIR)\host_tools\bin\orbis-objcopy.exe" -I binary -O elf64-x86-64 -B i386:x86-64 "$(OutDir)FUSN00000.7z" "$(ProjectDir)$(IntermediateOutputPath)FusionDaemon.o"
-
-</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="prx.cpp" />
-    <ClCompile Include="Settings.cpp" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">Create</PrecompiledHeader>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Embed.h" />
-    <ClInclude Include="Settings.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Version.h" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

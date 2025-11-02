@@ -1,23 +1,21 @@
 #include "stdafx.h"
 #include "Embed.h"
 
-#define ORBIS_TITLEID "ORBS30000"
-#define FTP_TITLEID "OFTP10000"
-#define FTP_ARCHIVE_PATH "/system/vsh/app/OFTP10000.7z"
+#define DAEMON_TITLEID "FUSN00000"
+#define DAEMON_ARCHIVE_PATH "/system/vsh/app/FUSN00000.7z"
 #define DAEMON_PATH "/system/vsh/app"
 
-// TODO: Add Daemon helper class that can Start and/or Install Daemons. We will want to add a list of Daemons to launch at startup to the config.
-
-void InstallFtpDaemon()
+void InstallDaemon()  
 {
-	FileSystem::Write(FTP_ARCHIVE_PATH, ftp_archive, ftp_archive_Size);
-	Extract7zFile(FTP_ARCHIVE_PATH, DAEMON_PATH);
+	FileSystem::Write(DAEMON_ARCHIVE_PATH, &_binary_C__Code_Fusion_build_FUSN00000_7z_start, (uint64_t)&_binary_C__Code_Fusion_build_FUSN00000_7z_end - (uint64_t)&_binary_C__Code_Fusion_build_FUSN00000_7z_start);
+	Extract7zFile(DAEMON_ARCHIVE_PATH, DAEMON_PATH);
+	FileSystem::Remove(DAEMON_ARCHIVE_PATH);
 
-	StartRestartApp(FTP_TITLEID, nullptr, SCE_USER_SERVICE_USER_ID_EVERYONE);
+	StartRestartApp(DAEMON_TITLEID, nullptr, SCE_USER_SERVICE_USER_ID_EVERYONE);
 	
-	if (GetAppIdByTitleId(FTP_TITLEID) <= 0)
+	if (GetAppIdByTitleId(DAEMON_TITLEID) <= 0)
 	{
-		Logger::Error("[Fusion] Failed to start FTP Daemon.");
+		Logger::Error("[Fusion] Failed to start daemon.");
 	}
 }
 
@@ -31,22 +29,19 @@ extern "C"
 			Logger::Init(true, Logger::LogLevelAll);
 
 			Jailbreak(-1, false);
-
+			
 			// Mount system as R/W
 			RemountReadWrite("/dev/da0x4.crypt", "/system");
-
+			
 			// Disable the annoying system updates.
 			DisableUpdates();
-
-			// Initialize the Settings.
-			Settings::Init();
 			
-			// Installs and loads the FTP.
-			if (Settings::EnableFTP)
-				InstallFtpDaemon();
-		
-			Notify("Fusion 3 Loaded\nUber haxor edition.");
-		
+			// Install and start the Fusion Daemon.
+			InstallDaemon();
+			
+			// NotifyCustom("cxml://psnotification/tex_icon_system", "Fusion 3 Loaded\n%s", "Uber haxor edition.");
+			Notify("Fusion 3 Loaded\n%s", "Uber haxor edition.");
+			
 			// Exit the Web Browser/Bluray Player
 			// ExitGraceful();
 

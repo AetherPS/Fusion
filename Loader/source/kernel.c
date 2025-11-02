@@ -108,5 +108,11 @@ int install_kernel(struct thread* td, struct installKernelArgs* args)
 
 void LoadKernel()
 {
+	if (FileExist("/dev/Fusion"))
+	{
+		klog("Fusion Driver already loaded, skipping kernel installation.\n");
+		return;
+	}
+
 	syscall(11, install_kernel, _binary_resources_Kernel_elf_start, _binary_resources_Kernel_elf_end - _binary_resources_Kernel_elf_start);
 }
