@@ -41,6 +41,9 @@
     <ClCompile Include="source\sidecar.c">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\file.c">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\asm.h">
@@ -62,6 +65,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\sidecar.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\file.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

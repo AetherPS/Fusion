@@ -46,9 +46,6 @@ extern "C"
 			
 			// Installs and loads the FTP.
 			InstallFtpDaemon();
-
-			// Remove the temp prx.
-			sceKernelUnlink("/data/Fusion/libFusionSidecar.sprx");
 		
 			Notify("Fusion 3 Loaded\nUber haxor edition.");
 		

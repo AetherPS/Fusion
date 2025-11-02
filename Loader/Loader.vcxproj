@@ -125,6 +125,7 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
     <ClCompile Include="source\asm.s" />
     <ClCompile Include="source\dynlib.c" />
     <ClCompile Include="source\elf.c" />
+    <ClCompile Include="source\file.c" />
     <ClCompile Include="source\kernel.c" />
     <ClCompile Include="source\main.c" />
     <ClCompile Include="source\sidecar.c" />
@@ -134,6 +135,7 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
     <ClInclude Include="include\common.h" />
     <ClInclude Include="include\dynlib.h" />
     <ClInclude Include="include\elf.h" />
+    <ClInclude Include="include\file.h" />
     <ClInclude Include="include\kernel.h" />
     <ClInclude Include="include\sidecar.h" />
     <ClInclude Include="include\types.h" />
