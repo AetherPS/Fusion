@@ -36,7 +36,9 @@ $(ODIR):
 .PHONY: clean
 
 clean:
-	rm -f $(TARGET) $(ODIR)/*.o
+	@echo "Cleaning project files..."
+	rm -f **Fusion-*.bin** $(ODIR)/*.o
 
 copy:
+	@echo "Copying build file..."
 	objcopy -O binary $(TARGET) $(TARGET)
