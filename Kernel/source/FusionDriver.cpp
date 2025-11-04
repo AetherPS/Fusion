@@ -51,8 +51,6 @@ int FusionDriver::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
 
 	default:
 		kprintf("[FusionDriver] Not Implemented. :(\n");
-		break;
+		return ENOSYS;
 	}
-
-	return 0;
 }

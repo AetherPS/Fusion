@@ -13,6 +13,9 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 	case CMD_PROC_JAIL:
 		return RestoreJail(data);
 
+	case CMD_PROC_MODULE_LIST:
+		return GetProccessModuleList(data);
+
 	case CMD_PROC_READ_WRITE_MEMORY:
 		return ProcessReadWrite(data);
 
@@ -35,8 +38,8 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 		return SetAuthId(data);
 
 	default:
-		kprintf("[Proc] Not Implemented. :(\n");
-		break;
+		kprintf("Driver Command %d Not Implemented. :(\n", cmd);
+		return ENOSYS;
 	}
 }
 

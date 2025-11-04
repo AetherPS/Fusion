@@ -39,7 +39,6 @@ extern "C"
 			// Install and start the Fusion Daemon.
 			InstallDaemon();
 			
-			// NotifyCustom("cxml://psnotification/tex_icon_system", "Fusion 3 Loaded\n%s", "Uber haxor edition.");
 			Notify("Fusion 3 Loaded\n%s", "Uber haxor edition.");
 			
 			// Exit the Web Browser/Bluray Player

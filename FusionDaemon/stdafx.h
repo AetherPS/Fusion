@@ -4,6 +4,13 @@
 #include <string>
 #include <vector>
 #include <mutex>
+#include <SysmoduleInternal.h>
+#include <json2.h>
+#include <libsysmodule.h>
+
+// StubMaker
+#include <LncUtil.h>
+#include <KernelExt.h>
 
 // libUtils
 #include <StringExt.h>
@@ -21,3 +28,6 @@
 
 // libSysInt
 #include <SystemInterface.h>
+
+#include "Misc.h"
+#include "Settings.h"

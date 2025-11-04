@@ -13,9 +13,28 @@ int main(int argc, char** arg)
 	if (!Jailbreak())
 	{
 		Notify("Failed to jailbreak Process...");
-		// ExitGraceful();
+		ExitGraceful();
 		return 0;
 	}
 
+	// Initialize and load required modules.
+	if (!LoadModules())
+	{
+		Notify("Failed to Load Modules...");
+		ExitGraceful();
+		return 0;
+	}
+
+	// // Initialize Settings config.
+	// Settings::Init();
+	// 
+	// if (Settings::EnableFTP)
+	// {
+	// 	// Start FTP Server.
+	// 	Logger::Info("Starting FTP Server...");
+	// 	Notify("Starting FTP Server...");
+	// }
+
+	ExitGraceful();
 	return 0;
 }

@@ -36,5 +36,3 @@
 // lubFusionDriver
 #include <FusionDriver.h>
 
-#include "Version.h"
-#include "Settings.h"

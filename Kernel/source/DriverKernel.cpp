@@ -8,6 +8,6 @@ int DriverKernel::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
 
     default:
         kprintf("Not Implemented. :(");
-        break;
+        return ENOSYS;
     }
 }
