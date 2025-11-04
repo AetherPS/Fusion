@@ -55,6 +55,19 @@ struct {								\
 	struct type **le_prev;	/* address of previous next element */	\
 }
 
+#define	LIST_HEAD(name, type)						\
+struct name {								\
+	struct type *lh_first;	/* first element */			\
+}
+
+#define	LIST_FIRST(head)	((head)->lh_first)
+#define	LIST_NEXT(elm, field)	((elm)->field.le_next)
+
+#define	LIST_FOREACH(var, head, field)					\
+	for ((var) = LIST_FIRST((head));				\
+	    (var);							\
+	    (var) = LIST_NEXT((var), field))
+
 #define	TAILQ_EMPTY(head)	((head)->tqh_first == NULL)
 #define	TAILQ_FIRST(head)	((head)->tqh_first)
 #define	TAILQ_NEXT(elm, field) ((elm)->field.tqe_next)
@@ -786,3 +799,8 @@ struct dynlib
 struct stat {
 	
 };
+
+LIST_HEAD(proclist, proc);
+
+#define	FOREACH_PROC_IN_SYSTEM(p)					\
+	LIST_FOREACH((p), allproc, p_list)

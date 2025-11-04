@@ -57,6 +57,7 @@
 
 /* Proc */
 #define addr_allproc						    0x01B28538
+#define addr_allproc_lock						0x01B284D8	
 #define addr_pfind								0x0000EA40
 #define addr_proc_rwmem							0x00365FA0
 #define addr_create_thread                      0x0004C6C0
@@ -76,6 +77,8 @@
 #define addr_mtx_unlock_flags                   0x00378570
 #define addr_sx_xlock							0x000A3840
 #define addr_sx_xunlock							0x000A3A00
+#define addr_sx_slock							0x000A3660
+#define addr_sx_sunlock							0x000A3950
 
 /* Driver */
 #define addr_make_dev_p                         0x0038A910

@@ -76,7 +76,8 @@ do {									\
 } while(0)
 
 /* Proc */
-extern proc* allproc;
+extern proclist* allproc;
+extern sx* allproc_lock;
 extern proc* (*pfind)(int pid);
 extern int (*proc_rwmem)(proc * p, uio * uio);
 extern int (*create_thread)(thread * td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp);
@@ -127,6 +128,8 @@ extern void (*_mtx_lock_flags)(mtx * mutex, int flags, const char* file, int lin
 extern void (*_mtx_unlock_flags)(mtx * mutex, int flags, const char* file, int line);
 extern int (*sx_xlock)(struct sx* sx, int opts);
 extern int (*sx_xunlock)(struct sx* sx);
+extern int(*sx_slock)(struct sx* sx, int opts, const char* file, int line);
+extern int(*sx_sunlock)(struct sx* sx, int opts, const char* file, int line);
 
 /* Driver */
 extern int(*make_dev_p)(int _flags, cdev * *_cdev, cdevsw * _devsw, ucred * _cr, uid_t _uid, gid_t _gid, int _mode, const char* _fmt, ...);

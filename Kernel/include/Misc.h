@@ -9,5 +9,3 @@ char* FileNameFromPath(char* path);
 bool GetSandboxPath(thread* td, char* sandboxPath);
 bool DoesFileExist(const char* path);
 int MkDir(const char* path, int mode);
-void MakeTempDmemConfig();
-int GetTempDmemConfig();

@@ -155,6 +155,8 @@ bool GetSandboxPath(thread* td, char* sandboxPath)
 		return false;
 	}
 
+	mtx_unlock_flags(&shellcore->p_lock, 0);
+
 	char* bufPath = nullptr;
 	char* freePath = nullptr;
 	auto res = vn_fullpath(shellcore->p_threads.tqh_first, td->td_proc->p_fd->fd_jdir, &bufPath, &freePath);
@@ -176,45 +178,17 @@ bool GetSandboxPath(thread* td, char* sandboxPath)
 
 bool DoesFileExist(const char* path)
 {
-	int fd = open(path, O_RDONLY, 0);
-	if (fd < 0)
-		return false;
-	close(fd);
-	return true;
+	// int fd = open(path, O_RDONLY, 0);
+	// if (fd < 0)
+	// 	return false;
+	// close(fd);
+	// return true;
+
+	// TODO: use kern_open instead of open
+	return false;
 }
 
 int MkDir(const char* path, int mode)
 {
 	return kern_mkdir(CurrentThread(), (char*)path, 0, mode);
-}
-
-#define DMEM_CONFIG_PATH "/data/Fusion/DmemAmount.cfg"
-
-void MakeTempDmemConfig()
-{
-	if (DoesFileExist(DMEM_CONFIG_PATH))
-		return;
-
-	int fd = open(DMEM_CONFIG_PATH, O_CREAT | O_WRONLY, 0777);
-
-	if (fd < 0)
-		return;
-
-	int dmemDefault = 50;
-	write(fd, &dmemDefault, sizeof(int));
-
-	close(fd);
-}
-
-int GetTempDmemConfig()
-{
-	int fd = open(DMEM_CONFIG_PATH, O_RDONLY, 0);
-	if (fd < 0)
-		return 50;
-
-	int dmemSize = 50;
-	read(fd, &dmemSize, sizeof(int));
-
-	close(fd);
-	return dmemSize;
 }

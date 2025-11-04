@@ -51,7 +51,8 @@ void (*eventhandler_deregister)(eventhandler_list* a, eventhandler_entry* b);
 eventhandler_list* (*eventhandler_find_list)(const char* name);
 
 /* Proc */
-proc* allproc = 0;
+proclist* allproc = 0;
+sx* allproc_lock = 0;
 proc* (*pfind)(int pid);
 int (*proc_rwmem)(proc* p, uio* uio) = 0;
 int (*create_thread)(thread* td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp) = 0;
@@ -102,6 +103,8 @@ void (*_mtx_lock_flags)(mtx* mutex, int flags, const char* file, int line);
 void (*_mtx_unlock_flags)(mtx* mutex, int flags, const char* file, int line);
 int (*sx_xlock)(struct sx* sx, int opts);
 int (*sx_xunlock)(struct sx* sx);
+int(*sx_slock)(struct sx* sx, int opts, const char* file, int line);
+int(*sx_sunlock)(struct sx* sx, int opts, const char* file, int line);
 
 /* Driver */
 int(*make_dev_p)(int _flags, cdev** _cdev, cdevsw* _devsw, ucred* _cr, uid_t _uid, gid_t _gid, int _mode, const char* _fmt, ...) = nullptr;
@@ -155,6 +158,7 @@ void ResolveFunctions()
 
     /* Proc */
     NATIVE_RESOLVE(allproc);
+	NATIVE_RESOLVE(allproc_lock);
     NATIVE_RESOLVE(pfind);
     NATIVE_RESOLVE(proc_rwmem);
     NATIVE_RESOLVE(create_thread);
@@ -205,6 +209,8 @@ void ResolveFunctions()
     _mtx_unlock_flags = decltype(_mtx_unlock_flags)(mtx_unlock_flags);
     NATIVE_RESOLVE(sx_xlock);
     NATIVE_RESOLVE(sx_xunlock);
+	NATIVE_RESOLVE(sx_slock);
+	NATIVE_RESOLVE(sx_sunlock);
 
     /* Driver */
     NATIVE_RESOLVE(make_dev_p);

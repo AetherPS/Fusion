@@ -4,19 +4,27 @@
 
 proc* GetProcByName(const char* name)
 {
-	proc* currentProc = allproc;
+	struct proc* p;
+	struct proc* target_proc = nullptr;
 
-	while (currentProc != nullptr)
+	sx_slock(allproc_lock, 0, 0, 0);
 	{
-		if (strstr(currentProc->p_comm, name))
+		FOREACH_PROC_IN_SYSTEM(p)
 		{
-			return currentProc;
+			mtx_unlock_flags(&p->p_lock, 0);
+
+			if (strstr(p->p_comm, name))
+			{
+				target_proc = p;
+				break;
+			}
+
+			mtx_unlock_flags(&p->p_lock, 0);
 		}
-
-		currentProc = currentProc->p_list.le_next;
 	}
+	sx_sunlock(allproc_lock, 0, 0, 0);
 
-	return nullptr;
+	return target_proc;
 }
 
 int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint32_t len, bool write)
