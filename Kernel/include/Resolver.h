@@ -131,5 +131,6 @@ extern int (*sx_xunlock)(struct sx* sx);
 /* Driver */
 extern int(*make_dev_p)(int _flags, cdev * *_cdev, cdevsw * _devsw, ucred * _cr, uid_t _uid, gid_t _gid, int _mode, const char* _fmt, ...);
 extern void(*destroy_dev)(cdev * _dev);
+extern void(*devfs_rule_applyde_recursive)(struct devfs_krule* dk, struct devfs_dirent* de);
 
 void ResolveFunctions();

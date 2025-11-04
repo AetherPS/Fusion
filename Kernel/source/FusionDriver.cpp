@@ -5,11 +5,14 @@
 
 cdev* FusionDriver::m_Device;
 cdevsw FusionDriver::m_DeviceSw;
+Detour32* FusionDriver::getnewvnodeDetour;
+
+#define DRIVER_NAME "Fusion"
 
 void FusionDriver::Init()
 {
 	m_DeviceSw.d_version = D_VERSION;
-	m_DeviceSw.d_name = "Fusion";
+	m_DeviceSw.d_name = DRIVER_NAME;
 	m_DeviceSw.d_ioctl = OnIoctl;
 
 	int ret = make_dev_p(MAKEDEV_CHECKNAME | MAKEDEV_WAITOK,
@@ -25,6 +28,8 @@ void FusionDriver::Init()
 		kprintf("could not create device driver, device driver already exists.");
 	else if (ret != 0)
 		kprintf("could not create device driver (%d).", ret);
+
+	getnewvnodeDetour = new Detour32(KernelBase + addr_getnewvnode, (uint8_t*)&getnewvnodeHook);
 }
 
 void FusionDriver::Term()
@@ -53,4 +58,30 @@ int FusionDriver::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
 		kprintf("[FusionDriver] Not Implemented. :(\n");
 		return ENOSYS;
 	}
+}
+
+int FusionDriver::getnewvnodeHook(const char* tag, mount* mp, void* vops, vnode** vpp)
+{
+	auto res = getnewvnodeDetour->Invoke<int>(tag, mp, vops, vpp);
+
+	if (strstr(tag, "devfs") == nullptr)
+		return res;
+
+	struct devfs_rule ruleset;
+	memset(&ruleset, 0, sizeof(struct devfs_rule));
+	ruleset.dr_id = 0;
+	ruleset.dr_magic = DEVFS_MAGIC;
+
+	strcpy(ruleset.dr_pathptrn, DRIVER_NAME);
+	ruleset.dr_icond |= DRC_PATHPTRN;
+	ruleset.dr_iacts |= DRA_BACTS;
+	ruleset.dr_bacts |= DRB_UNHIDE;
+
+	auto dm = (devfs_mount*)mp->mnt_data;
+	auto dk = (devfs_krule*)malloc(sizeof(devfs_krule), M_TEMP, 258);
+	memcpy(&dk->dk_rule, &ruleset, sizeof(struct devfs_rule));
+	devfs_rule_applyde_recursive(dk, dm->dm_rootdir);
+	free(dk, M_TEMP);
+
+	return res;
 }

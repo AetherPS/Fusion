@@ -353,10 +353,13 @@ struct prison
 
 };
 
-struct vnode
-{
+TYPE_BEGIN(struct mount, 0x1000); // XXX: random, don't use directly without fixing it
+TYPE_FIELD(void* mnt_data, 0x288);
+TYPE_END();
 
-};
+TYPE_BEGIN(struct vnode, 0x1000); // XXX: random, don't use directly without fixing it
+TYPE_FIELD(mount* v_mount, 0x20);
+TYPE_END();
 
 struct filedesc 
 {
@@ -708,6 +711,19 @@ struct devfs_rule {
 
 #define	DEVFS_MAGIC	0xdb0a087a
 #define _PATH_DEV "/dev/"
+
+struct devfs_dirent
+{
+
+};
+
+TYPE_BEGIN(struct devfs_mount, 0x50);
+TYPE_FIELD(devfs_dirent* dm_rootdir, 0x10);
+TYPE_END();
+
+TYPE_BEGIN(struct devfs_krule, 0x108);
+TYPE_FIELD(devfs_rule dk_rule, 0x18);
+TYPE_END();
 
 struct dynlib_get_obj_member {
 	uint32_t handle;

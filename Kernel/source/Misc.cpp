@@ -174,51 +174,6 @@ bool GetSandboxPath(thread* td, char* sandboxPath)
 	return true;
 }
 
-void UnHideDriver(char* deviceName)
-{
-	auto shellcore = GetProcByName("SceSysCore");
-	if (shellcore == nullptr)
-	{
-		kprintf("RegisterDevice(): Failed to get SceSysCore.\n");
-		return;
-	}
-
-	// Using SysCore as our puppet for userland.
-	auto td = shellcore->p_threads.tqh_first;
-
-	// Set up the devfs rules.
-	struct devfs_rule ruleset;
-	memset(&ruleset, 0, sizeof(struct devfs_rule));
-	ruleset.dr_id = 0;
-	ruleset.dr_magic = DEVFS_MAGIC;
-
-	strcpy(ruleset.dr_pathptrn, deviceName);
-	ruleset.dr_icond |= DRC_PATHPTRN;
-	ruleset.dr_iacts |= DRA_BACTS;
-	ruleset.dr_bacts |= DRB_UNHIDE;
-
-	// Opening a handle to the /dev folder. This is used to make ioctl commands to for changing devfs rules.
-	auto deviceHandle = open(_PATH_DEV, O_RDONLY, 0, td);
-	if (deviceHandle < 0)
-	{
-		kprintf("Unable to open handle to %s to mount device %s. %d\n", _PATH_DEV, deviceName, deviceHandle);
-		return;
-	}
-
-	// Making the devfs rule change.
-	auto ioctlResult = ioctl(deviceHandle, 0x80EC4402, (char*)&ruleset, td);
-	if (ioctlResult < 0)
-	{
-		kprintf("Unable to make devfs rule add request for %s. %d\n", deviceName, ioctlResult);
-
-		close(deviceHandle, td);
-
-		return;
-	}
-
-	close(deviceHandle, td);
-}
-
 bool DoesFileExist(const char* path)
 {
 	int fd = open(path, O_RDONLY, 0);

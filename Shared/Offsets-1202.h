@@ -25,6 +25,7 @@
 #define addr_trapHook                           0x0
 #define addr_trap_fatalHook                     0x0
 #define addr_QAFlags							0x021CC5D0
+#define addr_getnewvnode						0x0036E280
 
 /* STD Lib */
 #define addr_M_TEMP                             0x01520D00
@@ -79,6 +80,7 @@
 /* Driver */
 #define addr_make_dev_p                         0x0038A910
 #define addr_destroy_dev                        0x0038AE30
+#define addr_devfs_rule_applyde_recursive       0x002DEB00
 
 /* FSelfs */
 #define addr_sceSblAuthMgrGetSelfInfo						0x0063CFB0
