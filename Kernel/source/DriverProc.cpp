@@ -153,11 +153,12 @@ int DriverProc::GetProccessModuleList(caddr_t data)
 	if (res != 0)
 		return res;
 
+	mtx_unlock_flags(&p->p_lock, 0);
+
 	auto libTemp = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * input.MaxOutCount);
 	if (!libTemp)
 	{
 		kprintf("%s: Failed to allocate memory for libTemp.\n", __FUNCTION__);
-		mtx_unlock_flags(&p->p_lock, 0);
 		return -1;
 	}
 
@@ -167,14 +168,11 @@ int DriverProc::GetProccessModuleList(caddr_t data)
 	{
 		kprintf("%s: GetLibraries failed with the error %d\n", __FUNCTION__, res);
 		_free(libTemp);
-		mtx_unlock_flags(&p->p_lock, 0);
 		return res;
 	}
 
 	copyout(libTemp, input.LibraryListOut, sizeof(OrbisLibraryInfo) * input.MaxOutCount);
 	_free(libTemp);
-
-	mtx_unlock_flags(&p->p_lock, 0);
 
 	// Copy the number of modules out if the pointer is valid.
 	if (input.LibraryCount != nullptr)
@@ -195,11 +193,9 @@ int DriverProc::ProcessReadWrite(caddr_t data)
 	if (res != 0)
 		return res;
 
-	res = ReadWriteProcessMemory(td, p, (void*)input.ProcessAddress, (void*)input.DataAddress, input.Length, input.IsWrite);
-
 	mtx_unlock_flags(&p->p_lock, 0);
 
-	return res;
+	return ReadWriteProcessMemory(td, p, (void*)input.ProcessAddress, (void*)input.DataAddress, input.Length, input.IsWrite);
 }
 
 int DriverProc::ProcessAlloc(caddr_t data)
@@ -212,9 +208,9 @@ int DriverProc::ProcessAlloc(caddr_t data)
 	if (res != 0)
 		return res;
 
-	auto outAddress = AllocateMemory(td, input.Length, input.Protection, input.Flags);
-
 	mtx_unlock_flags(&p->p_lock, 0);
+
+	auto outAddress = AllocateMemory(td, input.Length, input.Protection, input.Flags);
 
 	// Copy the result out.
 	copyout(&outAddress, input.OutAddress, sizeof(outAddress));
@@ -231,11 +227,10 @@ int DriverProc::ProcessFree(caddr_t data)
 	int res = GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
-	res = FreeMemory(td, (caddr_t)input.ProcessAddress, input.Length);
 
 	mtx_unlock_flags(&p->p_lock, 0);
 
-	return res;
+	return FreeMemory(td, (caddr_t)input.ProcessAddress, input.Length);
 }
 
 int DriverProc::StartThread(caddr_t data)
@@ -248,11 +243,9 @@ int DriverProc::StartThread(caddr_t data)
 	if (res != 0)
 		return res;
 
-	res = CreateThread(td, (void*)input.ThreadEntry, nullptr, (char*)input.StackMemory, input.StackSize);
-
 	mtx_unlock_flags(&p->p_lock, 0);
 
-	return res;
+	return CreateThread(td, (void*)input.ThreadEntry, nullptr, (char*)input.StackMemory, input.StackSize);
 }
 
 int DriverProc::Resolve(caddr_t data)
@@ -265,16 +258,12 @@ int DriverProc::Resolve(caddr_t data)
 	if (res != 0)
 		return res;
 
-	uint64_t addr = 0;
-	res = dynlib_dlsym(p, input.Handle, input.Symbol, (*input.Library != '\0') ? input.Library : NULL, input.Flags, (void**)&addr);
-
 	mtx_unlock_flags(&p->p_lock, 0);
 
-	if (addr <= 0)
-		return EINVAL;
+	res = dynlib_dlsym(p, input.Handle, input.Symbol, (*input.Library != '\0') ? input.Library : NULL, input.Flags, (void**)&input.Address);
+	kprintf("%s: Resolved %s in %s to %llx with result %d\n", __FUNCTION__, input.Symbol, input.Library, input.Address, res);
 
-	// Copy the result out.
-	copyout(&addr, input.Result, sizeof(addr));
+	copyout(&input, data, sizeof(Input_ResolveInfo));
 
 	return res;
 }

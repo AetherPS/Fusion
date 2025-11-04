@@ -79,7 +79,7 @@ int FreeMemory(thread* td, caddr_t addr, size_t len)
 	return sys_munmap(td, addr, len);
 }
 
-int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int flags, void* addr)
+int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int flags, void** addr)
 {
 	dynlib* dynlib = p->p_dynlib;
 	if (!dynlib)
@@ -100,13 +100,16 @@ int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int 
 		}
 
 		dynlib_obj* obj = find_obj_by_handle(dynlib, handle);
-		if (!obj) {
+		if (!obj) 
+		{
 			sx_xunlock(&dynlib->bind_lock);
+
+			kprintf("Could not find obj by handle %d.\n", handle);
 			return ESRCH;
 		}
 
-		addr = do_dlsym(dynlib, obj, symbol, library, flags);
-		if (!addr) {
+		*addr = do_dlsym(dynlib, obj, symbol, library, flags);
+		if (!*addr) {
 			sx_xunlock(&dynlib->bind_lock);
 			return ESRCH;
 		}
