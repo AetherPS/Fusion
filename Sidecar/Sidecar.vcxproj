@@ -85,7 +85,9 @@ if not exist "$(SolutionDir)External\StubMaker\libkernel_gen_stub.a" (
     $(SolutionDir)External\StubMaker\build.bat"
 )
 
-"$(SCE_ORBIS_SDK_DIR)\host_tools\bin\orbis-objcopy.exe" -I binary -O elf64-x86-64 -B i386:x86-64 "$(OutDir)FUSN00000.7z" "$(ProjectDir)$(IntermediateOutputPath)FusionDaemon.o"
+cd $(OutDir)
+
+"$(SCE_ORBIS_SDK_DIR)\host_tools\bin\orbis-objcopy.exe" -I binary -O elf64-x86-64 -B i386:x86-64 "FUSN00000.7z" "$(ProjectDir)$(IntermediateOutputPath)FusionDaemon.o"
 
 </Command>
     </PreBuildEvent>

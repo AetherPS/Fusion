@@ -7,7 +7,7 @@
 
 void InstallDaemon()  
 {
-	FileSystem::Write(DAEMON_ARCHIVE_PATH, &_binary_C__Code_Fusion_build_FUSN00000_7z_start, (uint64_t)&_binary_C__Code_Fusion_build_FUSN00000_7z_end - (uint64_t)&_binary_C__Code_Fusion_build_FUSN00000_7z_start);
+	FileSystem::Write(DAEMON_ARCHIVE_PATH, &_binary_FUSN00000_7z_start, (uint64_t)&_binary_FUSN00000_7z_end - (uint64_t)&_binary_FUSN00000_7z_start);
 	Extract7zFile(DAEMON_ARCHIVE_PATH, DAEMON_PATH);
 	FileSystem::Remove(DAEMON_ARCHIVE_PATH);
 
