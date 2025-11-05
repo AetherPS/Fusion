@@ -147,7 +147,6 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClInclude Include="include\DirectMemory.h" />
     <ClInclude Include="include\DriverKernel.h" />
     <ClInclude Include="include\DriverProc.h" />
-    <ClInclude Include="include\elf.h" />
     <ClInclude Include="include\FakePkgs.h" />
     <ClInclude Include="include\FakePkgTypes.h" />
     <ClInclude Include="include\FakeSelfs.h" />
@@ -162,11 +161,24 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClInclude Include="include\Patches.h" />
     <ClInclude Include="include\ProcessUtils.h" />
     <ClInclude Include="include\Resolver.h" />
-    <ClInclude Include="include\Sparse.h" />
     <ClInclude Include="include\SystemCalls.h" />
     <ClInclude Include="include\table64.h" />
     <ClInclude Include="include\TTYRedirector.h" />
-    <ClInclude Include="include\Types.h" />
+    <ClInclude Include="include\Types\All.h" />
+    <ClInclude Include="include\Types\Dev.h" />
+    <ClInclude Include="include\Types\Dynlib.h" />
+    <ClInclude Include="include\Types\ELF.h" />
+    <ClInclude Include="include\Types\Errno.h" />
+    <ClInclude Include="include\Types\EventHandler.h" />
+    <ClInclude Include="include\Types\FS.h" />
+    <ClInclude Include="include\Types\Generic.h" />
+    <ClInclude Include="include\Types\List.h" />
+    <ClInclude Include="include\Types\Mutex.h" />
+    <ClInclude Include="include\Types\Proc.h" />
+    <ClInclude Include="include\Types\Sparse.h" />
+    <ClInclude Include="include\Types\Syscall.h" />
+    <ClInclude Include="include\Types\Uio.h" />
+    <ClInclude Include="include\Types\VM.h" />
     <ClInclude Include="include\Watcher.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

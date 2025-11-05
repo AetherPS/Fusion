@@ -1,7 +1,7 @@
 #pragma once
 #include "FakeSelfTypes.h"
 #include "FakePkgTypes.h"
-#include "Types.h"
+#include "Types/All.h"
 
 /* Util */
 extern sysentvec* sysvec;

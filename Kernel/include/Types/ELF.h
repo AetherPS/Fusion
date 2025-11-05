@@ -1,7 +1,5 @@
 #pragma once
 
-#include "common.h"
-
 #define ELF32_R_SYM(i)	((i)>>8)
 #define ELF32_R_TYPE(i)   ((unsigned char)(i))
 #define ELF32_R_INFO(s,t) (((s)<<8)+(unsigned char)(t))

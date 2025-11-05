@@ -37,6 +37,9 @@ void MemcpyTextSeg(void* dst, void* src, size_t len)
 
 void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_prot_t prot, vm_prot_t max)
 {
+	// Round up to the next page size.
+	size = round_page(size);
+
 	vm_map_lock(map);
 
 	uint64_t memoryAddress = 0;
@@ -45,7 +48,7 @@ void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_pro
 	{
 		vm_map_unlock(map);
 
-		kprintf("AllocateForMap: an error has occurred allocating: %d, %llu.\n", res, memoryAddress);
+		kprintf("%s: an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, memoryAddress);
 		return nullptr;
 	}
 
@@ -56,7 +59,7 @@ void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_pro
 
 		vm_map_unlock(map);
 
-		kprintf("AllocateForMap: vm_map_insert an error has occurred allocating: %d, %llu.\n", res, memoryAddress);
+		kprintf("%s: vm_map_insert an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, memoryAddress);
 		return nullptr;
 	}
 

@@ -1,13 +1,8 @@
 #pragma once
 
-#include <stdint.h>
-#include <stdarg.h>
-
 #include "FeatureFlags.h"
 #include "Offsets.h"
-
-#include "Sparse.h"
-#include "Types.h"
+#include "Types/All.h"
 #include "DriverDefinitions.h"
 #include "Asm.h"
 #include "Patches.h"

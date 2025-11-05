@@ -1,6 +1,6 @@
 #include "Common.h"
 #include "FakeSelfs.h"
-#include "Types.h"
+#include "Types/All.h"
 
 const uint8_t FakeSelf::AuthInfoForExec[] =
 {

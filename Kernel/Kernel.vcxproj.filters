@@ -37,6 +37,9 @@
     <Filter Include="source\Misc">
       <UniqueIdentifier>{cfcc5ec7-03de-49b3-bba3-8fdfd8177dee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Types">
+      <UniqueIdentifier>{bea0408c-86dc-4fcd-8316-0a5cf6a25429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Linker" />
@@ -49,9 +52,6 @@
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
       <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Patches.cpp">
-      <Filter>source\Utils</Filter>
     </ClCompile>
     <ClCompile Include="source\Resolver.cpp">
       <Filter>source\Utils</Filter>
@@ -122,15 +122,12 @@
     <ClCompile Include="source\Fusion.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\Patches.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Asm.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Patches.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Types.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\Resolver.h">
@@ -157,9 +154,6 @@
     <ClInclude Include="include\Heap.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Sparse.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="include\Misc.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
@@ -180,9 +174,6 @@
     </ClInclude>
     <ClInclude Include="include\table64.h">
       <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\elf.h">
-      <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\FeatureFlags.h">
       <Filter>include</Filter>
@@ -219,6 +210,54 @@
     </ClInclude>
     <ClInclude Include="include\Fusion.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Patches.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Sparse.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Dynlib.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\ELF.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Errno.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\FS.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Generic.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\List.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Mutex.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Proc.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\VM.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Dev.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Syscall.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\EventHandler.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\All.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Types\Uio.h">
+      <Filter>include\Types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
