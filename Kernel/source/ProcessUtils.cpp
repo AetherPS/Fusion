@@ -11,7 +11,7 @@ proc* GetProcByName(const char* name)
 	{
 		FOREACH_PROC_IN_SYSTEM(p)
 		{
-			mtx_unlock_flags(&p->p_lock, 0);
+			mtx_lock_flags(&p->p_lock, 0);
 
 			if (strstr(p->p_comm, name))
 			{

@@ -58,4 +58,3 @@ int sys_munmap(thread* td, caddr_t addr, size_t len)
 	// success
 	return td->td_retval[0];
 }
-
