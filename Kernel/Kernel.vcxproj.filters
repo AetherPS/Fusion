@@ -128,6 +128,9 @@
     <ClCompile Include="source\Misc\Watcher.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="source\Utils\Detours\DetourMemoryPool.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FeatureFlags.h">
@@ -261,6 +264,12 @@
     </ClInclude>
     <ClInclude Include="include\Misc\Watcher.h">
       <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Detours\DetourMemoryPool.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Common.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

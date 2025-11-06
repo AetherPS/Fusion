@@ -1,6 +1,11 @@
 #include "Common.h"
 #include "StringUtils.h"
 
+int isprint(int ch)
+{
+	return (ch >= 32 && ch <= 126); // Check if the character is within the printable ASCII range
+}
+
 char* strrchr(char* str, char ch) 
 {
 	char* lastOccurrence = 0;

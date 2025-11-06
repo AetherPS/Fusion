@@ -29,12 +29,7 @@ public:
 		Create(reinterpret_cast<void*>(address), reinterpret_cast<void*>(function));
 	}
 
-	~Detour32() { Restore(); }
+	~Detour32() { Disable(); }
 
 	void Create(void* address, void* destination);
-	void Restore();
-
-private:
-	size_t TrampolineSize;
-	void* TrampolinePtr;
 };

@@ -1,11 +1,6 @@
 #include "Common.h"
 #include "Misc.h"
 
-int isprint(int ch)
-{
-	return (ch >= 32 && ch <= 126); // Check if the character is within the printable ASCII range
-}
-
 void hexdump(void* ptr, int buflen, bool showAddress)
 {
 	unsigned char* buf = (unsigned char*)ptr;
@@ -35,7 +30,7 @@ void MemcpyTextSeg(void* dst, void* src, size_t len)
 	cpu_enable_wp();
 }
 
-void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_prot_t prot, vm_prot_t max)
+uint64_t AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_prot_t prot, vm_prot_t max)
 {
 	// Round up to the next page size.
 	size = round_page(size);
@@ -49,7 +44,7 @@ void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_pro
 		vm_map_unlock(map);
 
 		kprintf("%s: an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, memoryAddress);
-		return nullptr;
+		return 0;
 	}
 
 	res = vm_map_insert(map, 0, 0, memoryAddress, memoryAddress + size, prot, max, 0);
@@ -60,12 +55,33 @@ void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_pro
 		vm_map_unlock(map);
 
 		kprintf("%s: vm_map_insert an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, memoryAddress);
-		return nullptr;
+		return 0;
 	}
 
 	vm_map_unlock(map);
 
-	return (void*)(uintptr_t)memoryAddress;
+	return memoryAddress;
+}
+
+int FreeForMap(vm_map_t map, uint64_t address, vm_offset_t size)
+{
+	// Round up to the next page size.
+	size = round_page(size);
+
+	vm_map_lock(map);
+
+	auto res = vm_map_delete(map, address, address + size);
+	if (res != 0)
+	{
+		vm_map_unlock(map);
+
+		kprintf("%s: vm_map_delete an error has occurred freeing: %d, %llu.\n", __FUNCTION__, res, address);
+		return res;
+	}
+
+	vm_map_unlock(map);
+
+	return 0;
 }
 
 void* KmemAllocAt(vm_map_t map, vm_ooffset_t offset, vm_offset_t size)

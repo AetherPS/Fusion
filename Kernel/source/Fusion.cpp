@@ -22,6 +22,10 @@ void InitFusion()
 	PrintFeatureFlags();			// Print the active feature flags.
 	MkDir("/data/Fusion", 0777);	// Ensure the fusion dir is made.
 
+	kprintf("Initializing Detour Memory Pool...");
+	DetourMemoryPool::Init(PAGE_SIZE); // 4 MB Pool
+	kprintf("Done.\n");
+
 	kprintf("Initializing Watcher...");
 	Watcher::Init();
 	kprintf("Done.\n");

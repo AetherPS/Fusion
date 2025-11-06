@@ -1,14 +1,6 @@
 #include "Common.h"
 #include "BaseDetour.h"
 
-#ifndef INT32_MIN
-#define INT32_MIN (-2147483647 - 1)
-#endif
-
-#ifndef INT32_MAX
-#define INT32_MAX 2147483647
-#endif
-
 bool BaseDetour::IsRelativelyClose(void* address1, void* address2)
 {
 	const uintptr_t addr1 = reinterpret_cast<uintptr_t>(address1);
@@ -46,31 +38,85 @@ void BaseDetour::WriteCall32(void* address, void* destination)
 	MemcpyTextSeg(address, call_bytes, sizeof(call_bytes));
 }
 
-void* memoryReserveAddress = nullptr;
-size_t memoryReserveSize = PAGE_SIZE;
-size_t currentMemoryOffset = 0;
-
-void* BaseDetour::ReserveMemory(size_t ammount)
+int BaseDetour::GetInstructionSize()
 {
-	if (memoryReserveAddress == nullptr)
+	int instructionLength = 0;
+	while (instructionLength < JUMP_32SIZE)
 	{
-		memoryReserveAddress = AllocateForMap(kernel_map, (vm_ooffset_t)KernelBase, memoryReserveSize, VM_PROT_ALL, VM_PROT_ALL);
-		currentMemoryOffset = 0;
+		auto ptr = reinterpret_cast<uint64_t>(Address) + instructionLength;
 
-		if (memoryReserveAddress == nullptr)
+		hde64s hs;
+		instructionLength += hde64_disasm(reinterpret_cast<void*>(ptr), &hs);
+
+		if (hs.flags & F_ERROR)
 		{
-			kprintf("Failed to allocate reserve memory.\n");
-			return nullptr;
+			kprintf("[Detour32] HDE has run into an error dissasembling %llX!\n", ptr);
+			return -1;
 		}
 	}
 
-	if (currentMemoryOffset + ammount >= memoryReserveSize)
-	{
-		kprintf("Reserve pool is empty.\n");
-		return nullptr;
-	}
-	
-	currentMemoryOffset += ammount;
+	return instructionLength;
+}
 
-	return (void*)((uint64_t)memoryReserveAddress + (currentMemoryOffset - ammount));
+void BaseDetour::SaveOriginalBytes(size_t size)
+{
+	OriginalBytes = (uint8_t*)_malloc(size);
+	memcpy(OriginalBytes, Address, size);
+}
+
+bool BaseDetour::AllocateTrampoline()
+{
+	TrampolineAddress = (void*)DetourMemoryPool::ReserveMemory(JUMP_64SIZE);
+	if (TrampolineAddress == nullptr)
+	{
+		kprintf("[BaseDetour] AllocateTrampoline: an error has occurred allocating trampoline: %llX.\n", TrampolineAddress);
+		return false;
+	}
+
+	// Make sure we can make the jump.
+	if (!IsRelativelyClose((void*)((uint64_t)Address + JUMP_32SIZE), TrampolineAddress))
+	{
+		kprintf("[DetourCall] create: Trampoline is not relatively close we can not write a jump 32.\n");
+		return false;
+	}
+
+	return true;
+}
+
+bool BaseDetour::InitializeStub(int instructionLength, void* from, void* to)
+{
+	StubAddress = (void*)DetourMemoryPool::ReserveMemory(instructionLength + JUMP_64SIZE);
+	if (StubAddress == nullptr)
+	{
+		kprintf("[Detour32] create: DetourMemoryPool::ReserveMemory failed.\n");
+		return false;
+	}
+
+	// write original instructions to the stub
+	memcpy(StubAddress, Address, instructionLength);
+
+	// write the jump back to main function to the stub
+	auto stub_jump = reinterpret_cast<uint64_t>(StubAddress) + instructionLength;
+	auto stub_return = reinterpret_cast<uint64_t>(Address) + instructionLength;
+
+	WriteJump64(reinterpret_cast<void*>(stub_jump), reinterpret_cast<void*>(stub_return));
+	WriteJump64(from, to);
+}
+
+void BaseDetour::Enable()
+{
+	if (DetourSet)
+	{
+		WriteMethod(Address, Destination);
+		DetourSet = true;
+	}
+}
+
+void BaseDetour::Disable()
+{
+	if (DetourSet)
+	{
+		MemcpyTextSeg((void*)Address, OriginalBytes, OriginalSize);
+		DetourSet = false;
+	}
 }

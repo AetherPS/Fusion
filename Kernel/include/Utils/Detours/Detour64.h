@@ -29,11 +29,7 @@ public:
 		Create(reinterpret_cast<void*>(address), reinterpret_cast<void*>(function));
 	}
 
-	~Detour64() { Restore(); }
+	~Detour64() { Disable(); }
 
 	void Create(void* address, void* destination);
-	void Restore();
-
-private:
-
 };

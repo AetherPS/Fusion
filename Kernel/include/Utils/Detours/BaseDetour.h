@@ -9,7 +9,7 @@ public:
 	template <typename result, typename... Args>
 	result Invoke(Args... args)
 	{
-		result(*f)(Args... args) = decltype(f)(StubPtr);
+		result(*f)(Args... args) = decltype(f)(StubAddress);
 		return f(args...);
 	}
 
@@ -18,17 +18,25 @@ public:
 		_free(OriginalBytes);
 	}
 
+	void Enable();
+	void Disable();
+
 protected:
-	static void* ReserveMemory(size_t ammount);
 	bool IsRelativelyClose(void* address1, void* address2);
 	uintptr_t GetRelativeAddress(void* address, void* destination);
 	void WriteJump32(void* address, void* destination);
 	void WriteJump64(void* address, void* destination);
 	void WriteCall32(void* address, void* destination);
+	int GetInstructionSize();
+	void SaveOriginalBytes(size_t size);
+	bool AllocateTrampoline();
+	bool InitializeStub(int instructionLength, void* from, void* to);
 
-	void* StubPtr;
-	size_t StubSize;
+	void (*WriteMethod)(void*, void*);
+	void* StubAddress;
 	void* Address;
+	void* Destination;
+	void* TrampolineAddress;
 	uint8_t* OriginalBytes;
 	size_t OriginalSize;
 	bool DetourSet;
