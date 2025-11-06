@@ -19,27 +19,6 @@ void Detour::Detour64(Detour** detourOut, void* address, void* destination)
 	(*detourOut)->Enable();
 }
 
-void* Detour::InitializeStub(int instructionLength, void* address)
-{
-	auto stubAddress = DetourMemoryPool::ReserveMemory(instructionLength + JUMP_64SIZE);
-	if (stubAddress == nullptr)
-	{
-		kprintf("[Detour32] create: DetourMemoryPool::ReserveMemory failed.\n");
-		return nullptr;
-	}
-
-	// write original instructions to the stub
-	memcpy(stubAddress, address, instructionLength);
-
-	// write the jump back to main function to the stub
-	auto stubFrom = reinterpret_cast<uint64_t>(stubAddress) + instructionLength;
-	auto stubTo = reinterpret_cast<uint64_t>(address) + instructionLength;
-
-	WriteJump64(reinterpret_cast<void*>(stubFrom), reinterpret_cast<void*>(stubTo));
-
-	return stubAddress;
-}
-
 Detour* Detour::CreateDetour(DetourType type, void* address, void* destination)
 {
 	int instructionLength = 0;
@@ -80,6 +59,8 @@ Detour* Detour::CreateDetour(DetourType type, void* address, void* destination)
 			kprintf("[Detour] Trampoline is not relatively close we can not write a jump 32.\n");
 			return nullptr;
 		}
+
+		WriteJump64(trampolineAddress, destination);
 	}
 
 	void* stubAddress = nullptr;
@@ -90,12 +71,22 @@ Detour* Detour::CreateDetour(DetourType type, void* address, void* destination)
 		break;
 
 	case DetourType_Jump32:
-		stubAddress = InitializeStub(instructionLength, address);
-		WriteJump64(trampolineAddress, destination);
-		break;
-
 	case DetourType_Jump64:
-		stubAddress = InitializeStub(instructionLength, address);
+		stubAddress = DetourMemoryPool::ReserveMemory(instructionLength + JUMP_64SIZE);
+		if (stubAddress == nullptr)
+		{
+			kprintf("[Detour] DetourMemoryPool::ReserveMemory failed.\n");
+			return nullptr;
+		}
+
+		// write original instructions to the stub
+		memcpy(stubAddress, address, instructionLength);
+
+		// write the jump back to main function to the stub
+		auto stubFrom = reinterpret_cast<uint64_t>(stubAddress) + instructionLength;
+		auto stubTo = reinterpret_cast<uint64_t>(address) + instructionLength;
+
+		WriteJump64(reinterpret_cast<void*>(stubFrom), reinterpret_cast<void*>(stubTo));
 		break;
 	}
 

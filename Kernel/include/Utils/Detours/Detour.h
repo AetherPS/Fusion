@@ -49,6 +49,5 @@ private:
 	size_t OriginalSize;
 	bool DetourSet;
 
-	static void* InitializeStub(int instructionLength, void* address);
 	static Detour* CreateDetour(DetourType type, void* address, void* destination);
 };
