@@ -11,12 +11,10 @@
 #include "Heap.h"
 #include "Misc.h"
 #include "StringUtils.h"
+#include "ProcessUtils.h"
 
 #include "DetourMemoryPool.h"
 #include "Detour.h"
-
-#include "ProcessUtils.h"
-#include "SystemCalls.h"
 
 #include "FakePkgTypes.h"
 #include "FakePkgs.h"

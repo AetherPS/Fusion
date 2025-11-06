@@ -1,7 +1,5 @@
 #include "Common.h"
 #include "DriverProc.h"
-#include "ProcessUtils.h"
-#include "SystemCalls.h"
 
 int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, thread* td)
 {
@@ -208,9 +206,9 @@ int DriverProc::ProcessAlloc(caddr_t data)
 	if (res != 0)
 		return res;
 
-	mtx_unlock_flags(&p->p_lock, 0);
+	auto outAddress = AllocateMemory(p, input.Length, input.Protection, input.Flags);
 
-	auto outAddress = AllocateMemory(td, input.Length, input.Protection, input.Flags);
+	mtx_unlock_flags(&p->p_lock, 0);
 
 	// Copy the result out.
 	copyout(&outAddress, input.OutAddress, sizeof(outAddress));
@@ -228,9 +226,11 @@ int DriverProc::ProcessFree(caddr_t data)
 	if (res != 0)
 		return res;
 
+	res = FreeMemory(p, input.ProcessAddress, input.Length);
+
 	mtx_unlock_flags(&p->p_lock, 0);
 
-	return FreeMemory(td, (caddr_t)input.ProcessAddress, input.Length);
+	return res;
 }
 
 int DriverProc::StartThread(caddr_t data)
@@ -261,7 +261,6 @@ int DriverProc::Resolve(caddr_t data)
 	mtx_unlock_flags(&p->p_lock, 0);
 
 	res = dynlib_dlsym(p, input.Handle, input.Symbol, (*input.Library != '\0') ? input.Library : NULL, input.Flags, (void**)&input.Address);
-	kprintf("%s: Resolved %s in %s to %llx with result %d\n", __FUNCTION__, input.Symbol, input.Library, input.Address, res);
 
 	copyout(&input, data, sizeof(Input_ResolveInfo));
 
