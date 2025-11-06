@@ -6,8 +6,6 @@
 	NOTE: Dont forget to update the *PrintFeatureFlags()* to print any new feature flags you may add!
 */
 
-#define DEBUG
-
 #define FF_BETA
 #define FF_HomeBrew
 #define FF_Driver

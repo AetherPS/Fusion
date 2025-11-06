@@ -1,6 +1,5 @@
 #include "Common.h"
 #include "ProcessUtils.h"
-#include "SystemCalls.h"
 
 proc* GetProcByName(const char* name)
 {
@@ -77,14 +76,59 @@ int CreateThread(thread* td, void* entry, void* arg, char* stack, size_t stackSi
 	return create_thread(td, 0, entry, arg, stack, stackSize, 0, 0, 0, 0, 0);
 }
 
-caddr_t AllocateMemory(thread* td, size_t len, int prot, int flags)
+uint64_t AllocateMemory(proc* p, size_t len, int prot, int flags)
 {
-	return sys_mmap(td, nullptr, len, prot, flags, -1, 0);
+	vm_offset_t mappedAddress = 0;
+	auto pageLength = round_page(len);
+
+	auto vmspace = p->p_vmspace;
+	if (!vmspace)
+	{
+		kprintf("%s: Process has no vmspace.\n", __FUNCTION__);
+		return 0;
+	}
+
+	vm_map_t map = &vmspace->vm_map;
+
+	vm_map_lock(map);
+	{
+		int res = vm_map_findspace(map, map->header.start, pageLength, &mappedAddress);
+		if (res != 0 || mappedAddress == 0)
+		{
+			vm_map_unlock(map);
+			kprintf("%s: vm_map_findspace an error has occurred allocating: %d.\n", __FUNCTION__, res);
+			return 0;
+		}
+
+		res = vm_map_insert(map, 0, 0, mappedAddress, mappedAddress + pageLength, prot, prot, 0);
+		if (res != 0)
+		{
+			vm_map_unlock(map);
+			kprintf("%s: vm_map_insert an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, mappedAddress);
+			return 0;
+		}
+	}
+	vm_map_unlock(map);
+
+	return mappedAddress;
 }
 
-int FreeMemory(thread* td, caddr_t addr, size_t len)
+int FreeMemory(proc* p, uint64_t addr, size_t len)
 {
-	return sys_munmap(td, addr, len);
+	auto vmspace = p->p_vmspace;
+	if (!vmspace)
+	{
+		kprintf("%s: Process has no vmspace.\n", __FUNCTION__);
+		return EINVAL;
+	}
+
+	vm_map_t map = &vmspace->vm_map;
+
+	vm_map_lock(map);
+	int res = vm_map_delete(map, addr, addr + round_page(len));
+	vm_map_unlock(map);
+
+	return res;
 }
 
 int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int flags, void** addr)

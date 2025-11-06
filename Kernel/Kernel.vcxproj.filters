@@ -74,9 +74,6 @@
     <ClCompile Include="source\Utils\Resolver.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\SystemCalls.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="source\Utils\Detours\Detour.cpp">
       <Filter>source\Utils\Detours</Filter>
     </ClCompile>
@@ -191,9 +188,6 @@
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\Resolver.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\SystemCalls.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\Detours\Detour.h">
