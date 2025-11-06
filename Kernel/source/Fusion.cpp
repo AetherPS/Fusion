@@ -76,8 +76,7 @@ void InitFusion()
 
 #ifdef FF_Fuse
 	kprintf("Starting Fuse...");
-	auto fuseResult = fuse_loader(NULL, 0, NULL);
-	kprintf("Done. Result: %d\n", fuseResult);
+	kprintf(fuse_loader(NULL, 0, NULL) == 0 ? "Done.\n" : "Failed.\n");
 #endif
 
 #ifdef FF_TTYRedirect
