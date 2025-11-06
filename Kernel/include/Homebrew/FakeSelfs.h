@@ -10,11 +10,11 @@ private:
     static const uint8_t AuthInfoForExec[0x88];
     static const uint8_t AuthInfoForDynlib[0x88];
 
-    static DetourCall* SceSblAuthMgrVerifyHeaderDetour1;
-    static DetourCall* SceSblAuthMgrVerifyHeaderDetour2;;
-    static DetourCall* SceSblAuthMgrIsLoadable2Detour;
-    static DetourCall* SceSblAuthMgrSmLoadSelfSegment_MailboxDetour;
-    static DetourCall* SceSblAuthMgrSmLoadSelfBlock_MailboxDetour;
+    static Detour* SceSblAuthMgrVerifyHeaderDetour1;
+    static Detour* SceSblAuthMgrVerifyHeaderDetour2;;
+    static Detour* SceSblAuthMgrIsLoadable2Detour;
+    static Detour* SceSblAuthMgrSmLoadSelfSegment_MailboxDetour;
+    static Detour* SceSblAuthMgrSmLoadSelfBlock_MailboxDetour;
 
     static SblMapListEntry* SceSblDriverFindMappedPageListByGpuVa(vm_offset_t p_GpuVa);
     static vm_offset_t SceSblDriverGpuVaToCpuVa(vm_offset_t p_GpuVa, size_t* p_NumPageGroups);

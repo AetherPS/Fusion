@@ -1,11 +1,6 @@
 #include "Common.h"
 #include "Misc.h"
 
-int isprint(int ch)
-{
-	return (ch >= 32 && ch <= 126); // Check if the character is within the printable ASCII range
-}
-
 void hexdump(void* ptr, int buflen, bool showAddress)
 {
 	unsigned char* buf = (unsigned char*)ptr;
@@ -26,16 +21,7 @@ void hexdump(void* ptr, int buflen, bool showAddress)
 	}
 }
 
-void MemcpyTextSeg(void* dst, void* src, size_t len)
-{
-	cpu_disable_wp();
-
-	memcpy(dst, src, len);
-
-	cpu_enable_wp();
-}
-
-void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_prot_t prot, vm_prot_t max)
+uint64_t AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_prot_t prot, vm_prot_t max)
 {
 	// Round up to the next page size.
 	size = round_page(size);
@@ -49,7 +35,7 @@ void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_pro
 		vm_map_unlock(map);
 
 		kprintf("%s: an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, memoryAddress);
-		return nullptr;
+		return 0;
 	}
 
 	res = vm_map_insert(map, 0, 0, memoryAddress, memoryAddress + size, prot, max, 0);
@@ -60,12 +46,33 @@ void* AllocateForMap(vm_map_t map, vm_ooffset_t offset, vm_offset_t size, vm_pro
 		vm_map_unlock(map);
 
 		kprintf("%s: vm_map_insert an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, memoryAddress);
-		return nullptr;
+		return 0;
 	}
 
 	vm_map_unlock(map);
 
-	return (void*)(uintptr_t)memoryAddress;
+	return memoryAddress;
+}
+
+int FreeForMap(vm_map_t map, uint64_t address, vm_offset_t size)
+{
+	// Round up to the next page size.
+	size = round_page(size);
+
+	vm_map_lock(map);
+
+	auto res = vm_map_delete(map, address, address + size);
+	if (res != 0)
+	{
+		vm_map_unlock(map);
+
+		kprintf("%s: vm_map_delete an error has occurred freeing: %d, %llu.\n", __FUNCTION__, res, address);
+		return res;
+	}
+
+	vm_map_unlock(map);
+
+	return 0;
 }
 
 void* KmemAllocAt(vm_map_t map, vm_ooffset_t offset, vm_offset_t size)
@@ -141,4 +148,50 @@ bool GetSandboxPath(thread* td, char* sandboxPath)
 int MkDir(const char* path, int mode)
 {
 	return kern_mkdir(CurrentThread(), (char*)path, 0, mode);
+}
+
+void MemcpyTextSeg(void* dst, void* src, size_t len)
+{
+	cpu_disable_wp();
+
+	memcpy(dst, src, len);
+
+	cpu_enable_wp();
+}
+
+bool IsRelativelyClose(void* address1, void* address2)
+{
+	const uintptr_t addr1 = reinterpret_cast<uintptr_t>(address1);
+	const uintptr_t addr2 = reinterpret_cast<uintptr_t>(address2);
+	const int64_t diff = static_cast<int64_t>(addr1 - addr2);
+	return diff >= INT32_MIN && diff <= INT32_MAX;
+}
+
+uintptr_t GetRelativeAddress(void* address, void* destination)
+{
+	return size_t(destination) - (size_t(address) + JUMP_32SIZE);
+}
+
+void WriteJump32(void* address, void* destination)
+{
+	uint8_t jmp_bytes[JUMP_32SIZE] = { 0xE9, 0x90, 0x90, 0x90, 0x90 };
+	*reinterpret_cast<uint32_t*>(jmp_bytes + 1) = GetRelativeAddress(address, destination);
+
+	MemcpyTextSeg(address, jmp_bytes, sizeof(jmp_bytes));
+}
+
+void WriteJump64(void* address, void* destination)
+{
+	uint8_t jmp_bytes[JUMP_64SIZE] = { 0xFF, 0x25, 0x00, 0x00, 0x00, 0x00, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+	*reinterpret_cast<uint64_t*>(jmp_bytes + 6) = reinterpret_cast<uintptr_t>(destination);
+
+	MemcpyTextSeg(address, jmp_bytes, sizeof(jmp_bytes));
+}
+
+void WriteCall32(void* address, void* destination)
+{
+	uint8_t call_bytes[CALL_32SIZE] = { 0xE8, 0x90, 0x90, 0x90, 0x90 };
+	*reinterpret_cast<uint32_t*>(call_bytes + 1) = GetRelativeAddress(address, destination);
+
+	MemcpyTextSeg(address, call_bytes, sizeof(call_bytes));
 }

@@ -5,7 +5,7 @@
 
 cdev* FusionDriver::m_Device;
 cdevsw FusionDriver::m_DeviceSw;
-Detour32* FusionDriver::getnewvnodeDetour;
+Detour* FusionDriver::getnewvnodeDetour;
 
 #define DRIVER_NAME "Fusion"
 
@@ -29,7 +29,7 @@ void FusionDriver::Init()
 	else if (ret != 0)
 		kprintf("could not create device driver (%d).", ret);
 
-	getnewvnodeDetour = new Detour32(KernelBase + addr_getnewvnode, (uint8_t*)&getnewvnodeHook);
+	Detour::Detour32(&getnewvnodeDetour, KernelBase + addr_getnewvnode, (uint8_t*)&getnewvnodeHook);
 }
 
 void FusionDriver::Term()

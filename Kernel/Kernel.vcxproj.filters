@@ -77,16 +77,7 @@
     <ClCompile Include="source\Utils\SystemCalls.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\Detours\BaseDetour.cpp">
-      <Filter>source\Utils\Detours</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Utils\Detours\Detour32.cpp">
-      <Filter>source\Utils\Detours</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Utils\Detours\Detour64.cpp">
-      <Filter>source\Utils\Detours</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Utils\Detours\DetourCall.cpp">
+    <ClCompile Include="source\Utils\Detours\Detour.cpp">
       <Filter>source\Utils\Detours</Filter>
     </ClCompile>
     <ClCompile Include="source\Utils\Detours\hde64.cpp">
@@ -127,6 +118,9 @@
     </ClCompile>
     <ClCompile Include="source\Misc\Watcher.cpp">
       <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Detours\DetourMemoryPool.cpp">
+      <Filter>source\Utils\Detours</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,16 +196,7 @@
     <ClInclude Include="include\Utils\SystemCalls.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\Utils\Detours\BaseDetour.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\Detours\Detour32.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\Detours\Detour64.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\Detours\DetourCall.h">
+    <ClInclude Include="include\Utils\Detours\Detour.h">
       <Filter>include\Utils\Detours</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\Detours\hde64.h">
@@ -261,6 +246,12 @@
     </ClInclude>
     <ClInclude Include="include\Misc\Watcher.h">
       <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Detours\DetourMemoryPool.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Common.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

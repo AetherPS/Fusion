@@ -7,8 +7,7 @@ public:
 	static void Term();
 
 private:
-	static Detour64* DipSwitchOnIoctlDetour;
-	static Detour32* sceKernelCheckDipswDetour;
+	static Detour* sceKernelCheckDipswDetour;
 
 	static int DipSwitchOnIoctlHook(cdev* dev, unsigned long cmd, caddr_t data, int fflag, thread* td);
 	static int sceKernelCheckDipswHook(unsigned int dipswitch);

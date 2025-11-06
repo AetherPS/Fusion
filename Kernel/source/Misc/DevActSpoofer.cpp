@@ -1,7 +1,7 @@
 #include "Common.h"
 #include "DevActSpoofer.h"
 
-Detour64* DevActSpoofer::DevActOnIoctlDetour;
+Detour* DevActSpoofer::DevActOnIoctlDetour;
 
 uint8_t actId[] = { 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 0x69, 0x69, 0x69, 0x69 };
 
@@ -41,7 +41,7 @@ int DevActSpoofer::DevActOnIoctlHook(cdev* dev, unsigned long cmd, caddr_t data,
 
 void DevActSpoofer::Init()
 {
-	DevActOnIoctlDetour = new Detour64(KernelBase + addr_devact_onioctl_hook, DevActOnIoctlHook);
+	Detour::Detour64(&DevActOnIoctlDetour, KernelBase + addr_devact_onioctl_hook, (void*)DevActOnIoctlHook);
 }
 
 void DevActSpoofer::Term()

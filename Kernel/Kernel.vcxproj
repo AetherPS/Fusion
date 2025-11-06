@@ -126,10 +126,8 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClCompile Include="source\Misc\Patches.cpp" />
     <ClCompile Include="source\Misc\TTYRedirector.cpp" />
     <ClCompile Include="source\Misc\Watcher.cpp" />
-    <ClCompile Include="source\Utils\Detours\BaseDetour.cpp" />
-    <ClCompile Include="source\Utils\Detours\Detour32.cpp" />
-    <ClCompile Include="source\Utils\Detours\Detour64.cpp" />
-    <ClCompile Include="source\Utils\Detours\DetourCall.cpp" />
+    <ClCompile Include="source\Utils\Detours\Detour.cpp" />
+    <ClCompile Include="source\Utils\Detours\DetourMemoryPool.cpp" />
     <ClCompile Include="source\Utils\Detours\hde64.cpp" />
     <ClCompile Include="source\Utils\Heap.cpp" />
     <ClCompile Include="source\Utils\Misc.cpp" />
@@ -139,6 +137,7 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClCompile Include="source\Utils\SystemCalls.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Common.h" />
     <ClInclude Include="include\Driver\DriverKernel.h" />
     <ClInclude Include="include\Driver\DriverProc.h" />
     <ClInclude Include="include\Driver\FusionDriver.h" />
@@ -171,10 +170,8 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClInclude Include="include\Types\Uio.h" />
     <ClInclude Include="include\Types\VM.h" />
     <ClInclude Include="include\Utils\Asm.h" />
-    <ClInclude Include="include\Utils\Detours\BaseDetour.h" />
-    <ClInclude Include="include\Utils\Detours\Detour32.h" />
-    <ClInclude Include="include\Utils\Detours\Detour64.h" />
-    <ClInclude Include="include\Utils\Detours\DetourCall.h" />
+    <ClInclude Include="include\Utils\Detours\Detour.h" />
+    <ClInclude Include="include\Utils\Detours\DetourMemoryPool.h" />
     <ClInclude Include="include\Utils\Detours\hde64.h" />
     <ClInclude Include="include\Utils\Detours\table64.h" />
     <ClInclude Include="include\Utils\Heap.h" />

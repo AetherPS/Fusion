@@ -11,11 +11,9 @@
 #include "Heap.h"
 #include "Misc.h"
 #include "StringUtils.h"
- 
-#include "BaseDetour.h"
-#include "Detour64.h"
-#include "Detour32.h"
-#include "DetourCall.h"
+
+#include "DetourMemoryPool.h"
+#include "Detour.h"
 
 #include "ProcessUtils.h"
 #include "SystemCalls.h"
