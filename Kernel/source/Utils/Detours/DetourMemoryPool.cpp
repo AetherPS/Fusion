@@ -14,7 +14,6 @@ void DetourMemoryPool::Init(size_t poolSize)
 {
 	PoolSize = poolSize;
 
-	kprintf("KmemAllocAt\n");
 	PoolStart = KmemAllocAt(kernel_map, (vm_ooffset_t)KernelBase, PoolSize); //AllocateForMap(kernel_map, (vm_ooffset_t)KernelBase, PoolSize, VM_PROT_ALL, VM_PROT_ALL);
 	if (PoolStart == nullptr) 
 	{
@@ -23,7 +22,6 @@ void DetourMemoryPool::Init(size_t poolSize)
 		return;
 	}
 
-	kprintf("vm_map_protect\n");
 	int res = vm_map_protect(kernel_map, (vm_offset_t)PoolStart, (vm_offset_t)PoolStart + PoolSize, VM_PROT_ALL, 0);
 	if (res != 0)
 	{
@@ -37,7 +35,7 @@ void DetourMemoryPool::Init(size_t poolSize)
 	kprintf("DetourMemoryPool initialized with %zu bytes at address: 0x%llX.\n", PoolSize, PoolStart);
 
 	PoolCurrent = PoolStart;
-	memset((void*)PoolStart, 0, PoolSize);
+	memset(PoolStart, 0, PoolSize);
 }
 
 /**

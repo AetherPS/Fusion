@@ -70,22 +70,22 @@ const uint8_t FakePkgs::FakeKeySeed[] =
 	0x46, 0x41, 0x4B, 0x45, 0x46, 0x41, 0x4B, 0x45, 0x46, 0x41, 0x4B, 0x45, 0x46, 0x41, 0x4B, 0x45,
 };
 
-DetourCall* FakePkgs::SceSblDriverSendMsgDetour;
-DetourCall* FakePkgs::SceSblPfsSetKeysDetour;
-DetourCall* FakePkgs::NpdrmDecryptIsolatedRifDetour;
-DetourCall* FakePkgs::NpdrmDecryptRifNewDetour;
-DetourCall* FakePkgs::SceSblKeymgrInvalidateKeySxXlockDetour;
+Detour* FakePkgs::SceSblDriverSendMsgDetour;
+Detour* FakePkgs::SceSblPfsSetKeysDetour;
+Detour* FakePkgs::NpdrmDecryptIsolatedRifDetour;
+Detour* FakePkgs::NpdrmDecryptRifNewDetour;
+Detour* FakePkgs::SceSblKeymgrInvalidateKeySxXlockDetour;
 
 void FakePkgs::Init()
 {
 	InstallShellCorePatches();
 	InstallShellUIPatches(nullptr);
 
-	SceSblDriverSendMsgDetour = new DetourCall(&SceSblDriverSendMsgDetour, KernelBase + addr_SceSblDriverSendMsgHook, SceSblDriverSendMsgHook);
-	SceSblPfsSetKeysDetour = new DetourCall(&SceSblPfsSetKeysDetour, KernelBase + addr_SceSblPfsSetKeysHook, SceSblPfsSetKeysHook);
-	NpdrmDecryptIsolatedRifDetour = new DetourCall(&NpdrmDecryptIsolatedRifDetour, KernelBase + addr_NpdrmDecryptIsolatedRifHook, NpdrmDecryptIsolatedRifHook);
-	NpdrmDecryptRifNewDetour = new DetourCall(&NpdrmDecryptRifNewDetour, KernelBase + addr_NpdrmDecryptRifNewHook, NpdrmDecryptRifNewHook);
-	SceSblKeymgrInvalidateKeySxXlockDetour = new DetourCall(&SceSblKeymgrInvalidateKeySxXlockDetour, KernelBase + addr_SceSblKeymgrInvalidateKeySxXlockHook, SceSblKeymgrInvalidateKeySxXlockHook);
+	Detour::DetourCall(&SceSblDriverSendMsgDetour, KernelBase + addr_SceSblDriverSendMsgHook, (void*)SceSblDriverSendMsgHook);
+	Detour::DetourCall(&SceSblPfsSetKeysDetour, KernelBase + addr_SceSblPfsSetKeysHook, (void*)SceSblPfsSetKeysHook);
+	Detour::DetourCall(&NpdrmDecryptIsolatedRifDetour, KernelBase + addr_NpdrmDecryptIsolatedRifHook, (void*)NpdrmDecryptIsolatedRifHook);
+	Detour::DetourCall(&NpdrmDecryptRifNewDetour, KernelBase + addr_NpdrmDecryptRifNewHook, (void*)NpdrmDecryptRifNewHook);
+	Detour::DetourCall(&SceSblKeymgrInvalidateKeySxXlockDetour, KernelBase + addr_SceSblKeymgrInvalidateKeySxXlockHook, (void*)SceSblKeymgrInvalidateKeySxXlockHook);
 }
 
 void FakePkgs::Term()

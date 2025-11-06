@@ -13,10 +13,7 @@
 #include "StringUtils.h"
 
 #include "DetourMemoryPool.h"
-#include "BaseDetour.h"
-#include "Detour64.h"
-#include "Detour32.h"
-#include "DetourCall.h"
+#include "Detour.h"
 
 #include "ProcessUtils.h"
 #include "SystemCalls.h"

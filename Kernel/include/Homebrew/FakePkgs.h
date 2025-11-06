@@ -16,11 +16,11 @@ private:
 	const static uint8_t RifDebugKey[];
 	const static uint8_t FakeKeySeed[];
 
-	static DetourCall* SceSblDriverSendMsgDetour;
-	static DetourCall* SceSblPfsSetKeysDetour;
-	static DetourCall* NpdrmDecryptIsolatedRifDetour;
-	static DetourCall* NpdrmDecryptRifNewDetour;
-	static DetourCall* SceSblKeymgrInvalidateKeySxXlockDetour;
+	static Detour* SceSblDriverSendMsgDetour;
+	static Detour* SceSblPfsSetKeysDetour;
+	static Detour* NpdrmDecryptIsolatedRifDetour;
+	static Detour* NpdrmDecryptRifNewDetour;
+	static Detour* SceSblKeymgrInvalidateKeySxXlockDetour;
 
 	static void InstallShellCorePatches();
 	static void InstallShellUIPatches(proc* p);

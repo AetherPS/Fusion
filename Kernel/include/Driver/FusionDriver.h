@@ -11,7 +11,7 @@ public:
 private:
 	static cdev* m_Device;
 	static cdevsw m_DeviceSw;
-	static Detour32* getnewvnodeDetour;
+	static Detour* getnewvnodeDetour;
 
 	static int getnewvnodeHook(const char* tag, mount* mp, void* vops, vnode** vpp);
 	static int GetKDriverInfo(caddr_t data);

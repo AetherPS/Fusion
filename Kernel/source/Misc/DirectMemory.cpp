@@ -2,7 +2,7 @@
 #include "DirectMemory.h"
 #include "Misc.h"
 
-Detour64* DirectMemory::OnDirectMemoryIoctlDetour;
+Detour* DirectMemory::OnDirectMemoryIoctlDetour;
 
 int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t data, int fflag, thread* td)
 {
@@ -39,7 +39,7 @@ int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t d
 
 void DirectMemory::Init()
 {
-    OnDirectMemoryIoctlDetour = new Detour64(KernelBase + addr_DirectMemoryHook, OnDirectMemoryIoctl);
+    Detour::Detour64(&OnDirectMemoryIoctlDetour, KernelBase + addr_DirectMemoryHook, (void*)OnDirectMemoryIoctl);
 }
 
 void DirectMemory::Term()
