@@ -5,7 +5,6 @@ void* DetourMemoryPool::PoolStart;
 void* DetourMemoryPool::PoolCurrent;
 size_t DetourMemoryPool::PoolSize;
 
-
 /**
  * @brief Initializes the memory pool by allocating a large block of memory.
  * @param poolSize The total size (in bytes) of the memory pool to reserve.
@@ -14,25 +13,16 @@ void DetourMemoryPool::Init(size_t poolSize)
 {
 	PoolSize = poolSize;
 
-	PoolStart = KmemAllocAt(kernel_map, (vm_ooffset_t)KernelBase, PoolSize); //AllocateForMap(kernel_map, (vm_ooffset_t)KernelBase, PoolSize, VM_PROT_ALL, VM_PROT_ALL);
+	PoolStart = KmemAllocAt(kernel_map, (vm_ooffset_t)KernelBase, PoolSize);
 	if (PoolStart == nullptr) 
 	{
 		kprintf("ERROR: Failed to allocate %zu bytes for DetourMemoryPool.\n", PoolSize);
 		PoolSize = 0;
 		return;
 	}
-
-	int res = vm_map_protect(kernel_map, (vm_offset_t)PoolStart, (vm_offset_t)PoolStart + PoolSize, VM_PROT_ALL, 0);
-	if (res != 0)
-	{
-		kprintf("ERROR: vm_map_protect failed %llX.\n", res);
-
-		kmem_free(kernel_map, PoolStart, PoolSize);
-
-		return;
-	}
-
+#ifdef DEBUG
 	kprintf("DetourMemoryPool initialized with %zu bytes at address: 0x%llX.\n", PoolSize, PoolStart);
+#endif
 
 	PoolCurrent = PoolStart;
 	memset(PoolStart, 0, PoolSize);
