@@ -10,6 +10,7 @@
 #include "hde64.h"
 #include "Heap.h"
 #include "Misc.h"
+#include "StringUtils.h"
  
 #include "BaseDetour.h"
 #include "Detour64.h"

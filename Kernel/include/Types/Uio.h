@@ -10,11 +10,11 @@ enum uio_seg {
 };
 
 struct uio {
-	iovec* uio_iov;		/* scatter/gather list */
+	iovec* uio_iov;				/* scatter/gather list */
 	int	uio_iovcnt;				/* length of scatter/gather list */
 	off_t	uio_offset;			/* offset in target object */
 	ssize_t	uio_resid;			/* remaining bytes to process */
 	enum uio_seg uio_segflg;	/* address space */
-	enum uio_rw uio_rw;		/* operation */
+	enum uio_rw uio_rw;			/* operation */
 	thread* uio_td;				/* owner */
 };

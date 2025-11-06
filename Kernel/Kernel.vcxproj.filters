@@ -45,7 +45,7 @@
     <None Include="Linker" />
     <None Include="Makefile" />
     <None Include="crt0.s" />
-    <None Include="source\Asm.s">
+    <None Include="source\Utils\Asm.s">
       <Filter>source\Utils</Filter>
     </None>
   </ItemGroup>
@@ -53,166 +53,88 @@
     <ClCompile Include="source\Main.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\Resolver.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="source\FakePkgs.cpp">
-      <Filter>source\Homebrew</Filter>
-    </ClCompile>
-    <ClCompile Include="source\FakeSelfs.cpp">
-      <Filter>source\Homebrew</Filter>
-    </ClCompile>
-    <ClCompile Include="source\ProcessUtils.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="source\SystemCalls.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Heap.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Misc.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Detour64.cpp">
-      <Filter>source\Utils\Detours</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DetourCall.cpp">
-      <Filter>source\Utils\Detours</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BaseDetour.cpp">
-      <Filter>source\Utils\Detours</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Detour32.cpp">
-      <Filter>source\Utils\Detours</Filter>
-    </ClCompile>
-    <ClCompile Include="source\hde64.cpp">
-      <Filter>source\Utils\Detours</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DriverKernel.cpp">
-      <Filter>source\Driver</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DriverProc.cpp">
-      <Filter>source\Driver</Filter>
-    </ClCompile>
-    <ClCompile Include="source\FusionDriver.cpp">
-      <Filter>source\Driver</Filter>
-    </ClCompile>
     <ClCompile Include="source\FeatureFlags.cpp">
       <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DevActSpoofer.cpp">
-      <Filter>source\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DirectMemory.cpp">
-      <Filter>source\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="source\LibraryReplacer.cpp">
-      <Filter>source\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="source\Watcher.cpp">
-      <Filter>source\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="source\DipSwitchSpoofer.cpp">
-      <Filter>source\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="source\TTYRedirector.cpp">
-      <Filter>source\Misc</Filter>
     </ClCompile>
     <ClCompile Include="source\Fusion.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\Patches.cpp">
+    <ClCompile Include="source\Utils\StringUtils.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Heap.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Misc.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\ProcessUtils.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Resolver.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\SystemCalls.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Detours\BaseDetour.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Detours\Detour32.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Detours\Detour64.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Detours\DetourCall.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\Detours\hde64.cpp">
+      <Filter>source\Utils\Detours</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Driver\DriverKernel.cpp">
+      <Filter>source\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Driver\DriverProc.cpp">
+      <Filter>source\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Driver\FusionDriver.cpp">
+      <Filter>source\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Homebrew\FakePkgs.cpp">
+      <Filter>source\Homebrew</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Homebrew\FakeSelfs.cpp">
+      <Filter>source\Homebrew</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Misc\DevActSpoofer.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Misc\DipSwitchSpoofer.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Misc\DirectMemory.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Misc\LibraryReplacer.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Misc\Patches.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Misc\TTYRedirector.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Misc\Watcher.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Asm.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Resolver.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FakePkgs.h">
-      <Filter>include\Homebrew</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FakePkgTypes.h">
-      <Filter>include\Homebrew</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FakeSelfs.h">
-      <Filter>include\Homebrew</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FakeSelfTypes.h">
-      <Filter>include\Homebrew</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ProcessUtils.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SystemCalls.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Heap.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Misc.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Detour32.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Detour64.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DetourCall.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\BaseDetour.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\hde64.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
-    <ClInclude Include="include\table64.h">
-      <Filter>include\Utils\Detours</Filter>
-    </ClInclude>
     <ClInclude Include="include\FeatureFlags.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\DriverKernel.h">
-      <Filter>include\Driver</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DriverProc.h">
-      <Filter>include\Driver</Filter>
-    </ClInclude>
-    <ClInclude Include="include\FusionDriver.h">
-      <Filter>include\Driver</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DevActSpoofer.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DirectMemory.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\LibraryReplacer.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Common.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Watcher.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DipSwitchSpoofer.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TTYRedirector.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="include\Fusion.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Patches.h">
-      <Filter>include\Misc</Filter>
     </ClInclude>
     <ClInclude Include="include\Types\Sparse.h">
       <Filter>include\Types</Filter>
@@ -258,6 +180,87 @@
     </ClInclude>
     <ClInclude Include="include\Types\Uio.h">
       <Filter>include\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\StringUtils.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Asm.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Heap.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Misc.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\ProcessUtils.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Resolver.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\SystemCalls.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Detours\BaseDetour.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Detours\Detour32.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Detours\Detour64.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Detours\DetourCall.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Detours\hde64.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Detours\table64.h">
+      <Filter>include\Utils\Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Driver\DriverKernel.h">
+      <Filter>include\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Driver\DriverProc.h">
+      <Filter>include\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Driver\FusionDriver.h">
+      <Filter>include\Driver</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Homebrew\FakePkgs.h">
+      <Filter>include\Homebrew</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Homebrew\FakePkgTypes.h">
+      <Filter>include\Homebrew</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Homebrew\FakeSelfs.h">
+      <Filter>include\Homebrew</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Homebrew\FakeSelfTypes.h">
+      <Filter>include\Homebrew</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\DevActSpoofer.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\DipSwitchSpoofer.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\DirectMemory.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\LibraryReplacer.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\Patches.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\TTYRedirector.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\Watcher.h">
+      <Filter>include\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
