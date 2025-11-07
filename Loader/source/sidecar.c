@@ -7,6 +7,10 @@ extern uint8_t _binary_resources_libFusionSidecar_sprx_end[];
 
 void InitSidecar() 
 {
+	klog("Initialize Sidecar\n");
+
+#ifdef HAS_SIDECAR
+
 	// Remove existing Sidecar prx if exists.
 	if (FileExist(SIDECAR_PATH))
 	{
@@ -27,4 +31,9 @@ void InitSidecar()
 	}
 
 	RemoveFile(SIDECAR_PATH);
+
+#else
+	klog("Skipping... Sidecar not present, some features disabled!\n");
+#endif
 }
+
