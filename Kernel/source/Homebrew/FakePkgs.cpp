@@ -204,7 +204,7 @@ void FakePkgs::InstallShellUIPatches(proc* p)
 	for (int i = 0; i < numModules; i++)
 	{
 		OrbisLibraryInfo info;
-		dynlib_get_info(p, handles[0], &info);
+		dynlib_get_info(p, handles[i], &info);
 		uint64_t shellCoreBase = info.MapBase;
 
 		if (strstr(info.Path, "libkernel_sys.sprx"))
