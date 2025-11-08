@@ -29,11 +29,8 @@ int _main(void)
 {
 	ResolveDynlib();
 	ascii();
-
-	klog("Installing Kernel ELF\n");
+	
 	LoadKernel();
-
-	klog("Initialize Sidecar\n");
 	InitSidecar();
 
 	return 0;

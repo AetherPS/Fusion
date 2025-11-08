@@ -13,6 +13,10 @@ SFILES	:=	$(wildcard $(SDIR)/*.s)
 RFILES  :=  $(shell find $(RDIR) -name \*)
 OBJS	:=	$(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(CFILES)) $(patsubst $(SDIR)/%.s, $(ODIR)/%.o, $(SFILES)) $(patsubst $(RDIR)/%, $(ODIR)/%.o, $(RFILES))
 
+ifneq ($(wildcard $(RDIR)/libFusionSidecar.sprx), )
+	CFLAGS += -DHAS_SIDECAR
+endif
+
 TARGET = Fusion-$(SOFTWARE_VERSION).bin
 
 $(TARGET): $(ODIR) $(OBJS)

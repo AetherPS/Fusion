@@ -70,6 +70,7 @@
     <PostBuildEvent>
       <Command>py "$(SolutionDir)Scripts\make_fself.py" $(OutputPath)$(TargetName).prx $(OutputPath)$(TargetName).sprx
 del /Q "$(SolutionDir)Loader\resources\$(TargetName).sprx"
+del /Q "$(OutputPath)$(TargetName).prx"
 xcopy "$(OutputPath)$(TargetName).sprx" "$(SolutionDir)Loader\resources\" /K /D /H /Y</Command>
     </PostBuildEvent>
     <PreBuildEvent>
