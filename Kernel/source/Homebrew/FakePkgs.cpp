@@ -179,9 +179,9 @@ void FakePkgs::InstallShellUIPatches(proc* p)
 			kprintf("InstallShellUIPatches failed to find proc \"SceShellUI\"\n");
 			return;
 		}
-	}
 
-	mtx_unlock_flags(&p->p_lock, 0);
+		mtx_unlock_flags(&p->p_lock, 0);
+	}
 
 	auto td = p->p_threads.tqh_first;
 
