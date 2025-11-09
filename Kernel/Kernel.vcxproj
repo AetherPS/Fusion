@@ -161,6 +161,7 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClInclude Include="include\Types\EventHandler.h" />
     <ClInclude Include="include\Types\FS.h" />
     <ClInclude Include="include\Types\Generic.h" />
+    <ClInclude Include="include\Types\ioccom.h" />
     <ClInclude Include="include\Types\List.h" />
     <ClInclude Include="include\Types\Mutex.h" />
     <ClInclude Include="include\Types\Proc.h" />

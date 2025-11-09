@@ -247,5 +247,8 @@
     <ClInclude Include="include\Common.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\Types\ioccom.h">
+      <Filter>include\Types</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

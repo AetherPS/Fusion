@@ -105,6 +105,8 @@ typedef	uint16_t	au_event_t;
 typedef uint32_t gid_t;
 typedef uint32_t uid_t;
 typedef	__uint16_t	mode_t;
+typedef int64_t time_t;
+typedef long suseconds_t;
 
 struct iovec {
 	void* iov_base;  // Pointer to the data
@@ -113,4 +115,14 @@ struct iovec {
 
 struct fpu_kern_ctx {
 	// Ommitted
+};
+
+struct timespec {
+	time_t tv_sec;
+	long tv_nsec;
+};
+
+struct timeval {
+	time_t tv_sec;
+	suseconds_t tv_usec;
 };

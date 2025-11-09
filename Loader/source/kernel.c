@@ -79,24 +79,24 @@ int install_kernel(struct thread* td, struct installKernelArgs* args)
 	{
 		return 1;
 	}
-
+	
 	int s = (msize + 0x3FFFull) & ~0x3FFFull;
 	void* payloadbase = (void*)kmem_alloc(kernel_map, s);
 	if (!payloadbase)
 	{
 		return 1;
 	}
-
+	
 	int r = 0;
 	int (*payload_entry)(void* p);
-
+	
 	if ((r = load_elf(args->payload, args->psize, payloadbase, msize, (void**)&payload_entry)))
 	{
 		return r;
 	}
-
+	
 	kernel_printf("Starting Kernel. (Entry: %llX, ELFBase: %llX, Size: %i)\n", payload_entry, payloadbase, s);
-
+	
 	if (payload_entry(0))
 	{
 		return 1;
