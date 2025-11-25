@@ -3,8 +3,18 @@
 
 ProcessMonitor::ProcessMonitor(int pid)
 {
+	kinfo_proc info;
+	if (GetProcInfo(pid, &info) != 0)
+	{
+		Logger::Error("Invalid PID(%d) passed to ProcessMonitor.", pid);
+		return;
+	}
+
 	ShouldRun = true;
-	ThreadPool::QueueJob([=] { WatchThread(pid); });
+	ProcessId = pid;
+	ProcessName = info.ki_comm;
+
+	ThreadPool::QueueJob([=] { WatchThread(); });
 }
 
 ProcessMonitor::~ProcessMonitor()
@@ -12,30 +22,33 @@ ProcessMonitor::~ProcessMonitor()
 	ShouldRun = false;
 }
 
-void ProcessMonitor::WatchThread(int pid)
+void ProcessMonitor::WatchThread()
 {
 	while (ShouldRun)
 	{
 		std::vector<kinfo_proc> procList;
 		GetProcessList(procList);
 
-		if (std::find_if(procList.begin(), procList.end(), [=](const kinfo_proc& arg) { return arg.ki_pid == pid; }) == procList.end())
+		if (std::find_if(procList.begin(), procList.end(), [=](const kinfo_proc& arg) { return arg.ki_pid == ProcessId; }) == procList.end())
 		{
-			Logger::Error("Proc %d has died.", pid);
-
 			if (OnExit != nullptr)
 				OnExit();
 
-			return;
+			ProcessId = -1;
+			while (ProcessId == -1)
+			{
+				ProcessId = GetPidByName(ProcessName.c_str());
+				sceKernelSleep(1);
+			}
+
+			if (OnRespawn != nullptr)
+				OnRespawn();
 		}
 
 		int status;
-		auto debuggeePid = wait4(pid, &status, WNOHANG, nullptr);
-		if (debuggeePid == pid)
+		auto debuggeePid = wait4(ProcessId, &status, WNOHANG, nullptr);
+		if (debuggeePid == ProcessId)
 		{
-			int signal = WSTOPSIG(status);
-			Logger::Error("Process %d has recieved the signal %d", pid, signal);
-
 			if (OnException != nullptr)
 				OnException(status);
 		}

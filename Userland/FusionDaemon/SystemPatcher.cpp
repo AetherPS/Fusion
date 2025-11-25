@@ -3,55 +3,63 @@
 
 void SystemPatcher::Init()
 {
+	ShellUIMonitor = new ProcessMonitor(GetPidByName("SceShellUI"));
+	ShellUIMonitor->OnRespawn = [=]() -> void
+	{
+		sceKernelSleep(5);
+		ShellUI();
+	};
 
+	ShellCore();
+	ShellUI();
 }
 
 void SystemPatcher::ShellCore()
 {
-	// // Get the module handles.
-	// int numModules;
-	// int handles[256];
-	// dynlib_get_list(p, handles, 256, &numModules);
-	// 
-	// // Get the info for the main executable.
-	// OrbisLibraryInfo info;
-	// dynlib_get_info(p, handles[0], &info);
-	// uint64_t shellCoreBase = info.MapBase;
-	// 
-	// // Make sure we found the address.
-	// if (shellCoreBase == 0)
-	// {
-	// 	kprintf("InstallShellCorePatches(): Failed to find the base address for \"SceShellCore.elf\".\n");
-	// 	return;
-	// }
-	// 
-	// uint8_t xor__eax_eax[5] = { 0x31, 0xC0, 0xEB, 0x01 };
-	// 
-	// // sceKernelIsGenuineCEX
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX1), xor__eax_eax, sizeof(xor__eax_eax), true);
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX2), xor__eax_eax, sizeof(xor__eax_eax), true);
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX3), xor__eax_eax, sizeof(xor__eax_eax), true);
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsGenuineCEX4), xor__eax_eax, sizeof(xor__eax_eax), true);
-	// 
-	// // sceKernelIsAssistMode
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode1), xor__eax_eax, sizeof(xor__eax_eax), true);
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode2), xor__eax_eax, sizeof(xor__eax_eax), true);
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode3), xor__eax_eax, sizeof(xor__eax_eax), true);
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_sceKernelIsAssistMode4), xor__eax_eax, sizeof(xor__eax_eax), true);
-	// 
-	// // Enable fake pkg.
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_enableFpkg), (void*)"\xE9\x98\x00\x00\x00", 8, true);
-	// 
-	// // fake to free.
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_fakeText), (void*)"free", 4, true);
-	// 
-	// // Enable mounting data into sandboxes.
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_mountDataIntoSandbox), (void*)"\x31\xC0\xFF\xC0\x90", 5, true);
-	// 
-	// // Patch Pkg Update Checks
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck1), (void*)"\xEB", 1, true);
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck2), (void*)"\xEB", 1, true);
-	// ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(shellCoreBase + addr_disablePkgPatchCheck3), (void*)"\x48\x31\xC0\xC3", 4, true);
+	auto pid = GetPidByName("SceShellCore");
+
+	OrbisLibraryInfo libraries[255];
+	int libraryCount;
+	int res = Fusion::GetLibraryList(pid, libraries, 255, &libraryCount);
+	if (res != 0)
+	{
+		Logger::Error("Failed to get process libraries for pid %d for reason %llX", pid, res);
+		return;
+	}
+
+	for (int i = 0; i < libraryCount; i++)
+	{
+		auto baseAddress = libraries[i].MapBase;
+
+		if (libraries[i].Handle == 0)
+		{
+			// sceKernelIsGenuineCEX
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::IsGenuineCEX1, (void*)"\x31\xC0\xEB\x01", 4, true);
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::IsGenuineCEX2, (void*)"\x31\xC0\xEB\x01", 4, true);
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::IsGenuineCEX3, (void*)"\x31\xC0\xEB\x01", 4, true);
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::IsGenuineCEX4, (void*)"\x31\xC0\xEB\x01", 4, true);
+
+			// sceKernelIsAssistMode
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::IsAssistMode1, (void*)"\x31\xC0\xEB\x01", 4, true);
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::IsAssistMode2, (void*)"\x31\xC0\xEB\x01", 4, true);
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::IsAssistMode3, (void*)"\x31\xC0\xEB\x01", 4, true);
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::IsAssistMode4, (void*)"\x31\xC0\xEB\x01", 4, true);
+
+			// Enable fake pkg.
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::EnableFakePkg, (void*)"\xE9\x98\x00\x00\x00", 8, true);
+
+			// fake to free.
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::FakeText, (void*)"free", 4, true);
+
+			// Enable mounting data into sandboxes.
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::MountDataIntoSandbox, (void*)"\x31\xC0\xFF\xC0\x90", 5, true);
+
+			// Patch Pkg Update Checks
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DisablePkgPatchCheck1, (void*)"\xEB", 1, true);
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DisablePkgPatchCheck2, (void*)"\xEB", 1, true);
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DisablePkgPatchCheck3, (void*)"\x48\x31\xC0\xC3", 4, true);
+		}
+	}
 }
 
 void SystemPatcher::ShellUI()
@@ -73,8 +81,8 @@ void SystemPatcher::ShellUI()
 
 		if (strstr(libraries[i].Path, "libkernel_sys.sprx"))
 		{
-			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DebugMenuPatch1, "\xB8\x01\x00\x00\x00\xC3", 6, true); // sceKernelGetDebugMenuModeForRcmgr
-			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DebugMenuPatch2, "\xB8\x01\x00\x00\x00\xC3", 6, true); // sceKernelGetUtokenStoreModeForRcmgr
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DebugMenuPatch1, (void*)"\xB8\x01\x00\x00\x00\xC3", 6, true); // sceKernelGetDebugMenuModeForRcmgr
+			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DebugMenuPatch2, (void*)"\xB8\x01\x00\x00\x00\xC3", 6, true); // sceKernelGetUtokenStoreModeForRcmgr
 		}
 	}
 }

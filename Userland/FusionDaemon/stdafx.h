@@ -41,4 +41,5 @@
 #include "Misc.h"
 #include "Settings.h"
 #include "Offsets.h"
-
+#include "ProcessMonitor.h"
+#include "SystemPatcher.h"

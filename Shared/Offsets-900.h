@@ -135,29 +135,6 @@
 #define addr_console_cdev				0x021F1128
 #define addr_DeciTTYWriteHook			0x01A7ED98
 
-/* ShellCore Patches */
-#define addr_sceKernelIsGenuineCEX1		0x0016EAA4
-#define addr_sceKernelIsGenuineCEX2		0x008621D4
-#define addr_sceKernelIsGenuineCEX3		0x008AFBC2
-#define addr_sceKernelIsGenuineCEX4		0x00A27BD4
-
-#define addr_sceKernelIsAssistMode1		0x0016EAD2
-#define addr_sceKernelIsAssistMode2		0x00249F7B
-#define addr_sceKernelIsAssistMode3		0x00862202
-#define addr_sceKernelIsAssistMode4		0x00A27C02
-
-#define addr_enableFpkg					0x003D7AFF
-#define addr_fakeText					0x00FD3211
-#define addr_mountDataIntoSandbox		0x0032079B
-
-#define addr_disablePkgPatchCheck1		0x00138E90
-#define addr_disablePkgPatchCheck2		0x003C5EA7
-#define addr_disablePkgPatchCheck3		0x003C8540
-
-/* ShellUI Patches */
-#define sceKernelGetDebugMenuModeForRcmgr		0x0001D1C0
-#define sceKernelGetUtokenStoreModeForRcmgr		0x0001D520
-
 /* Kernel Patches */
 #define patch_memcpy			0x002714BD
 #define patch_kmem_alloc1		0x0037BF3C
