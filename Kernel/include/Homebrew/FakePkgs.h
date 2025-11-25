@@ -5,7 +5,6 @@ class FakePkgs
 public:
 	static void Init();
 	static void Term();
-	static void OnProcessStart(void* arg, proc* p);
 
 private:
 	const static uint8_t PkgKeyP[];
@@ -21,9 +20,6 @@ private:
 	static Detour* NpdrmDecryptIsolatedRifDetour;
 	static Detour* NpdrmDecryptRifNewDetour;
 	static Detour* SceSblKeymgrInvalidateKeySxXlockDetour;
-
-	static void InstallShellCorePatches();
-	static void InstallShellUIPatches(proc* p);
 
 	static void GenPfsCryptoKey(uint8_t* p_EncryptionKeyPFS, uint8_t p_Seed[PFS_SEED_SIZE], uint32_t p_Index, uint8_t p_Key[PFS_FINAL_KEY_SIZE]);
 	static void GenPfsEncKey(uint8_t* p_EncryptionKeyPFS, uint8_t p_Seed[PFS_SEED_SIZE], uint8_t p_Key[PFS_FINAL_KEY_SIZE]);

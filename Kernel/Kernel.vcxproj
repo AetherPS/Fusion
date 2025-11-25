@@ -125,7 +125,6 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClCompile Include="source\Misc\LibraryReplacer.cpp" />
     <ClCompile Include="source\Misc\Patches.cpp" />
     <ClCompile Include="source\Misc\TTYRedirector.cpp" />
-    <ClCompile Include="source\Misc\Watcher.cpp" />
     <ClCompile Include="source\Utils\Detours\Detour.cpp" />
     <ClCompile Include="source\Utils\Detours\DetourMemoryPool.cpp" />
     <ClCompile Include="source\Utils\Detours\hde64.cpp" />
@@ -152,7 +151,6 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClInclude Include="include\Misc\LibraryReplacer.h" />
     <ClInclude Include="include\Misc\Patches.h" />
     <ClInclude Include="include\Misc\TTYRedirector.h" />
-    <ClInclude Include="include\Misc\Watcher.h" />
     <ClInclude Include="include\Types\All.h" />
     <ClInclude Include="include\Types\Dev.h" />
     <ClInclude Include="include\Types\Dynlib.h" />

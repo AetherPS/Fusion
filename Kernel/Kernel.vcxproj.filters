@@ -113,9 +113,6 @@
     <ClCompile Include="source\Misc\TTYRedirector.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="source\Misc\Watcher.cpp">
-      <Filter>source\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="source\Utils\Detours\DetourMemoryPool.cpp">
       <Filter>source\Utils\Detours</Filter>
     </ClCompile>
@@ -236,9 +233,6 @@
       <Filter>include\Misc</Filter>
     </ClInclude>
     <ClInclude Include="include\Misc\TTYRedirector.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Misc\Watcher.h">
       <Filter>include\Misc</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\Detours\DetourMemoryPool.h">
