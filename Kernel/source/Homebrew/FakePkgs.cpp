@@ -200,22 +200,19 @@ void FakePkgs::InstallShellUIPatches(proc* p)
 
 	uint8_t mov__eax_1__ret[6] = { 0xB8, 0x01, 0x00, 0x00, 0x00, 0xC3 };
 
-	// Find the text segment address for libkernel.
 	for (int i = 0; i < numModules; i++)
 	{
 		OrbisLibraryInfo info;
 		dynlib_get_info(p, handles[i], &info);
-		uint64_t shellCoreBase = info.MapBase;
+		auto moduleBase = info.MapBase;
 
 		if (strstr(info.Path, "libkernel_sys.sprx"))
 		{
-			auto libKernelBase = info.MapBase;
-
 			// sceKernelGetDebugMenuModeForRcmgr
-			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libKernelBase + sceKernelGetDebugMenuModeForRcmgr), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
+			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(moduleBase + sceKernelGetDebugMenuModeForRcmgr), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
 
 			// sceKernelGetUtokenStoreModeForRcmgr
-			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(libKernelBase + sceKernelGetUtokenStoreModeForRcmgr), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
+			ReadWriteProcessMemory(p->p_threads.tqh_first, p, (void*)(moduleBase + sceKernelGetUtokenStoreModeForRcmgr), mov__eax_1__ret, sizeof(mov__eax_1__ret), true);
 		}
 	}
 #ifdef DEBUG

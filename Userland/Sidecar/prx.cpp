@@ -38,11 +38,6 @@ extern "C"
 			
 			// Install and start the Fusion Daemon.
 			InstallDaemon();
-			
-			Notify("Fusion 3 Loaded\n%s", "Uber haxor edition.");
-			
-			// Exit the Web Browser/Bluray Player
-			// ExitGraceful();
 
 			scePthreadExit(0);
 			return 0;

@@ -25,15 +25,18 @@ int main(int argc, char** arg)
 		return 0;
 	}
 
-	// // Initialize Settings config.
-	// Settings::Init();
-	// 
-	// if (Settings::EnableFTP)
-	// {
-	// 	// Start FTP Server.
-	// 	Logger::Info("Starting FTP Server...");
-	// 	Notify("Starting FTP Server...");
-	// }
+	Settings::Init();
+	
+	if (Settings::EnableFTP)
+	{
+		// Start FTP Server.
+		Logger::Info("Starting FTP Server...");
+		Notify("Starting FTP Server...");
+	}
+
+	Notify("Fusion 3 Loaded\nUber haxor edition.");
+
+	while (true) { sceKernelSleep(1); }
 
 	ExitGraceful();
 	return 0;

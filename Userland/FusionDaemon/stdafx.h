@@ -2,10 +2,11 @@
 
 #include <kernel.h>
 #include <string>
+#include <queue>
 #include <vector>
 #include <mutex>
+#include <variant>
 #include <SysmoduleInternal.h>
-#include <json2.h>
 #include <libsysmodule.h>
 
 // StubMaker
@@ -19,6 +20,8 @@
 #include <FileUtils.h>
 #include <FileSystem.h>
 #include <Notify.h>
+#include <Json.h>
+#include <ThreadPool.h>
 
 // lib7z
 #include <7zExtractor.h>
