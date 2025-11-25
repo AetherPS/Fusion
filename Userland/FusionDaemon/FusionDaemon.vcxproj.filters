@@ -9,6 +9,15 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;pssli</Extensions>
     </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{3959fec7-7410-4a72-80f3-bbb257845791}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{b372912b-a71b-43d8-8d43-a627e84a1adb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Offsets">
+      <UniqueIdentifier>{3c91f642-1a4c-4bbe-995b-601f5e46b8d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -19,6 +28,15 @@
     </ClInclude>
     <ClInclude Include="Settings.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemPatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessMonitor.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Offsets.h">
+      <Filter>Header Files\Offsets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +51,12 @@
     </ClCompile>
     <ClCompile Include="Settings.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemPatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessMonitor.cpp">
+      <Filter>Source Files\Utils</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

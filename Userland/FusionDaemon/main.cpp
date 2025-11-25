@@ -25,6 +25,13 @@ int main(int argc, char** arg)
 		return 0;
 	}
 
+	if (!Offsets::Init())
+	{
+		Notify("Failed to initialize offsets...");
+		ExitGraceful();
+		return 0;
+	}
+
 	Settings::Init();
 	
 	if (Settings::EnableFTP)
