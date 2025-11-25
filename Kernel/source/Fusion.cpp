@@ -3,7 +3,6 @@
 
 #include "FakePkgs.h"
 #include "FakeSelfs.h"
-#include "Watcher.h"
 #include "DirectMemory.h"
 #include "DevActSpoofer.h"
 #include "LibraryReplacer.h"
@@ -24,10 +23,6 @@ void InitFusion()
 
 	kprintf("Initializing Detour Memory Pool...");
 	DetourMemoryPool::Init(PAGE_SIZE); // 4 MB Pool
-	kprintf("Done.\n");
-
-	kprintf("Initializing Watcher...");
-	Watcher::Init();
 	kprintf("Done.\n");
 
 #ifdef FF_BETA

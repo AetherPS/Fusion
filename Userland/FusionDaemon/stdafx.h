@@ -22,6 +22,8 @@
 #include <Notify.h>
 #include <Json.h>
 #include <ThreadPool.h>
+#include <Process.h>
+#include <SignalDefs.h>
 
 // lib7z
 #include <7zExtractor.h>
@@ -32,5 +34,12 @@
 // libSysInt
 #include <SystemInterface.h>
 
+// libFusionDriver
+#include <DriverDefinitions.h>
+#include <FusionDriver.h>
+
 #include "Misc.h"
 #include "Settings.h"
+#include "Offsets.h"
+#include "ProcessMonitor.h"
+#include "SystemPatcher.h"

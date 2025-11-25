@@ -63,16 +63,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Misc.h" />
+    <ClInclude Include="Offsets.h" />
+    <ClInclude Include="ProcessMonitor.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SystemPatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Misc.cpp" />
+    <ClCompile Include="ProcessMonitor.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SystemPatcher.cpp" />
   </ItemGroup>
   <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
