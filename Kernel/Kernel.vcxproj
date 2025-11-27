@@ -132,7 +132,6 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClCompile Include="source\Utils\Misc.cpp" />
     <ClCompile Include="source\Utils\ProcessUtils.cpp" />
     <ClCompile Include="source\Utils\Resolver.cpp" />
-    <ClCompile Include="source\Utils\StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Common.h" />
@@ -176,7 +175,6 @@ xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Loader\resources\" /K /D /H /Y</N
     <ClInclude Include="include\Utils\Misc.h" />
     <ClInclude Include="include\Utils\ProcessUtils.h" />
     <ClInclude Include="include\Utils\Resolver.h" />
-    <ClInclude Include="include\Utils\StringUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

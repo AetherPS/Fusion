@@ -49,6 +49,10 @@
 #define addr_strdup                             0x004077F0
 #define addr_realloc                            0x000097E0
 #define addr_kprintf                            0x002E03E0
+#define addr_hexdump							0x002E1D10
+#define addr_dynlib_is_host_path				0x001B8650
+#define addr_dynlib_basename					0x001B86E0
+#define addr_dynlib_basename_host				0x001B86B0
 
 /* Event Handling */
 #define addr_eventhandler_register              0x00224110

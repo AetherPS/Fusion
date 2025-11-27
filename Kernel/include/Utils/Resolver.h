@@ -36,10 +36,14 @@ extern int (*sprintf)(char* dst, const char* fmt, ...);
 extern int (*snprintf)(char* str, size_t size, const char* format, ...);
 extern int (*vsprintf)(char* dst, const char* fmt, va_list ap);
 extern int (*vprintf)(const char* fmt, va_list arg);
-extern int(*sscanf)(const char* str, const char* format, ...);
+extern int (*sscanf)(const char* str, const char* format, ...);
 extern char* (*strdup)(const char* s, void* type);
 extern char* (*realloc)(void* addr, unsigned long size, void* mtp, int flags);
-extern void(*kprintf)(const char* fmt, ...);
+extern void (*kprintf)(const char* fmt, ...);
+extern void (*hexdump)(const void* ptr, int length, const char* hdr, int flags);
+extern bool (*dynlib_is_host_path)(char* s);
+extern char* (*dynlib_basename)(char* s);
+extern char* (*dynlib_basename_host)(char* s);
 
 /* Event Handling */
 #if SOFTWARE_VERSION <= 505

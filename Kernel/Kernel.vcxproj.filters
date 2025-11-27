@@ -59,9 +59,6 @@
     <ClCompile Include="source\Fusion.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\StringUtils.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="source\Utils\Heap.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
@@ -168,9 +165,6 @@
     </ClInclude>
     <ClInclude Include="include\Types\Uio.h">
       <Filter>include\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\StringUtils.h">
-      <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\Asm.h">
       <Filter>include\Utils</Filter>

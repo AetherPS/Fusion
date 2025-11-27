@@ -40,6 +40,10 @@ int(*sscanf)(const char* str, const char* format, ...) = 0;
 char* (*strdup)(const char* s, void* type) = 0;
 char* (*realloc)(void* addr, unsigned long size, void* mtp, int flags) = 0;
 void(*kprintf)(const char* fmt, ...) = nullptr;
+void(*hexdump)(const void* ptr, int length, const char* hdr, int flags) = nullptr;
+bool (*dynlib_is_host_path)(char* s) = nullptr;
+char* (*dynlib_basename)(char* s) = nullptr;
+char* (*dynlib_basename_host)(char* s) = nullptr;
 
 /* Event Handling */
 #if SOFTWARE_VERSION <= 505
@@ -150,6 +154,10 @@ void ResolveFunctions()
     NATIVE_RESOLVE(strdup);
     NATIVE_RESOLVE(realloc);
     NATIVE_RESOLVE(kprintf);
+	NATIVE_RESOLVE(hexdump);
+	NATIVE_RESOLVE(dynlib_is_host_path);
+	NATIVE_RESOLVE(dynlib_basename);
+	NATIVE_RESOLVE(dynlib_basename_host);
 
     /* Event Handling */
     NATIVE_RESOLVE(eventhandler_register);

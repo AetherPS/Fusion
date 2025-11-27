@@ -1,31 +1,6 @@
 #include "Common.h"
 #include "ProcessUtils.h"
 
-proc* GetProcByName(const char* name)
-{
-	struct proc* p;
-	struct proc* target_proc = nullptr;
-
-	sx_slock(allproc_lock, 0, 0, 0);
-	{
-		FOREACH_PROC_IN_SYSTEM(p)
-		{
-			mtx_lock_flags(&p->p_lock, 0);
-
-			if (strstr(p->p_comm, name))
-			{
-				target_proc = p;
-				break;
-			}
-
-			mtx_unlock_flags(&p->p_lock, 0);
-		}
-	}
-	sx_sunlock(allproc_lock, 0, 0, 0);
-
-	return target_proc;
-}
-
 int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint32_t len, bool write)
 {
 	if (proc == nullptr)

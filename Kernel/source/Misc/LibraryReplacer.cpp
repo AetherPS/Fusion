@@ -23,7 +23,7 @@ int LibraryReplacer::sys_dynlib_load_prxHook(thread* td, dynlib_load_prx_args* a
 
 	auto processName = td->td_proc->p_comm;
 	auto titleId = td->td_proc->titleId;
-	auto fileName = FileNameFromPath(path);
+	auto fileName = basename(path);
 
 #ifdef DEBUG
 	kprintf("sys_dynlib_load_prx: %s %d, %s\n", titleId, td->td_proc->p_pid, fileName);

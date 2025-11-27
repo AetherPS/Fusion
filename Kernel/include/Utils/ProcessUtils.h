@@ -1,6 +1,5 @@
 #pragma once
 
-proc* GetProcByName(const char* name);
 int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint32_t len, bool write);
 int CreateThread(thread* td, void* entry, void* arg, char* stack, size_t stackSize);
 uint64_t AllocateMemory(proc* p, size_t len, int prot, int flags);
