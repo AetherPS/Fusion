@@ -47,7 +47,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppExceptions>true</CppExceptions>
       <CppLanguageStd>Cpp17</CppLanguageStd>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -58,7 +58,7 @@
 "C:\Program Files\7-Zip\7z.exe" a -t7z "$(OutputPath)FUSN00000.7z" "$(OutputPath)FUSN00000"</Command>
     </PostBuildEvent>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker\Build;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

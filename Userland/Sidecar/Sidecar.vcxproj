@@ -57,11 +57,11 @@
       <PreprocessorDefinitions>NDEBUG;VERSION_900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;$(SolutionDir)External\libUtils\libSysInt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;$(SolutionDir)External\libUtils\libSysInt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppLanguageStd>Cpp17</CppLanguageStd>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker\Build;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
