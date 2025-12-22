@@ -43,3 +43,6 @@
 #include "Offsets.h"
 #include "ProcessMonitor.h"
 #include "SystemPatcher.h"
+
+// Extensions
+#include "DeciLaunch.h"

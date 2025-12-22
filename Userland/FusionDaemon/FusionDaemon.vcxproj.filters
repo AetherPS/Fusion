@@ -18,6 +18,12 @@
     <Filter Include="Header Files\Offsets">
       <UniqueIdentifier>{3c91f642-1a4c-4bbe-995b-601f5e46b8d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Extensions">
+      <UniqueIdentifier>{1cda9344-f06f-41ff-baf6-75d695047d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Extensions">
+      <UniqueIdentifier>{8a09c1e2-6126-4574-b3f8-532bedcdbc0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -38,6 +44,9 @@
     <ClInclude Include="Config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DeciLaunch.h">
+      <Filter>Header Files\Extensions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -57,6 +66,9 @@
     </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DeciLaunch.cpp">
+      <Filter>Source Files\Extensions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

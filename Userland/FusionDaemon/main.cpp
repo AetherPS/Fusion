@@ -36,7 +36,6 @@ int main(int argc, char** arg)
 	SystemPatcher::Init();
 	
 	Config config("/data/Fusion/Settings.cfg");
-	//config.Load()
 
 	if (config.Get<bool>("EnableFTP", false))
 	{
@@ -45,7 +44,12 @@ int main(int argc, char** arg)
 		Notify("Starting FTP Server...");
 	}
 
-	Notify("Fusion 3 Loaded\nUber haxor edition.");
+	if (config.Get<bool>("StartDECI", false))
+	{
+		StartDECI();
+	}
+
+	Notify("Fusion 3 Loaded\nDownload More RAM Edition");
 
 	while (true) { sceKernelSleep(1); }
 
