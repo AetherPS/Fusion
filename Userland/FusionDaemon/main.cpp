@@ -3,6 +3,18 @@
 
 // TODO: Add Daemon helper class that can Start and/or Install Daemons. We will want to add a list of Daemons to launch at startup to the config.
 
+void StartFTP()
+{
+	// TODO: Add install action... likely the above.
+
+	StartRestartApp("OFTP10000", nullptr, -1);
+
+	if (GetAppIdByTitleId("OFTP10000") <= 0)
+	{
+		Logger::Error("[Fusion] Failed to start daemon.");
+	}
+}
+
 int main(int argc, char** arg)
 {
 	// Set up the Logger.
@@ -39,9 +51,7 @@ int main(int argc, char** arg)
 
 	if (config.Get<bool>("EnableFTP", false))
 	{
-		// Start FTP Server.
-		Logger::Info("Starting FTP Server...");
-		Notify("Starting FTP Server...");
+		StartFTP();
 	}
 
 	if (config.Get<bool>("StartDECI", false))

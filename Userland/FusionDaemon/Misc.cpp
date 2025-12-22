@@ -20,13 +20,3 @@ bool LoadModules()
 	Logger::Success("%s: Success!\n", __FUNCTION__);
 	return true;
 }
-
-
-void ExitGraceful()
-{
-	SceAppInfo info;
-	sceKernelGetAppInfo(getpid(), &info);
-
-	sceLncUtilKillApp(info.AppId);
-}
-

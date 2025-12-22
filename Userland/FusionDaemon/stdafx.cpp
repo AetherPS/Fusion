@@ -8,6 +8,7 @@
 #pragma comment(lib, "libSceUserService_gen_stub_weak.a")
 #pragma comment(lib, "libSceLncUtil_gen_stub_weak.a")
 #pragma comment(lib, "libSceShellCoreUtil_gen_stub_weak.a")
+#pragma comment(lib, "libSceSysCore_gen_stub_weak.a")
 #pragma comment(lib, "libSceJson2_stub_weak.a")
 #pragma comment(lib, "libSceSysmodule_stub_weak.a")
 #pragma comment(lib, "libSceSysmodule_gen_stub_weak.a")
