@@ -42,9 +42,9 @@ bool Config::Load(const std::string& configPath)
         }
 
         std::string buffer(fileSize, '\0');
-        int bytesRead = FileSystem::Read(configPath, &buffer[0], fileSize);
+        int res = FileSystem::Read(configPath, &buffer[0], fileSize);
 
-        if (bytesRead <= 0)
+        if (res != 0)
         {
             Logger::Error("Failed to read config file: %s", configPath.c_str());
             return false;
@@ -76,9 +76,9 @@ bool Config::Save(const std::string& configPath) const
         std::string jsonContent = jsonConfig.dump(4);
 
         // Write to file using FileSystem
-        int bytesWritten = FileSystem::Write(configPath, jsonContent.c_str(), jsonContent.size());
+        int res = FileSystem::Write(configPath, jsonContent.c_str(), jsonContent.size());
 
-        if (bytesWritten <= 0)
+        if (res != 0)
         {
             Logger::Error("Failed to write config file: %s", configPath.c_str());
             return false;
