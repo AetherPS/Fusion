@@ -173,7 +173,7 @@ void InstallPatches()
 	// TargetId of Devkit.
 	*(uint8_t*)(KernelBase + addr_QAFlags + 0x3D) = 0x81;
 	*(uint8_t*)(KernelBase + addr_QAFlags + 0x3E) = 0x02;
-
+	
 	// Enable UL/SL debugger
 	*(uint8_t*)(KernelBase + addr_QAFlags + 0x36) |= 0x4;
 	*(uint8_t*)(KernelBase + addr_QAFlags + 0x59) |= 0x2;
@@ -187,17 +187,6 @@ void InstallPatches()
 	kmem = (uint8_t*)KernelBase + patch_dmamini1;
 	kmem[0] = 0x90;
 	kmem[1] = 0x90;
-
-	// Patch sceSblACMgrIsDebuggerProcess to always return true
-	kmem = (uint8_t*)KernelBase + patch_isDebuggerProcess;
-	kmem[0] = 0x48;
-	kmem[1] = 0xC7;
-	kmem[2] = 0xC0;
-	kmem[3] = 0x01;
-	kmem[4] = 0x00;
-	kmem[5] = 0x00;
-	kmem[6] = 0x00;
-	kmem[7] = 0xC3;
 
 	// patch sceKernelIsAssistMode to always return true in mdbg_basic_callback
 	uint64_t mdbgAssistModePatches[] = offsets_mdbgAssistMode;

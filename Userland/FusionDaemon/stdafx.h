@@ -39,7 +39,7 @@
 #include <FusionDriver.h>
 
 #include "Misc.h"
-#include "Settings.h"
+#include "Config.h"
 #include "Offsets.h"
 #include "ProcessMonitor.h"
 #include "SystemPatcher.h"
