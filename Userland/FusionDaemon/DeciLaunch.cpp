@@ -64,8 +64,10 @@ void StartDECI()
 		return;
 	}
 
+	// Start the DECI server that runs on SceShellCore.
 	StartDecidServer();
 
+	// Mount the fuse directories.
 	MountFuse(sysCorePid, "/hostapp", "/dev/fuse0");
 	MountFuse(sysCorePid, "/host", "/dev/fuse1");
 
@@ -75,6 +77,7 @@ void StartDECI()
 		Logger::Error("Failed to get DevPortThread address.");
 		return;
 	}
-
+	
+	// Start the devport thread that spawns the decid.elf daemon process.
 	Fusion::StartPThread(sysCorePid, DevPortThreadAddress);
 }
