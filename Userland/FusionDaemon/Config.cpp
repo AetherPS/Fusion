@@ -13,8 +13,24 @@ bool Config::Load(const std::string& configPath)
         // Check if file exists
         if (!FileSystem::Exists(configPath))
         {
-            Logger::Error("Config file does not exist: %s", configPath.c_str());
-            return false;
+            Logger::Warn("Config file does not exist: %s", configPath.c_str());
+            Logger::Info("Creating default config...");
+
+            // Create default config
+            jsonConfig = json::object();
+            jsonConfig["EnableFTP"] = false;
+            jsonConfig["StartDECI"] = false;
+
+            // Save default config
+            if (!Save(configPath))
+            {
+                Logger::Error("Failed to save default config");
+                return false;
+            }
+
+            lastLoadPath = configPath;
+            Logger::Success("Default config created and saved to: %s", configPath.c_str());
+            return true;
         }
 
         // Read file content using FileSystem

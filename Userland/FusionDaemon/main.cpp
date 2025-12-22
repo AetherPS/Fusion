@@ -36,7 +36,9 @@ int main(int argc, char** arg)
 	SystemPatcher::Init();
 	
 	Config config("/data/Fusion/Settings.cfg");
-	if (config.Get<bool>("AutoLoadFTP", false))
+	//config.Load()
+
+	if (config.Get<bool>("EnableFTP", false))
 	{
 		// Start FTP Server.
 		Logger::Info("Starting FTP Server...");
