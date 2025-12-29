@@ -17,10 +17,10 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 	case CMD_PROC_READ_WRITE_MEMORY:
 		return ProcessReadWrite(data);
 
-	case CMD_PROC_ALLOC_MEMORY: // Deprecated, use sceDebugCreateScratchExecutableArea or sceDebugDestroyScratchDataArea
+	case CMD_PROC_ALLOC_MEMORY:
 		return ProcessAlloc(data);
 
-	case CMD_PROC_FREE_MEMORY: // Deprecated, use sceDebugDestroyScratchExecutableArea or sceDebugDestroyScratchDataArea
+	case CMD_PROC_FREE_MEMORY:
 		return ProcessFree(data);
 
 	case CMD_PROC_START_THREAD:
@@ -47,7 +47,7 @@ int DriverProc::Jailbreak(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -109,7 +109,7 @@ int DriverProc::RestoreJail(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -147,7 +147,7 @@ int DriverProc::GetProccessModuleList(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -187,7 +187,7 @@ int DriverProc::ProcessReadWrite(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -202,7 +202,7 @@ int DriverProc::ProcessAlloc(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -222,7 +222,7 @@ int DriverProc::ProcessFree(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -239,7 +239,7 @@ int DriverProc::StartThread(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -254,7 +254,7 @@ int DriverProc::Resolve(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -273,7 +273,7 @@ int DriverProc::GetAuthId(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 
@@ -292,7 +292,7 @@ int DriverProc::SetAuthId(caddr_t data)
 	thread* td = nullptr;
 	proc* p = nullptr;
 
-	int res = GetProcessThreadInput(data, &input, &td, &p);
+	int res = FusionDriver::GetProcessThreadInput(data, &input, &td, &p);
 	if (res != 0)
 		return res;
 

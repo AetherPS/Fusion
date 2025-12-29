@@ -9,6 +9,8 @@ prison* prison0;
 vnode* rootvnode;
 int (*copyout)(const void* kaddr, void* udaddr, size_t len) = nullptr;
 int (*copyin)(const void* uaddr, void* kaddr, size_t len) = nullptr;
+int (*copyout_nofault)(const void* kaddr, void* udaddr, size_t len) = nullptr;
+int (*copyin_nofault)(const void* uaddr, void* kaddr, size_t len) = nullptr;
 int (*copyinstr)(const void* uaddr, void* kaddr, size_t len, size_t*) = nullptr;
 int (*kern_open)(thread* td, const char* path, int pathseg, int flags, int mode) = nullptr;
 int (*kern_mkdir)(thread* td, char* path, int pathseg, int mode) = nullptr;
@@ -115,6 +117,10 @@ int(*make_dev_p)(int _flags, cdev** _cdev, cdevsw* _devsw, ucred* _cr, uid_t _ui
 void(*destroy_dev)(cdev* _dev) = nullptr;
 void(*devfs_rule_applyde_recursive)(struct devfs_krule* dk, struct devfs_dirent* de) = nullptr;
 
+/* Flash & NVS */
+int (*icc_nvs_read)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value) = nullptr;
+int (*icc_nvs_write)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value) = nullptr;
+
 void ResolveFunctions()
 {
     /* Util */
@@ -123,6 +129,8 @@ void ResolveFunctions()
     NATIVE_RESOLVE(rootvnode);
     NATIVE_RESOLVE(copyin);
     NATIVE_RESOLVE(copyout);
+    NATIVE_RESOLVE(copyin_nofault);
+    NATIVE_RESOLVE(copyout_nofault);
 	NATIVE_RESOLVE(copyinstr);
     NATIVE_RESOLVE(kern_open);
     NATIVE_RESOLVE(kern_mkdir);
@@ -224,4 +232,8 @@ void ResolveFunctions()
     NATIVE_RESOLVE(make_dev_p);
     NATIVE_RESOLVE(destroy_dev);
 	NATIVE_RESOLVE(devfs_rule_applyde_recursive);
+
+    /* Flash & NVS */
+    NATIVE_RESOLVE(icc_nvs_read);
+    NATIVE_RESOLVE(icc_nvs_write);
 }

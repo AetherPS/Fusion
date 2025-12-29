@@ -9,6 +9,8 @@
 #define addr_rootvnode                          0x02136E90
 #define addr_copyout							0x002BD580
 #define addr_copyin								0x002BD670
+#define addr_copyout_nofault					0x0036C660
+#define addr_copyin_nofault						0x0036C620
 #define addr_copyinstr							0x002BDB20
 #define addr_kern_open                          0x00343570
 #define addr_kern_mkdir                         0x003486B0
@@ -88,6 +90,10 @@
 #define addr_make_dev_p                         0x0038A910
 #define addr_destroy_dev                        0x0038AE30
 #define addr_devfs_rule_applyde_recursive       0x002DEB00
+
+/* Flash & NVS */
+#define addr_icc_nvs_read						0x000A5BD0
+#define addr_icc_nvs_write						0x000A5A10
 
 /* FSelfs */
 #define addr_sceSblAuthMgrGetSelfInfo						0x0063CFB0

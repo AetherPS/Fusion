@@ -9,6 +9,8 @@ extern prison* prison0;
 extern vnode* rootvnode;
 extern int (*copyout)(const void* kaddr, void* udaddr, size_t len);
 extern int (*copyin)(const void* uaddr, void* kaddr, size_t len);
+extern int (*copyout_nofault)(const void* kaddr, void* udaddr, size_t len);
+extern int (*copyin_nofault)(const void* uaddr, void* kaddr, size_t len);
 extern int (*copyinstr)(const void* uaddr, void* kaddr, size_t len, size_t*);
 extern int (*kern_open)(thread* td, const char* path, int pathseg, int flags, int mode);
 extern int (*kern_mkdir)(thread* td, char* path, int pathseg, int mode);
@@ -139,5 +141,9 @@ extern int(*sx_sunlock)(struct sx* sx, int opts, const char* file, int line);
 extern int(*make_dev_p)(int _flags, cdev * *_cdev, cdevsw * _devsw, ucred * _cr, uid_t _uid, gid_t _gid, int _mode, const char* _fmt, ...);
 extern void(*destroy_dev)(cdev * _dev);
 extern void(*devfs_rule_applyde_recursive)(struct devfs_krule* dk, struct devfs_dirent* de);
+
+/* Flash & NVS */
+extern int (*icc_nvs_read)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value);
+extern int (*icc_nvs_write)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value);
 
 void ResolveFunctions();
