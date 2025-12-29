@@ -8,8 +8,10 @@ int DriverKernel::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
     {
     case CMD_KERN_GET_BASE:
 		return KernelBase(data);
+
 	case CMD_KERN_READ_WRITE_MEMORY:
 		return KernelReadWrite(data);
+
 	case CMD_KERN_ICC_NVS_READ_WRITE:
 		return KernelIccNvsReadWrite(data);
     default:
