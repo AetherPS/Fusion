@@ -3,6 +3,9 @@
 // libSceLibcInternal
 extern int(*vsprintf)(char* s, const char* format, va_list arg);
 extern char* (*strcpy)(char* destination, const char* source);
+extern void* (*memcpy)(void* destination, const void* source, size_t size);
+extern void* (*malloc)(size_t size);
+extern void (*free)(void* ptr);
 
 // libkernel
 extern int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
@@ -17,5 +20,4 @@ extern int (*sceKernelStat)(const char* path, SceKernelStat* sb);
 
 void klog(const char* fmt, ...);
 int sys_dynlib_dlsym(int loadedModuleID, const char* name, void* destination);
-int sys_dynlib_load_prx(const char* name, int* idDestination);
 void ResolveDynlib();

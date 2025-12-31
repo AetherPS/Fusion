@@ -30,7 +30,10 @@
     <None Include="resources\Kernel.elf">
       <Filter>resources</Filter>
     </None>
-    <None Include="resources\libFusionSidecar.sprx">
+    <None Include="resources\eboot.bin.compressed">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\param.sfo.compressed">
       <Filter>resources</Filter>
     </None>
   </ItemGroup>
@@ -38,7 +41,7 @@
     <ClCompile Include="source\main.c">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\sidecar.c">
+    <ClCompile Include="source\daemon.c">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\elf.c">
@@ -62,12 +65,18 @@
     <ClCompile Include="source\resolver.c">
       <Filter>source\Kernel</Filter>
     </ClCompile>
+    <ClCompile Include="source\Lz4.c">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\compressedblob.c">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\sidecar.h">
+    <ClInclude Include="include\daemon.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\elf.h">
@@ -93,6 +102,12 @@
     </ClInclude>
     <ClInclude Include="include\resolver.h">
       <Filter>include\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Lz4.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\compressedblob.h">
+      <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

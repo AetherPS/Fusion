@@ -4,6 +4,9 @@
 // libSceLibcInternal
 int(*vsprintf)(char* s, const char* format, va_list arg);
 char* (*strcpy)(char* destination, const char* source);
+void* (*memcpy)(void* destination, const void* source, size_t size);
+void* (*malloc)(size_t size);
+void (*free)(void* ptr);
 
 // libkernel
 int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
@@ -34,33 +37,23 @@ int sys_dynlib_dlsym(int loadedModuleID, const char* name, void* destination)
 	return syscall(591, loadedModuleID, name, destination);
 }
 
-int sys_dynlib_load_prx(const char* name, int* idDestination)
-{
-	return syscall(594, name, 0, idDestination, 0);
-}
-
 void ResolveDynlib()
 {
-	int handle;
-	sys_dynlib_load_prx("libSceLibcInternal.sprx", &handle);
-	sys_dynlib_dlsym(handle, "vsprintf", &vsprintf);
-	sys_dynlib_dlsym(handle, "strcpy", &strcpy);
+	// libSceLibcInternal is always module 2
+	sys_dynlib_dlsym(2, "vsprintf", &vsprintf);
+	sys_dynlib_dlsym(2, "strcpy", &strcpy);
+	sys_dynlib_dlsym(2, "memcpy", &memcpy);
+	sys_dynlib_dlsym(2, "malloc", &malloc);
+	sys_dynlib_dlsym(2, "free", &free);
 
-	if (sys_dynlib_load_prx("libkernel.sprx", &handle))
-	{
-		if (sys_dynlib_load_prx("libkernel_web.sprx", &handle))
-		{
-			sys_dynlib_load_prx("libkernel_sys.sprx", &handle);
-		}
-	}
-		
-	sys_dynlib_dlsym(handle, "sceKernelDebugOutText", &sceKernelDebugOutText);
-	sys_dynlib_dlsym(handle, "sceKernelOpen", &sceKernelOpen);
-	sys_dynlib_dlsym(handle, "sceKernelClose", &sceKernelClose);
-	sys_dynlib_dlsym(handle, "sceKernelWrite", &sceKernelWrite);
-	sys_dynlib_dlsym(handle, "sceKernelUnlink", &sceKernelUnlink);
-	sys_dynlib_dlsym(handle, "sceKernelMkdir", &sceKernelMkdir);
-	sys_dynlib_dlsym(handle, "sceKernelLoadStartModule", &sceKernelLoadStartModule);
-	sys_dynlib_dlsym(handle, "ioctl", &ioctl);
-	sys_dynlib_dlsym(handle, "sceKernelStat", &sceKernelStat);
+	// Libkernel is always module 8193
+	sys_dynlib_dlsym(8193, "sceKernelDebugOutText", &sceKernelDebugOutText);
+	sys_dynlib_dlsym(8193, "sceKernelOpen", &sceKernelOpen);
+	sys_dynlib_dlsym(8193, "sceKernelClose", &sceKernelClose);
+	sys_dynlib_dlsym(8193, "sceKernelWrite", &sceKernelWrite);
+	sys_dynlib_dlsym(8193, "sceKernelUnlink", &sceKernelUnlink);
+	sys_dynlib_dlsym(8193, "sceKernelMkdir", &sceKernelMkdir);
+	sys_dynlib_dlsym(8193, "sceKernelLoadStartModule", &sceKernelLoadStartModule);
+	sys_dynlib_dlsym(8193, "ioctl", &ioctl);
+	sys_dynlib_dlsym(8193, "sceKernelStat", &sceKernelStat);
 }

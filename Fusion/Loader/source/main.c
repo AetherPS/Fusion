@@ -1,5 +1,5 @@
 #include "common.h"
-#include "sidecar.h"
+#include "daemon.h"
 
 void ascii()
 {
@@ -31,7 +31,7 @@ int _main(void)
 	ascii();
 	
 	LoadKernel();
-	InitSidecar();
+	InstallDaemon();
 
 	return 0;
 }

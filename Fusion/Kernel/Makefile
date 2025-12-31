@@ -4,7 +4,7 @@ OBJCOPY   	:=    objcopy
 ODIR    	:=    build
 SDIR    	:=    source
 RI			:=	  $(shell find include -type d -not -path ./include -printf '-I%p ')
-IDIRS    	:=    -I../Shared -Iinclude -I../External/FusionShared $(RI)
+IDIRS    	:=    -I../../Shared -Iinclude -I../../External/FusionShared $(RI)
 CFLAGS    	:=    $(IDIRS) -O3 -s -w -std=gnu++11 -ffunction-sections -fdata-sections -fno-builtin -fno-exceptions -fno-asynchronous-unwind-tables -nostdlib -w -masm=intel -march=btver2 -m64 -mabi=sysv -mcmodel=small -mstackrealign -fPIE -DSOFTWARE_VERSION=$(SOFTWARE_VERSION) 
 LFLAGS    	:=    -Xlinker -T Linker -Wl,--build-id=none -mstackrealign -pie -Wl,--gc-sections
 SFLAGS  	:=    -nostdlib -masm=intel -march=btver2 -m64 -mabi=sysv

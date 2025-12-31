@@ -4,7 +4,7 @@ OBJCOPY	:=	objcopy
 ODIR	:=	build
 SDIR	:=	source
 RDIR	:=  resources
-IDIRS	:=  -I../Shared -Iinclude -I../External/FusionShared
+IDIRS	:=  -I../../Shared -Iinclude -I../../External/FusionShared
 CFLAGS	:=	$(IDIRS) -Os -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -DSOFTWARE_VERSION=$(SOFTWARE_VERSION)
 SFLAGS	:=	-nostartfiles -nostdlib -march=btver2 -mtune=btver2
 LFLAGS	:=	-Xlinker -T Linker -Wl,--build-id=none -Wl,--gc-sections
@@ -13,8 +13,8 @@ SFILES	:=	$(wildcard $(SDIR)/*.s)
 RFILES  :=  $(shell find $(RDIR) -name \*)
 OBJS	:=	$(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(CFILES)) $(patsubst $(SDIR)/%.s, $(ODIR)/%.o, $(SFILES)) $(patsubst $(RDIR)/%, $(ODIR)/%.o, $(RFILES))
 
-ifneq ($(wildcard $(RDIR)/libFusionSidecar.sprx), )
-	CFLAGS += -DHAS_SIDECAR
+ifneq ($(wildcard $(RDIR)/eboot.bin.compressed), )
+	CFLAGS += -DHAS_DAEMON
 endif
 
 TARGET = Fusion-$(SOFTWARE_VERSION).bin

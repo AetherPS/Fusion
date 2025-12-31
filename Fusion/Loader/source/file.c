@@ -13,6 +13,19 @@ bool FileExist(const char* path)
 	return true;
 }
 
+bool CreateDirectory(const char* path)
+{
+	int result = sceKernelMkdir(path, 0777);
+	if (result == 0 || result == 0x80020011) // SCE_KERNEL_ERROR_EEXIST
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 int RemoveFile(const char* path)
 {
 	return sceKernelUnlink(path);

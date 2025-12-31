@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="1202Release|Win32">
-      <Configuration>1202Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="1202Release|x64">
       <Configuration>1202Release</Configuration>
       <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="900Release|Win32">
-      <Configuration>900Release</Configuration>
-      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="900Release|x64">
       <Configuration>900Release</Configuration>
@@ -24,16 +16,6 @@
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|Win32'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|Win32'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -48,12 +30,6 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='900Release|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -104,45 +80,47 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|Win32'">
-    <NMakeOutput>Loader.exe</NMakeOutput>
-    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|Win32'">
-    <NMakeOutput>Loader.exe</NMakeOutput>
-    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
-  </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="crt0.s" />
     <None Include="Linker" />
     <None Include="Makefile" />
+    <None Include="resources\eboot.bin.compressed" />
     <None Include="resources\Kernel.elf" />
-    <None Include="resources\libFusionSidecar.sprx" />
+    <None Include="resources\param.sfo.compressed" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\asm.s" />
+    <ClCompile Include="source\compressedblob.c" />
     <ClCompile Include="source\dynlib.c" />
     <ClCompile Include="source\elf.c" />
     <ClCompile Include="source\file.c" />
     <ClCompile Include="source\kernel.c" />
+    <ClCompile Include="source\Lz4.c" />
     <ClCompile Include="source\main.c" />
     <ClCompile Include="source\patches.c" />
     <ClCompile Include="source\resolver.c" />
-    <ClCompile Include="source\sidecar.c" />
+    <ClCompile Include="source\daemon.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\asm.h" />
     <ClInclude Include="include\common.h" />
+    <ClInclude Include="include\compressedblob.h" />
     <ClInclude Include="include\dynlib.h" />
     <ClInclude Include="include\elf.h" />
     <ClInclude Include="include\file.h" />
     <ClInclude Include="include\kernel.h" />
+    <ClInclude Include="include\Lz4.h" />
     <ClInclude Include="include\patches.h" />
     <ClInclude Include="include\resolver.h" />
-    <ClInclude Include="include\sidecar.h" />
+    <ClInclude Include="include\daemon.h" />
     <ClInclude Include="include\types.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kernel\Kernel.vcxproj">
+      <Project>{7f7e2757-4cba-4203-8eeb-5b317a8c2d4d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
