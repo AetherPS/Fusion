@@ -10,6 +10,18 @@
     <Filter Include="resources">
       <UniqueIdentifier>{af6eeff9-2318-4458-84a9-2342002f1bb2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\Kernel">
+      <UniqueIdentifier>{8e362e33-73c3-4698-971c-9c399ecdc339}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Kernel">
+      <UniqueIdentifier>{2d92342e-ea31-450a-b8e4-99fc9ad5227a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Utils">
+      <UniqueIdentifier>{7790d648-a56a-4fb8-a746-c989dc95738c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Utils">
+      <UniqueIdentifier>{2d503d40-16a7-4cf0-8c00-581cd672a478}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="crt0.s" />
@@ -23,52 +35,64 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\asm.s">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\dynlib.c">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\elf.c">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\main.c">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\kernel.c">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\sidecar.c">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\elf.c">
+      <Filter>source\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="source\kernel.c">
+      <Filter>source\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="source\asm.s">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\dynlib.c">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
     <ClCompile Include="source\file.c">
-      <Filter>source</Filter>
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\patches.c">
+      <Filter>source\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="source\resolver.c">
+      <Filter>source\Kernel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\asm.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\common.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\dynlib.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\elf.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\types.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\kernel.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\sidecar.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\elf.h">
+      <Filter>include\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\kernel.h">
+      <Filter>include\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\asm.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\dynlib.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="include\file.h">
-      <Filter>include</Filter>
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\types.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\patches.h">
+      <Filter>include\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="include\resolver.h">
+      <Filter>include\Kernel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

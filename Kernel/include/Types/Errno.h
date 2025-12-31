@@ -15,9 +15,7 @@
 #define	ENOMEM		12		/* Cannot allocate memory */
 #define	EACCES		13		/* Permission denied */
 #define	EFAULT		14		/* Bad address */
-#ifndef _POSIX_SOURCE
 #define	ENOTBLK		15		/* Block device required */
-#endif
 #define	EBUSY		16		/* Device busy */
 #define	EEXIST		17		/* File exists */
 #define	EXDEV		18		/* Cross-device link */
@@ -28,9 +26,7 @@
 #define	ENFILE		23		/* Too many open files in system */
 #define	EMFILE		24		/* Too many open files */
 #define	ENOTTY		25		/* Inappropriate ioctl for device */
-#ifndef _POSIX_SOURCE
 #define	ETXTBSY		26		/* Text file busy */
-#endif
 #define	EFBIG		27		/* File too large */
 #define	ENOSPC		28		/* No space left on device */
 #define	ESPIPE		29		/* Illegal seek */
@@ -44,10 +40,9 @@
 
 /* non-blocking and interrupt i/o */
 #define	EAGAIN		35		/* Resource temporarily unavailable */
-#ifndef _POSIX_SOURCE
 #define	EWOULDBLOCK	EAGAIN		/* Operation would block */
 #define	EINPROGRESS	36		/* Operation now in progress */
-#define	EALREADY	37		/* Operation already in progress */
+#define EALREADY	37		/* Operation already in progress */
 
 /* ipc/network software -- argument errors */
 #define	ENOTSOCK	38		/* Socket operation on non-socket */
@@ -79,18 +74,14 @@
 #define	ECONNREFUSED	61		/* Connection refused */
 
 #define	ELOOP		62		/* Too many levels of symbolic links */
-#endif /* _POSIX_SOURCE */
 #define	ENAMETOOLONG	63		/* File name too long */
 
 /* should be rearranged */
-#ifndef _POSIX_SOURCE
 #define	EHOSTDOWN	64		/* Host is down */
 #define	EHOSTUNREACH	65		/* No route to host */
-#endif /* _POSIX_SOURCE */
 #define	ENOTEMPTY	66		/* Directory not empty */
 
 /* quotas & mush */
-#ifndef _POSIX_SOURCE
 #define	EPROCLIM	67		/* Too many processes */
 #define	EUSERS		68		/* Too many users */
 #define	EDQUOT		69		/* Disc quota exceeded */
@@ -103,12 +94,10 @@
 #define	EPROGUNAVAIL	74		/* RPC prog. not avail */
 #define	EPROGMISMATCH	75		/* Program version wrong */
 #define	EPROCUNAVAIL	76		/* Bad procedure for program */
-#endif /* _POSIX_SOURCE */
 
 #define	ENOLCK		77		/* No locks available */
 #define	ENOSYS		78		/* Function not implemented */
 
-#ifndef _POSIX_SOURCE
 #define	EFTYPE		79		/* Inappropriate file type or format */
 #define	EAUTH		80		/* Authentication error */
 #define	ENEEDAUTH	81		/* Need authenticator */
@@ -120,7 +109,6 @@
 #define	ENOATTR		87		/* Attribute not found */
 
 #define	EDOOFUS		88		/* Programming error */
-#endif /* _POSIX_SOURCE */
 
 #define	EBADMSG		89		/* Bad message */
 #define	EMULTIHOP	90		/* Multihop attempted */
