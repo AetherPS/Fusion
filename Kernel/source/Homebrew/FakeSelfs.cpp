@@ -2,6 +2,8 @@
 #include "FakeSelfs.h"
 #include "Types/All.h"
 
+// Credits: https://github.com/OpenOrbis/mira-project
+
 const uint8_t FakeSelf::AuthInfoForExec[] =
 {
   0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x31, 0x00, 0x00, 0x00, 0x00, 0x80, 0x03, 0x00, 0x20,
@@ -52,11 +54,11 @@ void FakeSelf::Term()
     delete SceSblAuthMgrSmLoadSelfBlock_MailboxDetour;
 }
 
-SblMapListEntry* FakeSelf::SceSblDriverFindMappedPageListByGpuVa(vm_offset_t p_GpuVa)
+SblMapListEntry* FakeSelf::SceSblDriverFindMappedPageListByGpuVa(vm_offset_t gpuVa)
 {
-    if (p_GpuVa == 0)
+    if (gpuVa == 0)
     {
-        kprintf("invalid gpu va\n");
+        printf("invalid gpu va\n");
         return nullptr;
     }
 
@@ -68,7 +70,7 @@ SblMapListEntry* FakeSelf::SceSblDriverFindMappedPageListByGpuVa(vm_offset_t p_G
 
     while (gpuVaPageList)
     {
-        if (gpuVaPageList->gpuVa == p_GpuVa)
+        if (gpuVaPageList->gpuVa == gpuVa)
         {
             finalEntry = gpuVaPageList;
             break;
@@ -82,321 +84,316 @@ SblMapListEntry* FakeSelf::SceSblDriverFindMappedPageListByGpuVa(vm_offset_t p_G
     return finalEntry;
 }
 
-vm_offset_t FakeSelf::SceSblDriverGpuVaToCpuVa(vm_offset_t p_GpuVa, size_t* p_NumPageGroups)
+vm_offset_t FakeSelf::SceSblDriverGpuVaToCpuVa(vm_offset_t gpuVa, size_t* numPageGroups)
 {
-    SblMapListEntry* s_Entry = SceSblDriverFindMappedPageListByGpuVa(p_GpuVa);
-    if (s_Entry == nullptr)
+    SblMapListEntry* entry = SceSblDriverFindMappedPageListByGpuVa(gpuVa);
+    if (entry == nullptr)
     {
-        kprintf("invalid gpu va entry\n");
+        printf("invalid gpu va entry\n");
         return 0;
     }
 
-    if (p_NumPageGroups != nullptr)
-        *p_NumPageGroups = s_Entry->numPageGroups;
+    if (numPageGroups != nullptr)
+        *numPageGroups = entry->numPageGroups;
 
-    return s_Entry->cpuVa;
+    return entry->cpuVa;
 }
 
-bool FakeSelf::IsFakeSelf(SelfContext* pSelfContext)
+bool FakeSelf::IsFakeSelf(SelfContext* selfContext)
 {
-    if (pSelfContext == nullptr)
+    if (selfContext == nullptr)
     {
-        kprintf("pSelfContext was NULL\n");
+        printf("pSelfContext was NULL\n");
         return false;
     }
 
-    SelfExInfo* s_Info = nullptr;
-    if (pSelfContext != nullptr && pSelfContext->format == SelfFormat::Self)
+    SelfExInfo* info = nullptr;
+    if (selfContext != nullptr && selfContext->format == SelfFormat::Self)
     {
-        (void)sceSblAuthMgrGetSelfInfo(pSelfContext, &s_Info);
+        (void)sceSblAuthMgrGetSelfInfo(selfContext, &info);
 
-        //WriteLog(LL_Debug, "ptype: (%d)", s_Info->ptype);
-        return (int32_t)s_Info->ptype == 1;
+        // printf("ptype: (%d)", info->ptype);
+        return (int32_t)info->ptype == 1;
     }
     else
         return false;
 }
 
-int FakeSelf::SceSblAuthMgrGetElfHeader(SelfContext* pSelfContext, Elf64_Ehdr** pOutElfHeader)
+int FakeSelf::SceSblAuthMgrGetElfHeader(SelfContext* selfContext, Elf64_Ehdr** outElfHeader)
 {
-    if (pSelfContext == nullptr)
+    if (selfContext == nullptr)
         return -EAGAIN;
 
-    if (pSelfContext->format == SelfFormat::Elf)
+    if (selfContext->format == SelfFormat::Elf)
     {
-        auto s_ElfHeader = reinterpret_cast<Elf64_Ehdr*>(pSelfContext->header);
-        if (s_ElfHeader != nullptr)
-            *pOutElfHeader = s_ElfHeader;
+        auto elfHeader = reinterpret_cast<Elf64_Ehdr*>(selfContext->header);
+        if (elfHeader != nullptr)
+            *outElfHeader = elfHeader;
 
         return 0;
     }
-    else if (pSelfContext->format == SelfFormat::Self)
+    else if (selfContext->format == SelfFormat::Self)
     {
-        auto s_SelfHeader = reinterpret_cast<SelfHeader*>(pSelfContext->header);
-        size_t s_PdataSize = s_SelfHeader->headerSize - sizeof(SelfEntry) * s_SelfHeader->numEntries - sizeof(SelfHeader);
-        if (s_PdataSize >= sizeof(Elf64_Ehdr) && (s_PdataSize & 0xF) == 0)
+        auto selfHeader = reinterpret_cast<SelfHeader*>(selfContext->header);
+        size_t dataSize = selfHeader->headerSize - sizeof(SelfEntry) * selfHeader->numEntries - sizeof(SelfHeader);
+        if (dataSize >= sizeof(Elf64_Ehdr) && (dataSize & 0xF) == 0)
         {
-            auto s_ElfHeader = reinterpret_cast<Elf64_Ehdr*>((uint8_t*)s_SelfHeader + sizeof(SelfHeader) + sizeof(SelfEntry) * s_SelfHeader->numEntries);
-            if (s_ElfHeader)
-                *pOutElfHeader = s_ElfHeader;
+            auto elfHeader = reinterpret_cast<Elf64_Ehdr*>((uint8_t*)selfHeader + sizeof(SelfHeader) + sizeof(SelfEntry) * selfHeader->numEntries);
+            if (elfHeader)
+                *outElfHeader = elfHeader;
 
             return 0;
         }
 
-        kprintf("-EALREADY\n");
-        return -37;
+        return -EALREADY;
     }
 
-    kprintf("-EAGAIN\n");
     return -EAGAIN;
 }
 
-int FakeSelf::SceSblAuthMgrGetSelfAuthInfoFake(SelfContext* pSelfContext, SelfAuthInfo* pInfo)
+int FakeSelf::SceSblAuthMgrGetSelfAuthInfoFake(SelfContext* selfContext, SelfAuthInfo* info)
 {
-    if (pSelfContext == nullptr)
+    if (selfContext == nullptr)
     {
-        kprintf("invalid context\n");
+        printf("Invalid context.\n");
         return -EAGAIN;
     }
 
-    if (pSelfContext->format == SelfFormat::Elf)
+    if (selfContext->format == SelfFormat::Elf)
     {
-        kprintf("invalid format\n");
+        printf("Invalid format.\n");
         return -EAGAIN;
     }
 
-    SelfHeader* s_Header = (SelfHeader*)pSelfContext->header;
-    auto s_Data = reinterpret_cast<const char*>(pSelfContext->header);
-    auto s_FakeInfo = reinterpret_cast<const SelfFakeAuthInfo*>(s_Data + s_Header->headerSize + s_Header->metaSize - 0x100);
-    if (s_FakeInfo->size == sizeof(s_FakeInfo->info))
+    SelfHeader* header = (SelfHeader*)selfContext->header;
+    auto data = reinterpret_cast<const char*>(selfContext->header);
+    auto fakeInfo = reinterpret_cast<const SelfFakeAuthInfo*>(data + header->headerSize + header->metaSize - 0x100);
+    if (fakeInfo->size == sizeof(fakeInfo->info))
     {
-        memcpy(pInfo, &s_FakeInfo->info, sizeof(*pInfo));
+        memcpy(info, &fakeInfo->info, sizeof(*info));
         return 0;
     }
 
-    return -37;
+    return -EALREADY;
 }
 
-int FakeSelf::BuildFakeSelfAuthInfo(SelfContext* pSelfContext, SelfAuthInfo* pParentAuthInfo, SelfAuthInfo* pAuthInfo)
+int FakeSelf::BuildFakeSelfAuthInfo(SelfContext* selfContext, SelfAuthInfo* parentAuthInfo, SelfAuthInfo* authInfo)
 {
-    if (pSelfContext == nullptr || pParentAuthInfo == nullptr || pAuthInfo == nullptr)
+    if (selfContext == nullptr || parentAuthInfo == nullptr || authInfo == nullptr)
     {
-        kprintf("invalid context (%p) || parentAuthInfo (%p) || authInfo (%p)\n", pSelfContext, pParentAuthInfo, pAuthInfo);
+        printf("Invalid context (%p) || parentAuthInfo (%p) || authInfo (%p)\n", selfContext, parentAuthInfo, authInfo);
         return -EINVAL;
     }
 
-    if (!IsFakeSelf(pSelfContext))
+    if (!IsFakeSelf(selfContext))
     {
-        kprintf("not fake self\n");
+        printf("Not fake self\n");
         return -EINVAL;
     }
 
-    SelfExInfo* s_ExInfo = nullptr;
-    int32_t s_Result = sceSblAuthMgrGetSelfInfo(pSelfContext, &s_ExInfo);
-    if (s_Result)
+    SelfExInfo* exInfo = nullptr;
+    int32_t result = sceSblAuthMgrGetSelfInfo(selfContext, &exInfo);
+    if (result)
     {
-        kprintf("could not get self info (%d).\n", s_Result);
-        return s_Result;
+        printf("Could not get self info (%d).\n", result);
+        return result;
     }
 
-    Elf64_Ehdr* sElfHeader = nullptr;
-    s_Result = SceSblAuthMgrGetElfHeader(pSelfContext, &sElfHeader);
-    if (s_Result)
+    Elf64_Ehdr* elfHeader = nullptr;
+    result = SceSblAuthMgrGetElfHeader(selfContext, &elfHeader);
+    if (result)
     {
-        kprintf("could not get elf header (%d).\n", s_Result);
-        return s_Result;
+        printf("Could not get elf header (%d).\n", result);
+        return result;
     }
 
-    if (sElfHeader == nullptr)
+    if (elfHeader == nullptr)
     {
-        kprintf("elf header invalid\n");
+        printf("ELF header invalid\n");
         return -ESRCH;
     }
 
-    SelfAuthInfo s_Info = { 0 };
-    s_Result = SceSblAuthMgrGetSelfAuthInfoFake(pSelfContext, &s_Info);
-    if (s_Result)
+    SelfAuthInfo info = { 0 };
+    result = SceSblAuthMgrGetSelfAuthInfoFake(selfContext, &info);
+    if (result)
     {
-        switch (sElfHeader->e_type)
+        switch (elfHeader->e_type)
         {
         case ET_EXEC:
         case ET_SCE_EXEC:
         case ET_SCE_EXEC_ASLR:
-            memcpy(&s_Info, AuthInfoForExec, sizeof(s_Info));
-            s_Result = 0;
+            memcpy(&info, AuthInfoForExec, sizeof(info));
+            result = 0;
             break;
         case ET_SCE_DYNAMIC:
-            memcpy(&s_Info, AuthInfoForDynlib, sizeof(s_Info));
-            s_Result = 0;
+            memcpy(&info, AuthInfoForDynlib, sizeof(info));
+            result = 0;
             break;
         default:
-            s_Result = 45;
-            return s_Result;
+            result = 45;
+            return result;
         }
 
-        s_Info.paid = s_ExInfo->paid;
+        info.paid = exInfo->paid;
     }
 
-    if (pAuthInfo)
-        memcpy(pAuthInfo, &s_Info, sizeof(*pAuthInfo));
+    if (authInfo)
+        memcpy(authInfo, &info, sizeof(*authInfo));
 
-    return s_Result;
+    return result;
 }
 
 int FakeSelf::AuthSelfHeader(SelfContext* pContext)
 {
-    bool s_IsUnsigned = pContext->format == SelfFormat::Elf || IsFakeSelf(pContext);
-    if (s_IsUnsigned)
+    bool isUnsigned = pContext->format == SelfFormat::Elf || IsFakeSelf(pContext);
+    if (isUnsigned)
     {
-        auto s_OldFormat = pContext->format;
-        auto s_OldTotalHeaderSize = pContext->totalHeaderSize;
-        auto s_NewTotalHeaderSize = mini_syscore_self_binary->headerSize + mini_syscore_self_binary->metaSize;
+        auto oldFormat = pContext->format;
+        auto oldTotalHeaderSize = pContext->totalHeaderSize;
+        auto newTotalHeaderSize = mini_syscore_self_binary->headerSize + mini_syscore_self_binary->metaSize;
 
         // Allocate some memory to hold our header size
-        auto s_Temp = new uint8_t[s_NewTotalHeaderSize];
-        if (s_Temp == nullptr)
+        auto temp = new uint8_t[newTotalHeaderSize];
+        if (temp == nullptr)
         {
-            kprintf("could not allocate new total header size (%x).\n", s_NewTotalHeaderSize);
+            printf("could not allocate new total header size (%x).\n", newTotalHeaderSize);
             return ENOMEM;
         }
 
         // Backup our current header
-        memcpy(s_Temp, pContext->header, s_NewTotalHeaderSize);
+        memcpy(temp, pContext->header, newTotalHeaderSize);
 
         // Copy over mini-syscore.elf's header
-        memcpy(pContext->header, mini_syscore_self_binary, s_NewTotalHeaderSize);
+        memcpy(pContext->header, mini_syscore_self_binary, newTotalHeaderSize);
 
         // Change the format
         pContext->format = SelfFormat::Self;
-        pContext->totalHeaderSize = s_NewTotalHeaderSize;
+        pContext->totalHeaderSize = newTotalHeaderSize;
 
         // xxx: call the original method using a real SELF file
-        //auto s_Result = SceSblAuthMgrVerifyHeaderDetour->Invoke<int>(pContext);
-        auto s_Result = sceSblAuthMgrVerifyHeader(pContext);
-        if (s_Result != 0)
+        auto result = sceSblAuthMgrVerifyHeader(pContext);
+        if (result != 0)
         {
-            kprintf("Cunts fucked\n");
-            delete[] s_Temp;
-            return s_Result;
+            delete[] temp;
+            return result;
         }
 
         // Restore everything
-        memcpy(pContext->header, s_Temp, s_NewTotalHeaderSize);
-        pContext->format = s_OldFormat;
-        pContext->totalHeaderSize = s_OldTotalHeaderSize;
+        memcpy(pContext->header, temp, newTotalHeaderSize);
+        pContext->format = oldFormat;
+        pContext->totalHeaderSize = oldTotalHeaderSize;
 
-        delete[] s_Temp;
+        delete[] temp;
 
-        return s_Result;
+        return result;
     }
     else
-        //return SceSblAuthMgrVerifyHeaderDetour->Invoke<int>(pContext);
         return sceSblAuthMgrVerifyHeader(pContext);
 }
 
-int FakeSelf::SceSblAuthMgrVerifyHeaderHook(SelfContext* pSelfContext)
+int FakeSelf::SceSblAuthMgrVerifyHeaderHook(SelfContext* selfContext)
 {
-    void* s_Temp = nullptr;
-    sceSblAuthMgrSmStart(&s_Temp);
+    void* temp = nullptr;
+    sceSblAuthMgrSmStart(&temp);
 
-    return AuthSelfHeader(pSelfContext);
+    return AuthSelfHeader(selfContext);
 }
 
-int FakeSelf::SceSblAuthMgrIsLoadable2Hook(SelfContext* pSelfContext, SelfAuthInfo* pOldAuthInfo, int32_t pPathId, SelfAuthInfo* pNewAuthInfo)
+int FakeSelf::SceSblAuthMgrIsLoadable2Hook(SelfContext* selfContext, SelfAuthInfo* oldAuthInfo, int32_t pathId, SelfAuthInfo* newAuthInfo)
 {
-    if (pSelfContext == nullptr)
+    if (selfContext == nullptr)
     {
-        kprintf("pSelfContext was NULL\n");
-        return SceSblAuthMgrIsLoadable2Detour->Invoke<int>(pSelfContext, pOldAuthInfo, pPathId, pNewAuthInfo);
+        printf("pSelfContext was NULL\n");
+        return SceSblAuthMgrIsLoadable2Detour->Invoke<int>(selfContext, oldAuthInfo, pathId, newAuthInfo);
     }
 
-    if (pSelfContext->format == SelfFormat::Elf || IsFakeSelf(pSelfContext))
+    if (selfContext->format == SelfFormat::Elf || IsFakeSelf(selfContext))
     {
-        return BuildFakeSelfAuthInfo(pSelfContext, pOldAuthInfo, pNewAuthInfo);
+        return BuildFakeSelfAuthInfo(selfContext, oldAuthInfo, newAuthInfo);
     }
     else
-        return SceSblAuthMgrIsLoadable2Detour->Invoke<int>(pSelfContext, pOldAuthInfo, pPathId, pNewAuthInfo);
+        return SceSblAuthMgrIsLoadable2Detour->Invoke<int>(selfContext, oldAuthInfo, pathId, newAuthInfo);
 }
 
-int FakeSelf::SceSblAuthMgrSmLoadSelfSegment_MailboxHook(uint64_t pServiceId, void* pRequest, void* pResponse)
+int FakeSelf::SceSblAuthMgrSmLoadSelfSegment_MailboxHook(uint64_t serviceId, void* request, void* response)
 {
     // self_context is first param of caller. 0x08 = sizeof(struct self_context*)
     uint8_t* frame = (uint8_t*)__builtin_frame_address(1);
-    SelfContext* s_Context = *(SelfContext**)(frame - 0x08);
+    SelfContext* context = *(SelfContext**)(frame - 0x08);
 
-    auto s_RequestMessage = static_cast<MailboxMessage*>(pRequest);
-    if (s_RequestMessage == nullptr)
+    auto requestMessage = static_cast<MailboxMessage*>(request);
+    if (requestMessage == nullptr)
     {
-        kprintf("invalid response\n");
-        return SceSblAuthMgrSmLoadSelfSegment_MailboxDetour->Invoke<int>(pServiceId, pRequest, pResponse);
+        printf("invalid response\n");
+        return SceSblAuthMgrSmLoadSelfSegment_MailboxDetour->Invoke<int>(serviceId, request, response);
     }
 
-    if (s_Context == nullptr)
+    if (context == nullptr)
     {
-        kprintf("could not load segment, could not get self context.\n");
-        return SceSblAuthMgrSmLoadSelfSegment_MailboxDetour->Invoke<int>(pServiceId, pRequest, pResponse);
+        printf("could not load segment, could not get self context.\n");
+        return SceSblAuthMgrSmLoadSelfSegment_MailboxDetour->Invoke<int>(serviceId, request, response);
     }
 
-    bool s_IsUnsigned = s_Context && IsFakeSelf(s_Context);
-    if (s_IsUnsigned)
+    bool isUnsigned = context && IsFakeSelf(context);
+    if (isUnsigned)
     {
-        s_RequestMessage->retVal = 0;
+        requestMessage->retVal = 0;
         return 0;
     }
 
-    return SceSblAuthMgrSmLoadSelfSegment_MailboxDetour->Invoke<int>(pServiceId, pRequest, pResponse);
+    return SceSblAuthMgrSmLoadSelfSegment_MailboxDetour->Invoke<int>(serviceId, request, response);
 }
 
-int FakeSelf::SceSblAuthMgrSmLoadSelfBlock_MailboxHook(uint64_t pServiceId, uint8_t* pRequest, void* pResponse)
+int FakeSelf::SceSblAuthMgrSmLoadSelfBlock_MailboxHook(uint64_t serviceId, uint8_t* request, void* response)
 {
     // self_context is first param of caller. 0x08 = sizeof(struct self_context*)
     uint8_t* frame = (uint8_t*)__builtin_frame_address(1);
-    SelfContext* pContext = *(SelfContext**)(frame - 0x08);
+    SelfContext* context = *(SelfContext**)(frame - 0x08);
 
-    bool s_IsUnsigned = pContext && (pContext->format == SelfFormat::Elf || IsFakeSelf((SelfContext*)pContext));
+    bool isUnsigned = context && (context->format == SelfFormat::Elf || IsFakeSelf((SelfContext*)context));
 
-    if (!s_IsUnsigned)
+    if (!isUnsigned)
     {
-        return SceSblAuthMgrSmLoadSelfBlock_MailboxDetour->Invoke<int>(pServiceId, pRequest, pResponse);
+        return SceSblAuthMgrSmLoadSelfBlock_MailboxDetour->Invoke<int>(serviceId, request, response);
     }
     else
     {
 
-        vm_offset_t s_SegmentDataGpuVa = *(uint64_t*)(pRequest + 0x08);
-        vm_offset_t s_CurrentDataGpuVa = *(uint64_t*)(pRequest + 0x50);
-        vm_offset_t s_CurrentData2GpuVa = *(uint64_t*)(pRequest + 0x58);
+        vm_offset_t segmentDataGpuVa = *(uint64_t*)(request + 0x08);
+        vm_offset_t currentDataGpuVa = *(uint64_t*)(request + 0x50);
+        vm_offset_t currentData2GpuVa = *(uint64_t*)(request + 0x58);
 
-        uint32_t s_DataOffset = *(uint32_t*)(pRequest + 0x44);
-        uint32_t s_DataSize = *(uint32_t*)(pRequest + 0x48);
+        uint32_t dataOffset = *(uint32_t*)(request + 0x44);
+        uint32_t dataSize = *(uint32_t*)(request + 0x48);
 
         // looking into lists of GPU's mapped memory regions
-        vm_offset_t s_SegmentDataCpuVa = SceSblDriverGpuVaToCpuVa(s_SegmentDataGpuVa, NULL);
-        vm_offset_t s_CurrentDataCpuVa = SceSblDriverGpuVaToCpuVa(s_CurrentDataGpuVa, NULL);
-        vm_offset_t s_CurrentData2CpuVa = s_CurrentData2GpuVa ? SceSblDriverGpuVaToCpuVa(s_CurrentData2GpuVa, NULL) : 0;
+        vm_offset_t segmentDataCpuVa = SceSblDriverGpuVaToCpuVa(segmentDataGpuVa, NULL);
+        vm_offset_t currentDataCpuVa = SceSblDriverGpuVaToCpuVa(currentDataGpuVa, NULL);
+        vm_offset_t currentData2CpuVa = currentData2GpuVa ? SceSblDriverGpuVaToCpuVa(currentData2GpuVa, NULL) : 0;
 
-        if (s_SegmentDataCpuVa && s_CurrentDataCpuVa)
+        if (segmentDataCpuVa && currentDataCpuVa)
         {
-            if (s_CurrentData2GpuVa && s_CurrentData2GpuVa != s_CurrentDataGpuVa && s_DataOffset > 0)
+            if (currentData2GpuVa && currentData2GpuVa != currentDataGpuVa && dataOffset > 0)
             {
 
                 // data spans two consecutive memory's pages, so we need to copy twice
-                uint32_t s_Size = PAGE_SIZE - s_DataOffset;
-                memcpy((char*)s_SegmentDataCpuVa, (char*)s_CurrentDataCpuVa + s_DataOffset, s_Size);
+                uint32_t size = PAGE_SIZE - dataOffset;
+                memcpy((char*)segmentDataCpuVa, (char*)currentDataCpuVa + dataOffset, size);
 
                 // prevent *potential* kpanic here
-                if (s_CurrentData2CpuVa)
+                if (currentData2CpuVa)
                 {
-                    memcpy((char*)s_SegmentDataCpuVa + s_Size, (char*)s_CurrentData2CpuVa, s_DataSize - s_Size);
+                    memcpy((char*)segmentDataCpuVa + size, (char*)currentData2CpuVa, dataSize - size);
                 }
             }
             else
             {
-                memcpy((char*)s_SegmentDataCpuVa, (char*)s_CurrentDataCpuVa + s_DataOffset, s_DataSize);
+                memcpy((char*)segmentDataCpuVa, (char*)currentDataCpuVa + dataOffset, dataSize);
             }
         }
 
         // setting error field to zero, thus we have no errors
-        *(int*)(pRequest + 0x04) = 0;
+        *(int*)(request + 0x04) = 0;
 
         return 0;
     }

@@ -31,7 +31,7 @@ Detour* Detour::CreateDetour(DetourType type, void* address, void* destination)
 
 		if (hs.flags & F_ERROR)
 		{
-			kprintf("[Detour] HDE has run into an error dissasembling %llX!\n", ptr);
+			printf("[Detour] HDE has run into an error dissasembling %llX!\n", ptr);
 			return nullptr;
 		}
 	}
@@ -49,14 +49,14 @@ Detour* Detour::CreateDetour(DetourType type, void* address, void* destination)
 		trampolineAddress = DetourMemoryPool::ReserveMemory(JUMP_64SIZE);
 		if (trampolineAddress == nullptr)
 		{
-			kprintf("[Detour] An error has occurred allocating trampoline: %llX.\n", trampolineAddress);
+			printf("[Detour] An error has occurred allocating trampoline: %llX.\n", trampolineAddress);
 			return nullptr;
 		}
 
 		// Make sure we can make the jump.
 		if (!IsRelativelyClose((void*)((uint64_t)address + JUMP_32SIZE), trampolineAddress))
 		{
-			kprintf("[Detour] Trampoline is not relatively close we can not write a jump 32.\n");
+			printf("[Detour] Trampoline is not relatively close we can not write a jump 32.\n");
 			return nullptr;
 		}
 
@@ -75,7 +75,7 @@ Detour* Detour::CreateDetour(DetourType type, void* address, void* destination)
 		stubAddress = DetourMemoryPool::ReserveMemory(instructionLength + JUMP_64SIZE);
 		if (stubAddress == nullptr)
 		{
-			kprintf("[Detour] DetourMemoryPool::ReserveMemory failed.\n");
+			printf("[Detour] DetourMemoryPool::ReserveMemory failed.\n");
 			return nullptr;
 		}
 

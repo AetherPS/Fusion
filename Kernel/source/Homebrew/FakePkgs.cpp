@@ -1,6 +1,8 @@
 #include "Common.h"
 #include "FakePkgs.h"
 
+// Credits: https://github.com/OpenOrbis/mira-project
+
 const uint8_t FakePkgs::PkgKeyP[] =
 {
 	0x2D, 0xE8, 0xB4, 0x65, 0xBE, 0x05, 0x78, 0x6A, 0x89, 0x31, 0xC9, 0x5A, 0x44, 0xDE, 0x50, 0xC1,
@@ -94,51 +96,50 @@ void FakePkgs::Term()
 	delete SceSblKeymgrInvalidateKeySxXlockDetour;
 }
 
-void FakePkgs::GenPfsCryptoKey(uint8_t* p_EncryptionKeyPFS, uint8_t p_Seed[PFS_SEED_SIZE], uint32_t p_Index, uint8_t p_Key[PFS_FINAL_KEY_SIZE])
+void FakePkgs::GenPfsCryptoKey(uint8_t* encryptionKeyPFS, uint8_t seed[PFS_SEED_SIZE], uint32_t index, uint8_t key[PFS_FINAL_KEY_SIZE])
 {
-	auto s_Thread = CurrentThread();
-	FakeKeyD s_D;
-	memset(&s_D, 0, sizeof(s_D));
+	auto td = CurrentThread();
+	FakeKeyD fakeKeyD;
+	memset(&fakeKeyD, 0, sizeof(fakeKeyD));
 
-	s_D.index = p_Index;
-	memcpy(s_D.seed, p_Seed, PFS_SEED_SIZE);
+	fakeKeyD.index = index;
+	memcpy(fakeKeyD.seed, seed, PFS_SEED_SIZE);
 
-	fpu_kern_enter(s_Thread, fpu_ctx, 0);
-	Sha256Hmac(p_Key, (const uint8_t*)&s_D, sizeof(s_D), p_EncryptionKeyPFS, EKPFS_SIZE);
-	fpu_kern_leave(s_Thread, fpu_ctx);
+	fpu_kern_enter(td, fpu_ctx, 0);
+	Sha256Hmac(key, (const uint8_t*)&fakeKeyD, sizeof(fakeKeyD), encryptionKeyPFS, EKPFS_SIZE);
+	fpu_kern_leave(td, fpu_ctx);
 }
 
-void FakePkgs::GenPfsEncKey(uint8_t* p_EncryptionKeyPFS, uint8_t p_Seed[PFS_SEED_SIZE], uint8_t p_Key[PFS_FINAL_KEY_SIZE])
+void FakePkgs::GenPfsEncKey(uint8_t* encryptionKeyPFS, uint8_t seed[PFS_SEED_SIZE], uint8_t key[PFS_FINAL_KEY_SIZE])
 {
-	GenPfsCryptoKey(p_EncryptionKeyPFS, p_Seed, 1, p_Key);
+	GenPfsCryptoKey(encryptionKeyPFS, seed, 1, key);
 }
 
-void FakePkgs::GenPfsSignKey(uint8_t* p_EncryptionKeyPFS, uint8_t p_Seed[PFS_SEED_SIZE], uint8_t p_Key[PFS_FINAL_KEY_SIZE])
+void FakePkgs::GenPfsSignKey(uint8_t* encryptionKeyPFS, uint8_t seed[PFS_SEED_SIZE], uint8_t key[PFS_FINAL_KEY_SIZE])
 {
-	GenPfsCryptoKey(p_EncryptionKeyPFS, p_Seed, 2, p_Key);
+	GenPfsCryptoKey(encryptionKeyPFS, seed, 2, key);
 }
 
-int FakePkgs::DecryptNpdrmDebugRif(uint32_t p_Type, uint8_t* p_Data)
+int FakePkgs::DecryptNpdrmDebugRif(uint32_t type, uint8_t* data)
 {
-	auto s_Thread = CurrentThread();
-	if (s_Thread == nullptr)
+	auto td = CurrentThread();
+	if (td == nullptr)
 		return SCE_SBL_ERROR_NPDRM_ENOTSUP;
 
-	auto s_Ret = 0;
-	fpu_kern_enter(s_Thread, fpu_ctx, 0);
-	s_Ret = AesCbcCfb128Decrypt(p_Data + RIF_DIGEST_SIZE, p_Data + RIF_DIGEST_SIZE, RIF_DATA_SIZE, RifDebugKey, sizeof(RifDebugKey) * 8, p_Data);
-	fpu_kern_leave(s_Thread, fpu_ctx);
-	if (s_Ret)
+	fpu_kern_enter(td, fpu_ctx, 0);
+	auto result = AesCbcCfb128Decrypt(data + RIF_DIGEST_SIZE, data + RIF_DIGEST_SIZE, RIF_DATA_SIZE, RifDebugKey, sizeof(RifDebugKey) * 8, data);
+	fpu_kern_leave(td, fpu_ctx);
+	if (result)
 		return SCE_SBL_ERROR_NPDRM_ENOTSUP;
 
-	return s_Ret;
+	return result;
 }
 
-SblMapListEntry* FakePkgs::SceSblDriverFindMappedPageListByGpuVa(vm_offset_t p_GpuVa)
+SblMapListEntry* FakePkgs::SceSblDriverFindMappedPageListByGpuVa(vm_offset_t gpuVa)
 {
-	if (p_GpuVa == 0)
+	if (gpuVa == 0)
 	{
-		kprintf("invalid gpu va\n");
+		printf("invalid gpu va\n");
 		return nullptr;
 	}
 
@@ -150,7 +151,7 @@ SblMapListEntry* FakePkgs::SceSblDriverFindMappedPageListByGpuVa(vm_offset_t p_G
 
 	while (gpuVaPageList)
 	{
-		if (gpuVaPageList->gpuVa == p_GpuVa)
+		if (gpuVaPageList->gpuVa == gpuVa)
 		{
 			finalEntry = gpuVaPageList;
 			break;
@@ -164,93 +165,94 @@ SblMapListEntry* FakePkgs::SceSblDriverFindMappedPageListByGpuVa(vm_offset_t p_G
 	return finalEntry;
 }
 
-vm_offset_t FakePkgs::SceSblDriverGpuVaToCpuVa(vm_offset_t p_GpuVa, size_t* p_NumPageGroups)
+vm_offset_t FakePkgs::SceSblDriverGpuVaToCpuVa(vm_offset_t gpuVa, size_t* numPageGroups)
 {
-	auto s_Entry = SceSblDriverFindMappedPageListByGpuVa(p_GpuVa);
-	if (s_Entry == nullptr)
+	auto entry = SceSblDriverFindMappedPageListByGpuVa(gpuVa);
+	if (entry == nullptr)
 		return 0;
 
-	if (p_NumPageGroups != nullptr)
-		*p_NumPageGroups = s_Entry->numPageGroups;
+	if (numPageGroups != nullptr)
+		*numPageGroups = entry->numPageGroups;
 
-	return s_Entry->cpuVa;
+	return entry->cpuVa;
 }
 
-SblKeyRbtreeEntry* FakePkgs::sceSblKeymgrGetKey(unsigned int p_Handle)
+SblKeyRbtreeEntry* FakePkgs::sceSblKeymgrGetKey(unsigned int handle)
 {
 	SblKeyRbtreeEntry* sblKeymgrKeyRbTree = *(SblKeyRbtreeEntry**)sbl_keymgr_key_rbtree;
 
 	while (sblKeymgrKeyRbTree)
 	{
-		if (sblKeymgrKeyRbTree->handle < p_Handle)
+		if (sblKeymgrKeyRbTree->handle < handle)
 			sblKeymgrKeyRbTree = sblKeymgrKeyRbTree->right;
-		else if (sblKeymgrKeyRbTree->handle > p_Handle)
+		else if (sblKeymgrKeyRbTree->handle > handle)
 			sblKeymgrKeyRbTree = sblKeymgrKeyRbTree->left;
-		else if (sblKeymgrKeyRbTree->handle == p_Handle)
+		else if (sblKeymgrKeyRbTree->handle == handle)
 			return sblKeymgrKeyRbTree;
 	}
 
 	return nullptr;
 }
 
-int FakePkgs::SceSblDriverSendMsgHook(SblMsg* p_Message, size_t p_Size)
+int FakePkgs::SceSblDriverSendMsgHook(SblMsg* message, size_t size)
 {
-	if (p_Message->hdr.cmd != SBL_MSG_CCP)
-		return sceSblDriverSendMsg(p_Message, p_Size);
+	if (message->hdr.cmd != SBL_MSG_CCP)
+		return sceSblDriverSendMsg(message, size);
 
-	union ccp_op* s_Op = &p_Message->service.ccp.op;
-	if (CCP_OP(s_Op->common.cmd) != CCP_OP_AES)
-		return sceSblDriverSendMsg(p_Message, p_Size);
+	union ccp_op* op = &message->service.ccp.op;
+	if (CCP_OP(op->common.cmd) != CCP_OP_AES)
+		return sceSblDriverSendMsg(message, size);
 
 	uint32_t s_Mask = CCP_USE_KEY_FROM_SLOT | CCP_GENERATE_KEY_AT_SLOT;
-	if ((s_Op->aes.cmd & s_Mask) != s_Mask || (s_Op->aes.key_index != PFS_FAKE_OBF_KEY_ID))
-		return sceSblDriverSendMsg(p_Message, p_Size);
+	if ((op->aes.cmd & s_Mask) != s_Mask || (op->aes.key_index != PFS_FAKE_OBF_KEY_ID))
+		return sceSblDriverSendMsg(message, size);
 
-	s_Op->aes.cmd &= ~CCP_USE_KEY_FROM_SLOT;
+	op->aes.cmd &= ~CCP_USE_KEY_FROM_SLOT;
 
 	size_t key_len = 16;
 
-	/* reverse key bytes */
+	// reverse key bytes
 	for (auto i = 0; i < key_len; ++i)
-		s_Op->aes.key[i] = FakeKeySeed[key_len - i - 1];
+		op->aes.key[i] = FakeKeySeed[key_len - i - 1];
 
-	return sceSblDriverSendMsg(p_Message, p_Size);
+	return sceSblDriverSendMsg(message, size);
 }
 
-int FakePkgs::SceSblPfsSetKeysHook(uint32_t* ekh, uint32_t* skh, uint8_t* eekpfs, Ekc* eekc, uint32_t pubkey_ver, uint32_t key_ver, PfsHeader* hdr, size_t hdr_size, uint32_t type, uint32_t finalized, uint32_t is_disc)
+int FakePkgs::SceSblPfsSetKeysHook(uint32_t* ekh, uint32_t* skh, uint8_t* eekpfs, Ekc* eekc, uint32_t pubkeyVer, uint32_t keyVer, PfsHeader* hdr, size_t hdrSize, uint32_t type, uint32_t finalized, uint32_t isDisc)
 {
 	struct thread* td;
-	RsaBuffer in_data;
-	RsaBuffer out_data;
+	RsaBuffer inData;
+	RsaBuffer outData;
 	RsaKey key;
 	uint8_t ekpfs[EKPFS_SIZE];
 	uint8_t iv[16];
-	SblKeyDesc enc_key_desc;
-	SblKeyDesc sign_key_desc;
-	int32_t ret, orig_ret = 0;
+	SblKeyDesc encKeyDesc;
+	SblKeyDesc signKeyDesc;
+	int32_t ret, originalRet = 0;
 
-	ret = orig_ret = SceSblPfsSetKeysDetour->Invoke<int>(ekh, skh, eekpfs, eekc, pubkey_ver, key_ver, hdr, hdr_size, type, finalized, is_disc);
+	ret = originalRet = SceSblPfsSetKeysDetour->Invoke<int>(ekh, skh, eekpfs, eekc, pubkeyVer, keyVer, hdr, hdrSize, type, finalized, isDisc);
 
 	if (ret)
 	{
-		if (finalized && is_disc != 0)
+		if (finalized && isDisc != 0)
 		{
-			ret = SceSblPfsSetKeysDetour->Invoke<int>(ekh, skh, eekpfs, eekc, pubkey_ver, key_ver, hdr, hdr_size, type, finalized, 0); /* always use is_disc=0 here */
+			// always use isDisc=0 here
+			ret = SceSblPfsSetKeysDetour->Invoke<int>(ekh, skh, eekpfs, eekc, pubkeyVer, keyVer, hdr, hdrSize, type, finalized, 0);
 			if (ret)
 			{
-				ret = orig_ret;
+				ret = originalRet;
 				goto err;
 			}
 		}
 		else
 		{
-			memset(&in_data, 0, sizeof(in_data));
-			in_data.ptr = eekpfs;
-			in_data.size = EEKPFS_SIZE;
+			memset(&inData, 0, sizeof(inData));
+			inData.ptr = eekpfs;
+			inData.size = EEKPFS_SIZE;
 
-			memset(&out_data, 0, sizeof(out_data));
-			out_data.ptr = ekpfs;
-			out_data.size = EKPFS_SIZE;
+			memset(&outData, 0, sizeof(outData));
+			outData.ptr = ekpfs;
+			outData.size = EKPFS_SIZE;
 
 			memset(&key, 0, sizeof(key));
 			key.p = (uint8_t*)PkgKeyP;
@@ -263,82 +265,82 @@ int FakePkgs::SceSblPfsSetKeysHook(uint32_t* ekh, uint32_t* skh, uint8_t* eekpfs
 
 			fpu_kern_enter(td, fpu_ctx, 0);
 			{
-				ret = RsaesPkcs1v15Dec2048CRT(&out_data, &in_data, &key);
+				ret = RsaesPkcs1v15Dec2048CRT(&outData, &inData, &key);
 			}
 			fpu_kern_leave(td, fpu_ctx);
 
 			if (ret)
 			{
-				ret = orig_ret;
+				ret = originalRet;
 				goto err;
 			}
 
 			sx_xlock(sbl_pfs_sx, 0);
 			{
-				memset(&enc_key_desc, 0, sizeof(enc_key_desc));
+				memset(&encKeyDesc, 0, sizeof(encKeyDesc));
 				{
-					enc_key_desc.Pfs.obfuscatedKeyId = PFS_FAKE_OBF_KEY_ID;
-					enc_key_desc.Pfs.keySize = sizeof(enc_key_desc.Pfs.escrowedKey);
+					encKeyDesc.Pfs.obfuscatedKeyId = PFS_FAKE_OBF_KEY_ID;
+					encKeyDesc.Pfs.keySize = sizeof(encKeyDesc.Pfs.escrowedKey);
 
-					GenPfsEncKey(ekpfs, hdr->cryptSeed, enc_key_desc.Pfs.escrowedKey);
+					GenPfsEncKey(ekpfs, hdr->cryptSeed, encKeyDesc.Pfs.escrowedKey);
 
 					fpu_kern_enter(td, fpu_ctx, 0);
 					{
 						memset(iv, 0, sizeof(iv));
-						ret = AesCbcCfb128Encrypt(enc_key_desc.Pfs.escrowedKey, enc_key_desc.Pfs.escrowedKey, sizeof(enc_key_desc.Pfs.escrowedKey), FakeKeySeed, sizeof(FakeKeySeed) * 8, iv);
+						ret = AesCbcCfb128Encrypt(encKeyDesc.Pfs.escrowedKey, encKeyDesc.Pfs.escrowedKey, sizeof(encKeyDesc.Pfs.escrowedKey), FakeKeySeed, sizeof(FakeKeySeed) * 8, iv);
 					}
 					fpu_kern_leave(td, fpu_ctx);
 				}
 
 				if (ret)
 				{
-					kprintf("AesCbcCfb128Encrypt returned (%d).\n", ret);
+					printf("AesCbcCfb128Encrypt returned (%d).\n", ret);
 					sx_xunlock(sbl_pfs_sx);
-					ret = orig_ret;
+					ret = originalRet;
 					goto err;
 				}
 
-				memset(&sign_key_desc, 0, sizeof(sign_key_desc));
+				memset(&signKeyDesc, 0, sizeof(signKeyDesc));
 				{
-					sign_key_desc.Pfs.obfuscatedKeyId = PFS_FAKE_OBF_KEY_ID;
-					sign_key_desc.Pfs.keySize = sizeof(sign_key_desc.Pfs.escrowedKey);
+					signKeyDesc.Pfs.obfuscatedKeyId = PFS_FAKE_OBF_KEY_ID;
+					signKeyDesc.Pfs.keySize = sizeof(signKeyDesc.Pfs.escrowedKey);
 
-					GenPfsSignKey(ekpfs, hdr->cryptSeed, sign_key_desc.Pfs.escrowedKey);
+					GenPfsSignKey(ekpfs, hdr->cryptSeed, signKeyDesc.Pfs.escrowedKey);
 
 					fpu_kern_enter(td, fpu_ctx, 0);
 					{
 						memset(iv, 0, sizeof(iv));
-						ret = AesCbcCfb128Encrypt(sign_key_desc.Pfs.escrowedKey, sign_key_desc.Pfs.escrowedKey, sizeof(sign_key_desc.Pfs.escrowedKey), FakeKeySeed, sizeof(FakeKeySeed) * 8, iv);
+						ret = AesCbcCfb128Encrypt(signKeyDesc.Pfs.escrowedKey, signKeyDesc.Pfs.escrowedKey, sizeof(signKeyDesc.Pfs.escrowedKey), FakeKeySeed, sizeof(FakeKeySeed) * 8, iv);
 					}
 					fpu_kern_leave(td, fpu_ctx);
 				}
 
 				if (ret)
 				{
-					kprintf("AesCbcCfb128Encrypt returned (%d).\n", ret);
+					printf("AesCbcCfb128Encrypt returned (%d).\n", ret);
 					sx_xunlock(sbl_pfs_sx);
-					ret = orig_ret;
+					ret = originalRet;
 					goto err;
 				}
 
-				ret = sceSblKeymgrSetKeyForPfs(&enc_key_desc, ekh);
+				ret = sceSblKeymgrSetKeyForPfs(&encKeyDesc, ekh);
 				if (ret)
 				{
 					if (*ekh != 0xFFFFFFFF)
 						sceSblKeymgrClearKey(*ekh);
 
 					sx_xunlock(sbl_pfs_sx);
-					ret = orig_ret;
+					ret = originalRet;
 					goto err;
 				}
 
-				ret = sceSblKeymgrSetKeyForPfs(&sign_key_desc, skh);
+				ret = sceSblKeymgrSetKeyForPfs(&signKeyDesc, skh);
 				if (ret)
 				{
 					if (*skh != 0xFFFFFFFF)
 						sceSblKeymgrClearKey(*skh);
 					sx_xunlock(sbl_pfs_sx);
-					ret = orig_ret;
+					ret = originalRet;
 					goto err;
 				}
 			}
@@ -350,76 +352,76 @@ err:
 	return ret;
 }
 
-int FakePkgs::NpdrmDecryptIsolatedRifHook(KeymgrPayload* p_Payload)
+int FakePkgs::NpdrmDecryptIsolatedRifHook(KeymgrPayload* payload)
 {
 	// it's SM request, thus we have the GPU address here, so we need to convert it to the CPU address
-	KeymgrRequest* s_Request = reinterpret_cast<KeymgrRequest*>(SceSblDriverGpuVaToCpuVa(p_Payload->data, nullptr));
+	KeymgrRequest* request = reinterpret_cast<KeymgrRequest*>(SceSblDriverGpuVaToCpuVa(payload->data, nullptr));
 
-	// // try to decrypt rif normally
-	int s_Ret = NpdrmDecryptIsolatedRifDetour->Invoke<int>(p_Payload);
-	if ((s_Ret != 0 || p_Payload->status != 0) && s_Request)
+	// try to decrypt rif normally
+	int result = NpdrmDecryptIsolatedRifDetour->Invoke<int>(payload);
+	if ((result != 0 || payload->status != 0) && request)
 	{
-		if (s_Request->DecryptRif.type == 0x200)
+		if (request->DecryptRif.type == 0x200)
 		{
 			// fake?
-			s_Ret = DecryptNpdrmDebugRif(s_Request->DecryptRif.type, s_Request->DecryptRif.data);
-			p_Payload->status = s_Ret;
-			s_Ret = 0;
+			result = DecryptNpdrmDebugRif(request->DecryptRif.type, request->DecryptRif.data);
+			payload->status = result;
+			result = 0;
 		}
 	}
 
-	return s_Ret;
+	return result;
 }
 
-int FakePkgs::NpdrmDecryptRifNewHook(KeymgrPayload* p_Payload)
+int FakePkgs::NpdrmDecryptRifNewHook(KeymgrPayload* payload)
 {
 	// it's SM request, thus we have the GPU address here, so we need to convert it to the CPU address
-	uint64_t s_BufferGpuVa = p_Payload->data;
-	auto s_Request = reinterpret_cast<KeymgrRequest*>(SceSblDriverGpuVaToCpuVa(s_BufferGpuVa, nullptr));
-	auto s_Response = reinterpret_cast<KeymgrResponse*>(s_Request);
+	uint64_t bufferGpuVa = payload->data;
+	auto request = reinterpret_cast<KeymgrRequest*>(SceSblDriverGpuVaToCpuVa(bufferGpuVa, nullptr));
+	auto response = reinterpret_cast<KeymgrResponse*>(request);
 
 	// try to decrypt rif normally
-	int s_Ret = NpdrmDecryptRifNewDetour->Invoke<int>(p_Payload);
-	int s_OriginalRet = s_Ret;
+	int result = NpdrmDecryptRifNewDetour->Invoke<int>(payload);
+	int originalResult = result;
 
 	// and if it fails then we check if it's fake rif and try to decrypt it by ourselves
-	if ((s_Ret != 0 || p_Payload->status != 0) && s_Request)
+	if ((result != 0 || payload->status != 0) && request)
 	{
-		if (s_Request->DecryptEntireRif.rif.format != 2)
+		if (request->DecryptEntireRif.rif.format != 2)
 		{
 			// not fake?
 			goto err;
 		}
 
-		s_Ret = DecryptNpdrmDebugRif(s_Request->DecryptEntireRif.rif.format, s_Request->DecryptEntireRif.rif.digest);
+		result = DecryptNpdrmDebugRif(request->DecryptEntireRif.rif.format, request->DecryptEntireRif.rif.digest);
 
-		if (s_Ret)
+		if (result)
 		{
-			s_Ret = s_OriginalRet;
+			result = originalResult;
 			goto err;
 		}
 
 		/* XXX: sorry, i'm lazy to refactor this crappy code :D basically, we're copying decrypted data to proper place,
 		consult with kernel code if offsets needs to be changed */
-		memcpy(s_Response->DecryptEntireRif.raw, s_Request->DecryptEntireRif.rif.digest, sizeof(s_Request->DecryptEntireRif.rif.digest));
-		memcpy(s_Response->DecryptEntireRif.raw + sizeof(s_Request->DecryptEntireRif.rif.digest), s_Request->DecryptEntireRif.rif.data, sizeof(s_Request->DecryptEntireRif.rif.data));
+		memcpy(response->DecryptEntireRif.raw, request->DecryptEntireRif.rif.digest, sizeof(request->DecryptEntireRif.rif.digest));
+		memcpy(response->DecryptEntireRif.raw + sizeof(request->DecryptEntireRif.rif.digest), request->DecryptEntireRif.rif.data, sizeof(request->DecryptEntireRif.rif.data));
 
-		memset(s_Response->DecryptEntireRif.raw +
-			sizeof(s_Request->DecryptEntireRif.rif.digest) +
-			sizeof(s_Request->DecryptEntireRif.rif.data),
+		memset(response->DecryptEntireRif.raw +
+			sizeof(request->DecryptEntireRif.rif.digest) +
+			sizeof(request->DecryptEntireRif.rif.data),
 			0,
-			sizeof(s_Response->DecryptEntireRif.raw) -
-			(sizeof(s_Request->DecryptEntireRif.rif.digest) +
-				sizeof(s_Request->DecryptEntireRif.rif.data)));
+			sizeof(response->DecryptEntireRif.raw) -
+			(sizeof(request->DecryptEntireRif.rif.digest) +
+				sizeof(request->DecryptEntireRif.rif.data)));
 
-		p_Payload->status = s_Ret;
+		payload->status = result;
 	}
 
 err:
-	return s_Ret;
+	return result;
 }
 
-int FakePkgs::SceSblKeymgrInvalidateKeySxXlockHook(struct sx* p_Sx, int p_Opts, const char* p_File, int p_Line)
+int FakePkgs::SceSblKeymgrInvalidateKeySxXlockHook(struct sx* sx, int opts, const char* file, int line)
 {
 	auto sblKeymgrBufGva = sbl_keymgr_buf_gva;
 	auto sblKeymgrBufVa = sbl_keymgr_buf_va;
@@ -429,9 +431,7 @@ int FakePkgs::SceSblKeymgrInvalidateKeySxXlockHook(struct sx* p_Sx, int p_Opts, 
 	SblKeySlotDesc* keySlotDesc;
 
 	unsigned keyHandle;
-	int ret, ret2;
-
-	ret = sx_xlock(p_Sx, p_Opts);
+	auto lockResult = sx_xlock(sx, opts);
 
 	if (TAILQ_EMPTY(sblKeymgrKeySlots))
 		goto done;
@@ -441,50 +441,42 @@ int FakePkgs::SceSblKeymgrInvalidateKeySxXlockHook(struct sx* p_Sx, int p_Opts, 
 		keyHandle = keySlotDesc->keyHandle;
 		if (keyHandle == (unsigned int)-1)
 		{
-			/* unbounded */
-			kprintf("unbounded\n");
+			// unbounded
 			continue;
 		}
 
 		keyDesc = sceSblKeymgrGetKey(keyHandle);
 		if (!keyDesc)
 		{
-			/* shouldn't happen in normal situations */
-			kprintf("shouldn't happen in normal situations\n");
+			// Shouldn't happen in normal situations.
 			continue;
 		}
 
 		if (!keyDesc->occupied)
 		{
-			kprintf("!occupied\n");
 			continue;
 		}
 
 		if (keyDesc->desc.Pfs.obfuscatedKeyId != PFS_FAKE_OBF_KEY_ID)
 		{
-			/* not our key, just skip, so it will be handled by original code */
-			kprintf("not our key, just skip, so it will be handled by original code\n");
+			// not our key, just skip, so it will be handled by original code.
 			continue;
 		}
 
 		if (keyDesc->desc.Pfs.keySize != sizeof(keyDesc->desc.Pfs.escrowedKey))
 		{
-			/* something weird with key params, just ignore and app will just crash... */
-			kprintf("something weird with key params, just ignore and app will just crash...\n");
+			// something weird with key params, just ignore and app will just crash...
 			continue;
 		}
 
 		memcpy(sblKeymgrBufVa, keyDesc->desc.Pfs.escrowedKey, keyDesc->desc.Pfs.keySize);
-		ret2 = sceSblKeymgrSetKeyStorage(*sblKeymgrBufGva, keyDesc->desc.Pfs.keySize, keyDesc->desc.Pfs.obfuscatedKeyId, keySlotDesc->keyId);
-		if (ret2)
+		if (sceSblKeymgrSetKeyStorage(*sblKeymgrBufGva, keyDesc->desc.Pfs.keySize, keyDesc->desc.Pfs.obfuscatedKeyId, keySlotDesc->keyId))
 		{
-			kprintf("wtf?\n");
-			/* wtf? */
 			continue;
 		}
 	}
 
 done:
-	/* XXX: no need to call SX unlock because we'll jump to original code which expects SX is already locked */
-	return ret;
+	// XXX: no need to call SX unlock because we'll jump to original code which expects SX is already locked
+	return lockResult;
 }

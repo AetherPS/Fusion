@@ -43,7 +43,7 @@ int LibraryReplacer::sys_dynlib_load_prxHook(thread* td, dynlib_load_prx_args* a
 	{
 		copyout(&loadedHandleOut, args->handle_out, sizeof(int));
 
-		kprintf("Replaced \"%s\" on %s(%d)\n", fileName, titleId, td->td_proc->p_pid);
+		printf("Replaced \"%s\" on %s(%d)\n", fileName, titleId, td->td_proc->p_pid);
 		return 0;
 	}
 

@@ -41,7 +41,7 @@ extern int (*vprintf)(const char* fmt, va_list arg);
 extern int (*sscanf)(const char* str, const char* format, ...);
 extern char* (*strdup)(const char* s, void* type);
 extern char* (*realloc)(void* addr, unsigned long size, void* mtp, int flags);
-extern void (*kprintf)(const char* fmt, ...);
+extern void (*printf)(const char* fmt, ...);
 extern void (*hexdump)(const void* ptr, int length, const char* hdr, int flags);
 extern bool (*dynlib_is_host_path)(char* s);
 extern char* (*dynlib_basename)(char* s);

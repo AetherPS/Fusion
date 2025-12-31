@@ -5,19 +5,19 @@ int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint3
 {
 	if (proc == nullptr)
 	{
-		kprintf("ReadWriteProcessMemory(): Invalid Process.\n");
+		printf("ReadWriteProcessMemory(): Invalid Process.\n");
 		return EINVAL;
 	}
 
 	if (addr == nullptr)
 	{
-		kprintf("ReadWriteProcessMemory(): Invalid address.\n");
+		printf("ReadWriteProcessMemory(): Invalid address.\n");
 		return EINVAL;
 	}
 
 	if (data == nullptr || len <= 0)
 	{
-		kprintf("ReadWriteProcessMemory(): Invalid data.\n");
+		printf("ReadWriteProcessMemory(): Invalid data.\n");
 		return EINVAL;
 	}
 
@@ -39,7 +39,7 @@ int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint3
 	auto res = proc_rwmem(proc, &Uio);
 	if (res != 0)
 	{
-		kprintf("ReadWriteProcessMemory(): proc_rwmem failed with the error %llX\n", res);
+		printf("ReadWriteProcessMemory(): proc_rwmem failed with the error %llX\n", res);
 		return res;
 	}
 
@@ -59,7 +59,7 @@ uint64_t AllocateMemory(proc* p, size_t len, int prot, int flags)
 	auto vmspace = p->p_vmspace;
 	if (!vmspace)
 	{
-		kprintf("%s: Process has no vmspace.\n", __FUNCTION__);
+		printf("%s: Process has no vmspace.\n", __FUNCTION__);
 		return 0;
 	}
 
@@ -71,7 +71,7 @@ uint64_t AllocateMemory(proc* p, size_t len, int prot, int flags)
 		if (res != 0 || mappedAddress == 0)
 		{
 			vm_map_unlock(map);
-			kprintf("%s: vm_map_findspace an error has occurred allocating: %d.\n", __FUNCTION__, res);
+			printf("%s: vm_map_findspace an error has occurred allocating: %d.\n", __FUNCTION__, res);
 			return 0;
 		}
 
@@ -79,7 +79,7 @@ uint64_t AllocateMemory(proc* p, size_t len, int prot, int flags)
 		if (res != 0)
 		{
 			vm_map_unlock(map);
-			kprintf("%s: vm_map_insert an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, mappedAddress);
+			printf("%s: vm_map_insert an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, mappedAddress);
 			return 0;
 		}
 	}
@@ -93,7 +93,7 @@ int FreeMemory(proc* p, uint64_t addr, size_t len)
 	auto vmspace = p->p_vmspace;
 	if (!vmspace)
 	{
-		kprintf("%s: Process has no vmspace.\n", __FUNCTION__);
+		printf("%s: Process has no vmspace.\n", __FUNCTION__);
 		return EINVAL;
 	}
 
@@ -111,7 +111,7 @@ int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int 
 	dynlib* dynlib = p->p_dynlib;
 	if (!dynlib)
 	{
-		kprintf("this is not dynamic linked program.\n");
+		printf("this is not dynamic linked program.\n");
 		return EPERM;
 	}
 
@@ -122,7 +122,7 @@ int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int 
 		{
 			sx_xunlock(&dynlib->bind_lock);
 
-			kprintf("this is not dynamic linked program.\n");
+			printf("this is not dynamic linked program.\n");
 			return EPERM;
 		}
 
@@ -131,7 +131,7 @@ int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int 
 		{
 			sx_xunlock(&dynlib->bind_lock);
 
-			kprintf("Could not find obj by handle %d.\n", handle);
+			printf("Could not find obj by handle %d.\n", handle);
 			return ESRCH;
 		}
 
@@ -151,7 +151,7 @@ int dynlib_get_list(proc* p, int* handles, int max_handles, int* handle_count)
 	dynlib* dynlib = p->p_dynlib;
 	if (!dynlib)
 	{
-		kprintf("this is not dynamic linked program.\n");
+		printf("this is not dynamic linked program.\n");
 		return EPERM;
 	}
 
@@ -161,7 +161,7 @@ int dynlib_get_list(proc* p, int* handles, int max_handles, int* handle_count)
 		if (!main_obj)
 		{
 			sx_xunlock(&dynlib->bind_lock);
-			kprintf("this is not dynamic linked program.\n");
+			printf("this is not dynamic linked program.\n");
 			return EPERM;
 		}
 
@@ -186,7 +186,7 @@ int dynlib_get_info(proc* p, int handle, OrbisLibraryInfo* info)
 	dynlib* dynlib = p->p_dynlib;
 	if (!dynlib)
 	{
-		kprintf("this is not dynamic linked program.\n");
+		printf("this is not dynamic linked program.\n");
 		return EPERM;
 	}
 
@@ -197,13 +197,16 @@ int dynlib_get_info(proc* p, int handle, OrbisLibraryInfo* info)
 		{
 			sx_xunlock(&dynlib->bind_lock);
 
-			kprintf("this is not dynamic linked program.\n");
+			printf("this is not dynamic linked program.\n");
 			return EPERM;
 		}
 
 		dynlib_obj* obj = find_obj_by_handle(dynlib, handle);
-		if (!obj) {
+		if (!obj) 
+		{
 			sx_xunlock(&dynlib->bind_lock);
+
+			printf("Could not find obj by handle %d.\n", handle);
 			return ESRCH;
 		}
 
@@ -227,7 +230,7 @@ int GetLibraries(proc* p, OrbisLibraryInfo* libInfos, int maxLibs, int* libCount
 	auto res = dynlib_get_list(p, handles, 256, &numModules);
 	if (res != 0)
 	{
-		kprintf("%s: dynlib_get_list failed with the error %llX\n", __FUNCTION__, res);
+		printf("%s: dynlib_get_list failed with the error %llX\n", __FUNCTION__, res);
 		return res;
 	}
 
@@ -239,7 +242,7 @@ int GetLibraries(proc* p, OrbisLibraryInfo* libInfos, int maxLibs, int* libCount
 		res = dynlib_get_info(p, handles[i], &libInfos[i]);
 		if (res != 0)
 		{
-			kprintf("%s: dynlib_get_info failed with the error %llX\n", __FUNCTION__, res);
+			printf("%s: dynlib_get_info failed with the error %llX\n", __FUNCTION__, res);
 			return res;
 		}
 	}

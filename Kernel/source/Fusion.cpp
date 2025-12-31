@@ -21,57 +21,57 @@ void InitFusion()
 	PrintFeatureFlags();			// Print the active feature flags.
 	MkDir("/data/Fusion", 0777);	// Ensure the fusion dir is made.
 
-	kprintf("Initializing Detour Memory Pool...");
+	printf("Initializing Detour Memory Pool...");
 	DetourMemoryPool::Init(PAGE_SIZE); // 4 MB Pool
-	kprintf("Done.\n");
+	printf("Done.\n");
 
 #ifdef FF_BETA
 	dmamini_initialize_ioctl();
 #endif
 
 #ifdef FF_HomeBrew
-	kprintf("Initializing Fake Packages...");
+	printf("Initializing Fake Packages...");
 	FakePkgs::Init();
-	kprintf("Done.\n");
+	printf("Done.\n");
 
-	kprintf("Initializing Fake Selfs...");
+	printf("Initializing Fake Selfs...");
 	FakeSelf::Init();
-	kprintf("Done.\n");
+	printf("Done.\n");
 #endif
 
 #ifdef FF_DirectMemory
-	kprintf("Initializing Direct Memory Reservation...");
+	printf("Initializing Direct Memory Reservation...");
 	DirectMemory::Init();
-	kprintf("Done.\n");
+	printf("Done.\n");
 #endif
 
 #ifdef FF_Driver
-	kprintf("Initializing Driver...");
+	printf("Initializing Driver...");
 	FusionDriver::Init();
-	kprintf("Done.\n");
+	printf("Done.\n");
 #endif
 
 #ifdef FF_DevAct
-	kprintf("Initializing Dev Activation Spoofer...");
+	printf("Initializing Dev Activation Spoofer...");
 	DevActSpoofer::Init();
-	kprintf("Done.\n");
+	printf("Done.\n");
 #endif
 
 #ifdef FF_Dipsw
-	kprintf("Initializing Dip Switch Spoofer...");
+	printf("Initializing Dip Switch Spoofer...");
 	DipSwitchSpoofer::Init();
-	kprintf("Done.\n");
+	printf("Done.\n");
 #endif
 
 #ifdef FF_LibraryReplacer
-	kprintf("Initializing Library Replacer...");
+	printf("Initializing Library Replacer...");
 	LibraryReplacer::Init();
-	kprintf("Done.\n");
+	printf("Done.\n");
 #endif
 
 #ifdef FF_Fuse
-	kprintf("Starting Fuse...");
-	kprintf(fuse_loader(NULL, 0, NULL) == 0 ? "Done.\n" : "Failed.\n");
+	printf("Starting Fuse...");
+	printf(fuse_loader(NULL, 0, NULL) == 0 ? "Done.\n" : "Failed.\n");
 #endif
 
 #ifdef FF_TTYRedirect

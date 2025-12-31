@@ -50,7 +50,7 @@
 #define addr_sscanf                             0x0026C8D0
 #define addr_strdup                             0x00278540
 #define addr_realloc                            0x00301DE0
-#define addr_kprintf                            0x000B7A30
+#define addr_printf                             0x000B7A30
 #define addr_hexdump							0x000B9360
 #define addr_dynlib_is_host_path				0x0023C400
 #define addr_dynlib_basename					0x0023C490

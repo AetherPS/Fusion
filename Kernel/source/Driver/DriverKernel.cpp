@@ -15,7 +15,7 @@ int DriverKernel::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
 	case CMD_KERN_ICC_NVS_READ_WRITE:
 		return KernelIccNvsReadWrite(data);
     default:
-        kprintf("Not Implemented. :(");
+        printf("Not Implemented. :(");
         return ENOSYS;
     }
 }

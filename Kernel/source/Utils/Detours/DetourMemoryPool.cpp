@@ -16,7 +16,7 @@ void DetourMemoryPool::Init(size_t poolSize)
 	PoolStart = KmemAllocAt(kernel_map, (vm_ooffset_t)KernelBase, PoolSize);
 	if (PoolStart == nullptr) 
 	{
-		kprintf("ERROR: Failed to allocate %zu bytes for DetourMemoryPool.\n", PoolSize);
+		printf("ERROR: Failed to allocate %zu bytes for DetourMemoryPool.\n", PoolSize);
 		PoolSize = 0;
 		return;
 	}
@@ -38,7 +38,7 @@ void DetourMemoryPool::Term() {
 
 		PoolStart = 0;
 		PoolCurrent = 0;
-		kprintf("DetourMemoryPool shut down and memory released.\n");
+		printf("DetourMemoryPool shut down and memory released.\n");
 	}
 	PoolSize = 0;
 }
@@ -53,12 +53,12 @@ void DetourMemoryPool::Term() {
 void* DetourMemoryPool::ReserveMemory(size_t size)
 {
     if (!PoolStart) {
-        kprintf("WARNING: DetourMemoryPool not initialized.\n");
+        printf("WARNING: DetourMemoryPool not initialized.\n");
         return 0;
     }
 
     if (getRemainingSize() < size) {
-        kprintf("WARNING: DetourMemoryPool exhausted. Requested %zu bytes, only %zu remaining.\n", size, getRemainingSize());
+        printf("WARNING: DetourMemoryPool exhausted. Requested %zu bytes, only %zu remaining.\n", size, getRemainingSize());
         return 0;
     }
 

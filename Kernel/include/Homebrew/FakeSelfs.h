@@ -16,16 +16,16 @@ private:
     static Detour* SceSblAuthMgrSmLoadSelfSegment_MailboxDetour;
     static Detour* SceSblAuthMgrSmLoadSelfBlock_MailboxDetour;
 
-    static SblMapListEntry* SceSblDriverFindMappedPageListByGpuVa(vm_offset_t p_GpuVa);
-    static vm_offset_t SceSblDriverGpuVaToCpuVa(vm_offset_t p_GpuVa, size_t* p_NumPageGroups);
-    static bool IsFakeSelf(SelfContext* pSelfContext);
-    static int SceSblAuthMgrGetElfHeader(SelfContext* pSelfContext, Elf64_Ehdr** pOutElfHeader);
-    static int SceSblAuthMgrGetSelfAuthInfoFake(SelfContext* pSelfContext, SelfAuthInfo* pInfo);
-    static int BuildFakeSelfAuthInfo(SelfContext* pSelfContext, SelfAuthInfo* pParentAuthInfo, SelfAuthInfo* pAuthInfo);
-    static int AuthSelfHeader(SelfContext* pContext);
+    static SblMapListEntry* SceSblDriverFindMappedPageListByGpuVa(vm_offset_t gpuVa);
+    static vm_offset_t SceSblDriverGpuVaToCpuVa(vm_offset_t gpuVa, size_t* numPageGroups);
+    static bool IsFakeSelf(SelfContext* selfContext);
+    static int SceSblAuthMgrGetElfHeader(SelfContext* selfContext, Elf64_Ehdr** outElfHeader);
+    static int SceSblAuthMgrGetSelfAuthInfoFake(SelfContext* selfContext, SelfAuthInfo* info);
+    static int BuildFakeSelfAuthInfo(SelfContext* selfContext, SelfAuthInfo* parentAuthInfo, SelfAuthInfo* authInfo);
+    static int AuthSelfHeader(SelfContext* context);
 
-    static int SceSblAuthMgrVerifyHeaderHook(SelfContext* pSelfContext);
-    static int SceSblAuthMgrIsLoadable2Hook(SelfContext* p_Context, SelfAuthInfo* pOldAuthInfo, int32_t pPathId, SelfAuthInfo* pNewAuthInfo);
-    static int SceSblAuthMgrSmLoadSelfSegment_MailboxHook(uint64_t pServiceId, void* pRequest, void* pResponse);
-    static int SceSblAuthMgrSmLoadSelfBlock_MailboxHook(uint64_t pServiceId, uint8_t* pRequest, void* pResponse);
+    static int SceSblAuthMgrVerifyHeaderHook(SelfContext* selfContext);
+    static int SceSblAuthMgrIsLoadable2Hook(SelfContext* context, SelfAuthInfo* oldAuthInfo, int32_t pathId, SelfAuthInfo* newAuthInfo);
+    static int SceSblAuthMgrSmLoadSelfSegment_MailboxHook(uint64_t serviceId, void* request, void* response);
+    static int SceSblAuthMgrSmLoadSelfBlock_MailboxHook(uint64_t serviceId, uint8_t* request, void* response);
 };

@@ -36,7 +36,7 @@ int DriverProc::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag, t
 		return SetAuthId(data);
 
 	default:
-		kprintf("Driver Command %d Not Implemented. :(\n", cmd);
+		printf("Driver Command %d Not Implemented. :(\n", cmd);
 		return ENOSYS;
 	}
 }
@@ -56,7 +56,7 @@ int DriverProc::Jailbreak(caddr_t data)
 
 	if (fd == nullptr || cred == nullptr)
 	{
-		kprintf("%s: Failed to get jail info.\n", __FUNCTION__);
+		printf("%s: Failed to get jail info.\n", __FUNCTION__);
 		return EINVAL;
 	}
 
@@ -79,7 +79,7 @@ int DriverProc::Jailbreak(caddr_t data)
 
 	if (input.AuthId != -1)
 	{
-		kprintf("%s: Jailbreak with AuthID: %llx\n", __FUNCTION__, input.AuthId);
+		printf("%s: Jailbreak with AuthID: %llx\n", __FUNCTION__, input.AuthId);
 	}
 
 	// Jailbreak time.
@@ -118,7 +118,7 @@ int DriverProc::RestoreJail(caddr_t data)
 
 	if (fd == nullptr || cred == nullptr)
 	{
-		kprintf("%s: Failed to get jail info.\n", __FUNCTION__);
+		printf("%s: Failed to get jail info.\n", __FUNCTION__);
 		return EINVAL;
 	}
 
@@ -156,7 +156,7 @@ int DriverProc::GetProccessModuleList(caddr_t data)
 	auto libTemp = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * input.MaxOutCount);
 	if (!libTemp)
 	{
-		kprintf("%s: Failed to allocate memory for libTemp.\n", __FUNCTION__);
+		printf("%s: Failed to allocate memory for libTemp.\n", __FUNCTION__);
 		return -1;
 	}
 
@@ -164,7 +164,7 @@ int DriverProc::GetProccessModuleList(caddr_t data)
 	res = GetLibraries(p, libTemp, input.MaxOutCount, &realCount);
 	if (res != 0)
 	{
-		kprintf("%s: GetLibraries failed with the error %d\n", __FUNCTION__, res);
+		printf("%s: GetLibraries failed with the error %d\n", __FUNCTION__, res);
 		_free(libTemp);
 		return res;
 	}

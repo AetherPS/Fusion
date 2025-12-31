@@ -25,9 +25,9 @@ void FusionDriver::Init()
 		m_DeviceSw.d_name);
 
 	if (ret == EEXIST)
-		kprintf("could not create device driver, device driver already exists.");
+		printf("could not create device driver, device driver already exists.");
 	else if (ret != 0)
-		kprintf("could not create device driver (%d).", ret);
+		printf("could not create device driver (%d).", ret);
 
 	Detour::Detour32(&getnewvnodeDetour, KernelBase + addr_getnewvnode, (uint8_t*)&getnewvnodeHook);
 }
@@ -55,7 +55,7 @@ int FusionDriver::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
 		return DriverKernel::OnIoctl(dev, baseCmd, data, fflag, td);
 
 	default:
-		kprintf("[FusionDriver] Not Implemented. :(\n");
+		printf("[FusionDriver] Not Implemented. :(\n");
 		return ENOSYS;
 	}
 }

@@ -7,33 +7,33 @@ void PrintFeatureFlags()
 	kprintf("\n!! DEBUG BUILD !!\n\n");
 #endif
 
-	kprintf("Features: \n");
+	printf("Features: \n");
 #ifdef FF_BETA
-	kprintf("   Beta Features Active!\n");
+	printf("   Beta Features Active!\n");
 #endif
 #ifdef FF_HomeBrew
-	kprintf("   Homebrew\n");
+	printf("   Homebrew\n");
 #endif
 #ifdef FF_Driver
-	kprintf("   Kernel Driver\n");
+	printf("   Kernel Driver\n");
 #endif
 #ifdef FF_DirectMemory
-	kprintf("   Direct Memory\n");
+	printf("   Direct Memory\n");
 #endif
 #ifdef FF_LibraryReplacer
-	kprintf("   Library Replacer\n");
+	printf("   Library Replacer\n");
 #endif
 #ifdef FF_Fuse
-	kprintf("   Fuse\n");
+	printf("   Fuse\n");
 #endif
 #ifdef FF_TrapHooks
 	kprintf("   Trap Hooks\n");
 #endif
 #ifdef FF_DevAct
-	kprintf("   Dev Act Spoofer\n");
+	printf("   Dev Act Spoofer\n");
 #endif
 #ifdef FF_Dipsw
-	kprintf("   Dip Switch Spoofer\n");
+	printf("   Dip Switch Spoofer\n");
 #endif
 #ifdef FF_TTYRedirect
 	kprintf("   TTY Redirector\n");

@@ -18,7 +18,7 @@ public:
         int res = copyin(data, input, sizeof(T));
         if (res != 0)
         {
-            kprintf("%s: copyin failed with error %d\n", __FUNCTION__, res);
+            printf("%s: copyin failed with error %d\n", __FUNCTION__, res);
             return res;
         }
 
@@ -26,7 +26,7 @@ public:
         *p = pfind(input->ProcessId);
         if (*p == nullptr)
         {
-            kprintf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input->ProcessId);
+            printf("%s: Failed to find Process with the pid %i\n", __FUNCTION__, input->ProcessId);
             return ESRCH;
         }
 
@@ -34,7 +34,7 @@ public:
         *td = (*p)->p_threads.tqh_first;
         if (*td == nullptr)
         {
-            kprintf("%s: Failed to find Thread for Process with the pid %i\n", __FUNCTION__, input->ProcessId);
+            printf("%s: Failed to find Thread for Process with the pid %i\n", __FUNCTION__, input->ProcessId);
             mtx_unlock_flags(&(*p)->p_lock, 0);
             return ESRCH;
         }

@@ -41,7 +41,7 @@ int (*vprintf)(const char* fmt, va_list arg) = 0;
 int(*sscanf)(const char* str, const char* format, ...) = 0;
 char* (*strdup)(const char* s, void* type) = 0;
 char* (*realloc)(void* addr, unsigned long size, void* mtp, int flags) = 0;
-void(*kprintf)(const char* fmt, ...) = nullptr;
+void(*printf)(const char* fmt, ...) = nullptr;
 void(*hexdump)(const void* ptr, int length, const char* hdr, int flags) = nullptr;
 bool (*dynlib_is_host_path)(char* s) = nullptr;
 char* (*dynlib_basename)(char* s) = nullptr;
@@ -161,7 +161,7 @@ void ResolveFunctions()
     NATIVE_RESOLVE(sscanf);
     NATIVE_RESOLVE(strdup);
     NATIVE_RESOLVE(realloc);
-    NATIVE_RESOLVE(kprintf);
+    NATIVE_RESOLVE(printf);
 	NATIVE_RESOLVE(hexdump);
 	NATIVE_RESOLVE(dynlib_is_host_path);
 	NATIVE_RESOLVE(dynlib_basename);
