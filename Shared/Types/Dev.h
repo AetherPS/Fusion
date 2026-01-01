@@ -1,6 +1,5 @@
 #pragma once
 
-typedef int d_ioctl_t(struct cdev* dev, unsigned long cmd, caddr_t data, int fflag, struct thread* td);
 typedef uint32_t devfs_rid;
 typedef uint16_t devfs_rsnum;
 typedef uint32_t uid_t;
@@ -109,7 +108,9 @@ struct cdevsw {
 };
 #pragma pack(pop)
 
+#ifdef __cplusplus
 static_assert(sizeof(struct cdevsw) == 0xC0, "devsw size invalid.");
+#endif
 
 // --- Device Filesystem (devfs) ---
 #define DEVFS_MAGIC 0xdb0a087a
@@ -160,7 +161,7 @@ struct devfs_dirent
 * struct devfs_mount: Information about the devfs mounted instance.
 */
 TYPE_BEGIN(struct devfs_mount, 0x50);
-TYPE_FIELD(devfs_dirent* dm_rootdir, 0x10);
+TYPE_FIELD(struct devfs_dirent* dm_rootdir, 0x10);
 TYPE_END();
 
 /**

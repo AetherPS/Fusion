@@ -1,5 +1,18 @@
 #pragma once
 
+typedef mode_t SceKernelMode;
+
+#define SCE_KERNEL_NAME_MAX        255
+#define SCE_KERNEL_PATH_MAX        1024
+#define SCE_KERNEL_IOV_MAX         1024
+#define SCE_KERNEL_MAXNAMLEN       255
+
+#define SCE_KERNEL_O_RDONLY        0x0000
+#define SCE_KERNEL_O_WRONLY        0x0001 
+#define SCE_KERNEL_O_RDWR          0x0002
+
+#define SCE_KERNEL_O_CREAT		   0x0200
+
 // libSceLibcInternal
 extern int(*vsprintf)(char* s, const char* format, va_list arg);
 extern char* (*strcpy)(char* destination, const char* source);

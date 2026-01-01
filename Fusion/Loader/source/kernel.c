@@ -7,19 +7,18 @@ void JailbreakProc(uint64_t kernelBase, struct thread* td)
 	struct ucred* cred = td->td_proc->p_ucred;
 	struct filedesc* fd = td->td_proc->p_fd;
 
-	cred->cr_prison = *(void**)(kernelBase + addr_prison0); //prison0
-	fd->fd_rdir = *(void**)(kernelBase + addr_rootvnode); //rootvnode
-	fd->fd_jdir = *(void**)(kernelBase + addr_rootvnode); //rootvnode
+	cred->cr_prison = *(struct prison**)(kernelBase + addr_prison0); //prison0
+	fd->fd_rdir = *(struct vnode**)(kernelBase + addr_rootvnode); //rootvnode
+	fd->fd_jdir = *(struct vnode**)(kernelBase + addr_rootvnode); //rootvnode
 
 	cred->cr_uid = 0;
 	cred->cr_ruid = 0;
 	cred->cr_rgid = 0;
 	cred->cr_groups[0] = 0;
 
-	void* td_ucred = *(void**)(((char*)td) + 304);
-	*(uint64_t*)(((char*)td_ucred) + 96) = 0xffffffffffffffff;
-	*(uint64_t*)(((char*)td_ucred) + 88) = 0x3801000000000013;
-	*(uint64_t*)(((char*)td_ucred) + 104) = 0xffffffffffffffff;
+	cred->cr_sceAuthID = 0x3801000000000013;
+	cred->cr_sceCaps[0] = 0xFFFFFFFFFFFFFFFF;
+	cred->cr_sceCaps[1] = 0xFFFFFFFFFFFFFFFF;
 }
 
 int InstallKernelElf(void* payload, size_t size)

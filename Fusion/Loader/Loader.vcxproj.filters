@@ -22,9 +22,6 @@
     <Filter Include="include\Utils">
       <UniqueIdentifier>{2d503d40-16a7-4cf0-8c00-581cd672a478}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Types">
-      <UniqueIdentifier>{4b613871-32ba-40de-a471-3278fdb351de}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="crt0.s" />
@@ -100,9 +97,6 @@
     <ClInclude Include="include\file.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="include\types.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="include\patches.h">
       <Filter>include\Kernel</Filter>
     </ClInclude>
@@ -117,12 +111,6 @@
     </ClInclude>
     <ClInclude Include="source\fusiondriver.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Types\ioccom.h">
-      <Filter>include\Types</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Types\errno.h">
-      <Filter>include\Types</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

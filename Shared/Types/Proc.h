@@ -42,7 +42,7 @@ struct ucred {
     uint64_t cr_sceCaps[0x04];
     uint64_t cr_sceAttr[0x04];
     char 	 cr_unk0A0[0x48];
-    auditinfo_addr cr_audit; // Assuming auditinfo_addr is defined
+    struct auditinfo_addr cr_audit; // Assuming auditinfo_addr is defined
     uint32_t* cr_groups;
     int 	 cr_agroups;
 };
@@ -52,7 +52,7 @@ TYPE_FIELD(void* mnt_data, 0x288);
 TYPE_END();
 
 TYPE_BEGIN(struct vnode, 0x1000); // XXX: random, don't use directly without fixing it
-TYPE_FIELD(mount* v_mount, 0x20);
+TYPE_FIELD(struct mount* v_mount, 0x20);
 TYPE_END();
 
 /**
@@ -62,9 +62,9 @@ struct filedesc
 {
     void** fd_ofiles; 	        /* file structures for open files */
     char* fd_ofileflags; 	    /* per-process open file flags */
-    vnode* fd_cdir; 	 	    /* current directory (vnode*) */
-    vnode* fd_rdir; 	        /* root directory (vnode*) */
-    vnode* fd_jdir; 	        /* jail root directory (vnode*) */
+    struct vnode* fd_cdir; 	 	/* current directory (vnode*) */
+    struct vnode* fd_rdir; 	    /* root directory (vnode*) */
+    struct vnode* fd_jdir; 	    /* jail root directory (vnode*) */
     int fd_nfiles; 	            /* number of open files allocated */
     unsigned long* fd_map; 	    /* bitmap of free fds */
     int fd_lastfile; 	        /* high-water mark of fd_ofiles */
@@ -85,7 +85,7 @@ TYPE_FIELD(TAILQ_HEAD(, thread) p_threads, 0x10); // List of threads in this pro
 TYPE_FIELD(struct ucred* p_ucred, 0x40);  // Pointer to the process credentials
 TYPE_FIELD(struct filedesc* p_fd, 0x48); // Pointer to the file descriptor table
 TYPE_FIELD(int p_pid, 0xB0);            // Process ID
-TYPE_FIELD(mtx p_lock, 0xF8);           // Process lock
+TYPE_FIELD(struct mtx p_lock, 0xF8);           // Process lock
 TYPE_FIELD(struct vmspace* p_vmspace, 0x168); // Pointer to the address space
 TYPE_FIELD(struct dynlib* p_dynlib, 0x340); // Pointer to dynamic library info
 TYPE_FIELD(char titleId[10], 0x390);    // Application Title ID

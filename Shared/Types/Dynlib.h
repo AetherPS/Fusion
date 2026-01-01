@@ -39,7 +39,7 @@ struct dynlib
 	Objlist obj_list_1;
 	Objlist obj_list_2;
 	Objlist obj_list_3;
-	sx bind_lock;
+	struct sx bind_lock;
 	char unk90[0x18];
 	uint8_t unkA8[0x8];
 	uint8_t unkB0[0x8];

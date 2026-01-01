@@ -11,4 +11,13 @@ extern uint8_t _binary_resources_eboot_bin_compressed_end[];
 extern uint8_t _binary_resources_param_sfo_compressed_start[];
 extern uint8_t _binary_resources_param_sfo_compressed_end[];
 
+struct LaunchAppParam
+{
+	unsigned int size;      //0x00
+	int userId;             //0x04
+	int appAttr;            //0x08
+	int enableCrashReport;  //0x0C
+	uint64_t checkFlag;     //0x10
+};
+
 void InstallDaemon();

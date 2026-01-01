@@ -13,7 +13,7 @@ void(*kmem_free)(void* map, void* addr, size_t size);
 vm_map_t kernel_map;
 
 uint64_t kernel_getbase() {
-	return __readmsr(0xC0000082) - addr_Xfast_syscall;
+	return Readmsr(0xC0000082) - addr_Xfast_syscall;
 }
 
 void* kernel_alloc(uint32_t size) {

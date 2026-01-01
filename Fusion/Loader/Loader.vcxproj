@@ -116,15 +116,7 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
     <ClInclude Include="include\patches.h" />
     <ClInclude Include="include\resolver.h" />
     <ClInclude Include="include\daemon.h" />
-    <ClInclude Include="include\types.h" />
-    <ClInclude Include="include\Types\errno.h" />
-    <ClInclude Include="include\Types\ioccom.h" />
     <ClInclude Include="source\fusiondriver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Kernel\Kernel.vcxproj">
-      <Project>{7f7e2757-4cba-4203-8eeb-5b317a8c2d4d}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,7 +9,7 @@ struct eventhandler_list {
 	int	 el_flags;
 #define EHL_INITTED	(1<<0)
 	unsigned int el_runcount;
-	mtx	el_lock;
+	struct mtx	el_lock;
 	TAILQ_ENTRY(eventhandler_list) el_link;
 	TAILQ_HEAD(, eventhandler_entry) el_entries;
 };

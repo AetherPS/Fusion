@@ -1,11 +1,10 @@
 #pragma once 
-
 #include <stdint.h>
 #include <stdarg.h>
-
+#include <stdbool.h>
+#include <Types/All.h>
 #include "Offsets.h"
 
-#include "types.h"
 #include "asm.h"
 #include "dynlib.h"
 #include "resolver.h"
