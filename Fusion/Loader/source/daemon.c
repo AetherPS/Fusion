@@ -22,7 +22,13 @@ void InstallDaemon()
 	klog("Initialize Daemon...\n");
 
 #ifdef HAS_DAEMON
+	// Mount system as R/W
+	RemountReadWrite("/dev/da0x4.crypt", "/system");
+
+	// Resolve libSceLncUtil functions.
 	ResolveLnc();
+
+	// Create necessary directories.
 	CreateDirectory(DAEMON_PATH);
 	CreateDirectory(DAEMON_SYS_PATH);
 

@@ -7,6 +7,9 @@ char* (*strcpy)(char* destination, const char* source);
 void* (*memcpy)(void* destination, const void* source, size_t size);
 void* (*malloc)(size_t size);
 void (*free)(void* ptr);
+void* (*realloc)(void* ptr, size_t size);
+char* (*strdup)(const char* s);
+size_t(*strlen)(const char* s);
 
 // libkernel
 int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
@@ -49,6 +52,9 @@ void ResolveDynlib()
 	sys_dynlib_dlsym(2, "memcpy", &memcpy);
 	sys_dynlib_dlsym(2, "malloc", &malloc);
 	sys_dynlib_dlsym(2, "free", &free);
+	sys_dynlib_dlsym(2, "realloc", &realloc);
+	sys_dynlib_dlsym(2, "strdup", &strdup);
+	sys_dynlib_dlsym(2, "strlen", &strlen);
 
 	// Libkernel is always module 8193
 	sys_dynlib_dlsym(8193, "sceKernelDebugOutText", &sceKernelDebugOutText);

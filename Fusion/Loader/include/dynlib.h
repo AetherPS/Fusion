@@ -19,6 +19,9 @@ extern char* (*strcpy)(char* destination, const char* source);
 extern void* (*memcpy)(void* destination, const void* source, size_t size);
 extern void* (*malloc)(size_t size);
 extern void (*free)(void* ptr);
+extern void* (*realloc)(void* ptr, size_t size);
+extern char* (*strdup)(const char* s);
+extern size_t(*strlen)(const char* s);
 
 // libkernel
 extern int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
