@@ -16,6 +16,7 @@
 *.oelf
 *.7z
 Fusion-*.bin
+eboot.bin.compressed
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
