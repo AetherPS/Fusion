@@ -61,7 +61,6 @@ void InstallDaemon()
 	int appId = sceLncUtilGetAppId(DAEMON_TITLEID);
 	if (appId)
 	{
-		
 		sceLncUtilKillApp(appId);
 	}
 
@@ -76,9 +75,10 @@ void InstallDaemon()
 	// Launch the Daemon.
 	int newAppId = sceLncUtilLaunchApp(DAEMON_TITLEID, 0, &appParam);
 
-	(newAppId > 0)
-		? klog("Done.\nDaemon launched with AppID: %d\n", newAppId)
-		: klog("Failed to launch Daemon: %X\n", newAppId);
+	if (newAppId <= 0)
+	{
+		klog("Failed to launch Daemon: %X\n", newAppId);
+	}
 
 #else
 	klog("Skipping... Daemon not present, some features disabled!\n");
