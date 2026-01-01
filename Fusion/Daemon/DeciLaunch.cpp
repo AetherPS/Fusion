@@ -1,13 +1,9 @@
 #include "stdafx.h"
 #include "DeciLaunch.h"
+#include "Offsets.h"
 
 #include <RemoteThread.h>
 #include <RemoteCallerManager.h>
-
-// For 9.00... TODO: Make these detect on version or use pattern.
-#define StartDecidServerOffset 0x251F60
-#define MountFuseOffset 0x12C0
-#define DevPortThreadOffset 0x1480
 
 void StartDecidServer()
 {
@@ -22,7 +18,7 @@ void StartDecidServer()
 	if (!caller)
 		return;
 
-	uint64_t StartDecidServerAddress = Fusion::GetRemoteAddress(shellCorePid, (int)0, StartDecidServerOffset);
+	uint64_t StartDecidServerAddress = Fusion::GetRemoteAddress(shellCorePid, (int)0, Offsets::StartDecidServer);
 	if (StartDecidServerAddress <= 0)
 	{
 		Logger::Error("Failed to get StartDecidServer address.");
@@ -38,7 +34,7 @@ void MountFuse(int processId, const char* to, const char* from)
 	if (!caller)
 		return;
 
-	uint64_t MountFuseAddress = Fusion::GetRemoteAddress(processId, (int)0, MountFuseOffset);
+	uint64_t MountFuseAddress = Fusion::GetRemoteAddress(processId, (int)0, Offsets::MountFuse);
 	if (MountFuseAddress <= 0)
 	{
 		Logger::Error("Failed to get MountFuse address.");
@@ -71,7 +67,7 @@ void StartDECI()
 	MountFuse(sysCorePid, "/hostapp", "/dev/fuse0");
 	MountFuse(sysCorePid, "/host", "/dev/fuse1");
 
-	uint64_t DevPortThreadAddress = Fusion::GetRemoteAddress(sysCorePid, (int)0, DevPortThreadOffset);
+	uint64_t DevPortThreadAddress = Fusion::GetRemoteAddress(sysCorePid, (int)0, Offsets::DevPortThread);
 	if (DevPortThreadAddress <= 0)
 	{
 		Logger::Error("Failed to get DevPortThread address.");

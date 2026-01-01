@@ -37,6 +37,11 @@ public:
 			DebugMenuPatch1 = 0x0001D1C0;
 			DebugMenuPatch2 = 0x0001D520;
 
+			// DECI
+			StartDecidServer = 0x251F60;
+			MountFuse = 0x12C0;
+			DevPortThread = 0x1480;
+
 			break;
 
 		case 0x12020001:
@@ -60,6 +65,11 @@ public:
 			// ShellUI
 			DebugMenuPatch1 = 0x0001D100;
 			DebugMenuPatch2 = 0x0001D460;
+
+			// DECI
+			StartDecidServer = 0x255EC0;
+			MountFuse = 0x12A0;
+			DevPortThread = 0x1480;
 
 			break;
 
@@ -89,6 +99,11 @@ public:
 	// ShellUI
 	static inline uint64_t DebugMenuPatch1;
 	static inline uint64_t DebugMenuPatch2;
+
+	// DECI
+	static inline uint64_t StartDecidServer;
+	static inline uint64_t MountFuse;
+	static inline uint64_t DevPortThread;
 
 private:
 
