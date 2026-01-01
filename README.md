@@ -48,12 +48,7 @@ cd Fusion
 ```
 
 5. Build External Dependencies
-The FTP server and other dependencies in the `External` folder need to be built separately:
-```
-cd External/Fusion-FTP
-make
-cd ../..
-```
+The FTP server and other dependencies in the `External` folder need to be built separately.
 
 6. Build Fusion
 Open the `Fusion.sln` and build the `Loader` project. This will compile the kernel driver and userland daemon, which exposes additional kernel functionality to userland.
