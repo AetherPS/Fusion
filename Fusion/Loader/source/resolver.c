@@ -27,7 +27,8 @@ void kernel_dealloc(void* addr) {
 #define RESOLVE(name, base, offset) \
 	name = (void *)(base + offset) \
 
-void ResolveKernelFunctions(uint64_t kernelBase) {
+void ResolveKernelFunctions(uint64_t kernelBase) 
+{
 	RESOLVE(M_TEMP, kernelBase, addr_M_TEMP);
 	RESOLVE(kernel_malloc, kernelBase, addr_malloc);
 	RESOLVE(kernel_free, kernelBase, addr_free);

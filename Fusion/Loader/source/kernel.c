@@ -2,17 +2,24 @@
 #include "kernel.h"
 #include "patches.h"
 
-void JailbreakProc(uint64_t kernelBase, struct proc* p)
+void JailbreakProc(uint64_t kernelBase, struct thread* td)
 {
-	struct ucred* cred = p->p_ucred;
-	struct filedesc* fd = p->p_fd;
+	struct ucred* cred = td->td_proc->p_ucred;
+	struct filedesc* fd = td->td_proc->p_fd;
+
 	cred->cr_prison = *(void**)(kernelBase + addr_prison0); //prison0
 	fd->fd_rdir = *(void**)(kernelBase + addr_rootvnode); //rootvnode
 	fd->fd_jdir = *(void**)(kernelBase + addr_rootvnode); //rootvnode
+
 	cred->cr_uid = 0;
 	cred->cr_ruid = 0;
 	cred->cr_rgid = 0;
 	cred->cr_groups[0] = 0;
+
+	void* td_ucred = *(void**)(((char*)td) + 304);
+	*(uint64_t*)(((char*)td_ucred) + 96) = 0xffffffffffffffff;
+	*(uint64_t*)(((char*)td_ucred) + 88) = 0x3801000000000013;
+	*(uint64_t*)(((char*)td_ucred) + 104) = 0xffffffffffffffff;
 }
 
 int InstallKernelElf(void* payload, size_t size)
@@ -48,20 +55,21 @@ int InstallKernelElf(void* payload, size_t size)
 	return 0;
 }
 
-int installKernelSyscall(struct thread* td, struct installKernelArgs* args)
+int InstallKernelSyscall(struct thread* td, struct installKernelArgs* args)
 {
 	uint64_t kernelBase = kernel_getbase();
 
 	ResolveKernelFunctions(kernelBase);
-	JailbreakProc(kernelBase, td->td_proc);		// Jailbreak the current process.
-	InstallPatches(kernelBase);					// Install kernel patches.
-
-	// Install the kernel ELF.
-	return InstallKernelElf(args->payload, args->payloadSize);
+	JailbreakProc(kernelBase, td);						// Jailbreak the current process.
+	InstallPatches(kernelBase);							// Install kernel patches.
+	InstallKernelElf(args->payload, args->payloadSize); // Install the kernel ELF.
+	
+	return 0;
 }
 
 void LoadKernel()
 {
 	klog("Installing Kernel ELF\n");
-	syscall(11, installKernelSyscall, _binary_resources_Kernel_elf_start, _binary_resources_Kernel_elf_end - _binary_resources_Kernel_elf_start);
+	syscall(11, InstallKernelSyscall, _binary_resources_Kernel_elf_start, _binary_resources_Kernel_elf_end - _binary_resources_Kernel_elf_start);
+	klog("Done.\n");
 }

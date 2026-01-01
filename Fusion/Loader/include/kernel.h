@@ -9,7 +9,7 @@ struct installKernelArgs {
 	size_t payloadSize;
 };
 
-void JailbreakProc(uint64_t kernelBase, struct proc* p);
+void JailbreakProc(uint64_t kernelBase, struct thread* td);
 int InstallKernelElf(void* payload, size_t size);
-int installKernelSyscall(struct thread* td, struct installKernelArgs* args);
+int InstallKernelSyscall(struct thread* td, struct installKernelArgs* args);
 void LoadKernel();
