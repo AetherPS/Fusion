@@ -32,7 +32,7 @@ void InstallDaemon()
 	CreateDirectory(DAEMON_PATH);
 	CreateDirectory(DAEMON_SYS_PATH);
 
-	// Decompress and write the param.sfo. if it does not exist.
+	// Decompress and write the param.sfo if it does not exist.
 	if (!FileExist(DAEMON_PARAM_PATH))
 	{
 		int result = DecompressToFile(_binary_resources_param_sfo_compressed_start, DAEMON_PARAM_PATH);
