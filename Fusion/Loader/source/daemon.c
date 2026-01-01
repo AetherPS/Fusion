@@ -1,22 +1,28 @@
 #include "common.h"
-#include "compressedblob.h"
+#include "daemon.h"
+#include "fusiondriver.h"
 
-#define DAEMON_PARAM_PATH "/system/vsh/app/FUSN00000/sce_sys/param.sfo"
-#define DAEMON_SYS_PATH "/system/vsh/app/FUSN00000/sce_sys"
-#define DAEMON_EBOOT_PATH "/system/vsh/app/FUSN00000/eboot.bin"
-#define DAEMON_PATH "/system/vsh/app/FUSN00000"
+// libSceLncUtil
+int (*sceLncUtilLaunchApp)(const char* titleId, char** args, struct LaunchAppParam* appParam);
+int (*sceLncUtilGetAppId)(const char* tileId);
+int (*sceLncUtilKillApp)(int appId);
 
-extern uint8_t _binary_resources_eboot_bin_compressed_start[];
-extern uint8_t _binary_resources_eboot_bin_compressed_end[];
-extern uint8_t _binary_resources_param_sfo_compressed_start[];
-extern uint8_t _binary_resources_param_sfo_compressed_end[];
+void ResolveLnc()
+{
+	int libSceSystemServiceHandle = 0;
+	sys_dynlib_load_prx("libSceSystemService.sprx", &libSceSystemServiceHandle);
+
+	Resolve(getpid(), libSceSystemServiceHandle, "libSceLncUtil", "sceLncUtilLaunchApp", 0, (uint64_t*)&sceLncUtilLaunchApp);
+	Resolve(getpid(), libSceSystemServiceHandle, "libSceLncUtil", "sceLncUtilGetAppId", 0, (uint64_t*)&sceLncUtilGetAppId);
+	Resolve(getpid(), libSceSystemServiceHandle, "libSceLncUtil", "sceLncUtilKillApp", 0, (uint64_t*)&sceLncUtilKillApp);
+}
 
 void InstallDaemon() 
 {
 	klog("Initialize Daemon...\n");
 
-//#ifdef HAS_DAEMON
-
+#ifdef HAS_DAEMON
+	ResolveLnc();
 	CreateDirectory(DAEMON_PATH);
 	CreateDirectory(DAEMON_SYS_PATH);
 
@@ -45,12 +51,31 @@ void InstallDaemon()
 		return;
 	}
 
+	// App is already running kill it so we can restart it.
+	int appId = sceLncUtilGetAppId(DAEMON_TITLEID);
+	if (appId)
+	{
+		
+		sceLncUtilKillApp(appId);
+	}
 
+	// Setup launch parameters.
+	struct LaunchAppParam appParam;
+	appParam.size = sizeof(struct LaunchAppParam);
+	appParam.userId = -1; // All users.
+	appParam.enableCrashReport = 0;
+	appParam.checkFlag = 0;
+	appParam.appAttr = 0;
 
-	klog("Done.\n");
+	// Launch the Daemon.
+	int newAppId = sceLncUtilLaunchApp(DAEMON_TITLEID, 0, &appParam);
 
-//#else
-//	klog("Skipping... Daemon not present, some features disabled!\n");
-//#endif
+	(newAppId > 0)
+		? klog("Done.\nDaemon launched with AppID: %d\n", newAppId)
+		: klog("Failed to launch Daemon: %X\n", newAppId);
+
+#else
+	klog("Skipping... Daemon not present, some features disabled!\n");
+#endif
 }
 

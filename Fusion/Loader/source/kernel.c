@@ -63,13 +63,5 @@ int installKernelSyscall(struct thread* td, struct installKernelArgs* args)
 void LoadKernel()
 {
 	klog("Installing Kernel ELF\n");
-
-	// Check if Fusion Driver is already loaded.
-	if (FileExist("/dev/Fusion"))
-	{
-		klog("Fusion Driver already loaded, skipping kernel installation.\n");
-		return;
-	}
-
 	syscall(11, installKernelSyscall, _binary_resources_Kernel_elf_start, _binary_resources_Kernel_elf_end - _binary_resources_Kernel_elf_start);
 }

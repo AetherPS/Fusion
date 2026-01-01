@@ -54,7 +54,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
 
 xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories>
     </PublicIncludeDirectories>
@@ -96,6 +96,7 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
     <ClCompile Include="source\dynlib.c" />
     <ClCompile Include="source\elf.c" />
     <ClCompile Include="source\file.c" />
+    <ClCompile Include="source\fusiondriver.c" />
     <ClCompile Include="source\kernel.c" />
     <ClCompile Include="source\Lz4.c" />
     <ClCompile Include="source\main.c" />
@@ -116,6 +117,9 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
     <ClInclude Include="include\resolver.h" />
     <ClInclude Include="include\daemon.h" />
     <ClInclude Include="include\types.h" />
+    <ClInclude Include="include\Types\errno.h" />
+    <ClInclude Include="include\Types\ioccom.h" />
+    <ClInclude Include="source\fusiondriver.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kernel\Kernel.vcxproj">

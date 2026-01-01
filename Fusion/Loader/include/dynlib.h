@@ -14,10 +14,10 @@ extern int (*sceKernelClose)(int fd);
 extern int (*sceKernelUnlink)(const char* path);
 extern int (*sceKernelWrite)(int fd, const void* data, size_t size);
 extern int (*sceKernelMkdir)(const char* path, SceKernelMode mode);
-extern int(*sceKernelLoadStartModule)(const char* name, size_t args, const void* argp, unsigned int flags, void* pOpt, void* pRes);
 extern int (*ioctl)(int fd, unsigned long request, ...);
-extern int (*sceKernelStat)(const char* path, SceKernelStat* sb);
+extern int (*getpid)(void);
 
 void klog(const char* fmt, ...);
 int sys_dynlib_dlsym(int loadedModuleID, const char* name, void* destination);
+int sys_dynlib_load_prx(const char* name, int* idDestination);
 void ResolveDynlib();

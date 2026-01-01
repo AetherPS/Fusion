@@ -12,3 +12,4 @@
 #include "kernel.h"
 #include "elf.h"
 #include "file.h"
+#include "compressedblob.h"

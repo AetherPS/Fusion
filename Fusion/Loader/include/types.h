@@ -213,6 +213,15 @@ struct stat {
 	unsigned int :(8 / 2)* (16 - (int)sizeof(struct timespec));
 };
 
+struct LaunchAppParam
+{
+	unsigned int size;      //0x00
+	int userId;             //0x04
+	int appAttr;            //0x08
+	int enableCrashReport;  //0x0C
+	uint64_t checkFlag;     //0x10
+};
+
 typedef struct stat SceKernelStat;
 typedef mode_t SceKernelMode;
 

@@ -15,9 +15,8 @@ int (*sceKernelClose)(int fd);
 int (*sceKernelUnlink)(const char* path);
 int (*sceKernelWrite)(int fd, const void* data, size_t size);
 int (*sceKernelMkdir)(const char* path, SceKernelMode mode);
-int(*sceKernelLoadStartModule)(const char* name, size_t args, const void* argp, unsigned int flags, void* pOpt, void* pRes);
 int (*ioctl)(int fd, unsigned long request, ...);
-int (*sceKernelStat)(const char* path, SceKernelStat* sb);
+int (*getpid)(void);
 
 void klog(const char* fmt, ...)
 {
@@ -37,6 +36,11 @@ int sys_dynlib_dlsym(int loadedModuleID, const char* name, void* destination)
 	return syscall(591, loadedModuleID, name, destination);
 }
 
+int sys_dynlib_load_prx(const char* name, int* idDestination)
+{
+	return syscall(594, name, 0, idDestination, 0);
+}
+
 void ResolveDynlib()
 {
 	// libSceLibcInternal is always module 2
@@ -53,7 +57,6 @@ void ResolveDynlib()
 	sys_dynlib_dlsym(8193, "sceKernelWrite", &sceKernelWrite);
 	sys_dynlib_dlsym(8193, "sceKernelUnlink", &sceKernelUnlink);
 	sys_dynlib_dlsym(8193, "sceKernelMkdir", &sceKernelMkdir);
-	sys_dynlib_dlsym(8193, "sceKernelLoadStartModule", &sceKernelLoadStartModule);
 	sys_dynlib_dlsym(8193, "ioctl", &ioctl);
-	sys_dynlib_dlsym(8193, "sceKernelStat", &sceKernelStat);
+	sys_dynlib_dlsym(8193, "getpid", &getpid);
 }
