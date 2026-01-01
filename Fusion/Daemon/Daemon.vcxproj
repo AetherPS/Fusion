@@ -51,7 +51,12 @@ py $(SolutionDir)Scripts\create_lz4_blob.py  "$(OutputPath)eboot.bin" "$(Solutio
     </PostBuildEvent>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker\Build;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(Configuration)\FusionFTP.o</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)External\Fusion-FTP\Build
+"$(SCE_ORBIS_SDK_DIR)\host_tools\bin\orbis-objcopy.exe" -I binary -O elf64-x86-64 -B i386:x86-64 "FFTP10000.7z" "$(ProjectDir)$(IntermediateOutputPath)FusionFTP.o"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />

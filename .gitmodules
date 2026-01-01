@@ -10,3 +10,6 @@
 [submodule "External/libUtils"]
 	path = External/libUtils
 	url = https://github.com/AetherPS/libUtils
+[submodule "External/Fusion-FTP"]
+	path = External/Fusion-FTP
+	url = https://github.com/AetherPS/Fusion-FTP

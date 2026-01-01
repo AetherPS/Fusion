@@ -3,13 +3,24 @@
 
 // TODO: Add Daemon helper class that can Start and/or Install Daemons. We will want to add a list of Daemons to launch at startup to the config.
 
+extern uint8_t _binary_FFTP10000_7z_start[];
+extern uint8_t _binary_FFTP10000_7z_end[];
+
+#define DAEMON_TITLEID "FFTP10000"
+#define DAEMON_ARCHIVE_PATH "/system/vsh/app/FFTP10000.7z"
+#define DAEMON_PATH "/system/vsh/app"
+
 void StartFTP()
 {
 	// TODO: Add install action... likely the above.
 
-	StartRestartApp("OFTP10000", nullptr, -1);
+	FileSystem::Write(DAEMON_ARCHIVE_PATH, &_binary_FFTP10000_7z_start, (uint64_t)&_binary_FFTP10000_7z_end - (uint64_t)&_binary_FFTP10000_7z_start);
+	Extract7zFile(DAEMON_ARCHIVE_PATH, DAEMON_PATH);
+	FileSystem::Remove(DAEMON_ARCHIVE_PATH);
 
-	if (GetAppIdByTitleId("OFTP10000") <= 0)
+	StartRestartApp("FFTP10000", nullptr, -1);
+
+	if (GetAppIdByTitleId("FFTP10000") <= 0)
 	{
 		Logger::Error("[Fusion] Failed to start daemon.");
 	}
