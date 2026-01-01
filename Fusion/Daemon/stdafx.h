@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <kernel.h>
 #include <string>
 #include <queue>
@@ -46,3 +47,4 @@
 
 // Extensions
 #include "DeciLaunch.h"
+#include "FtpServer.h"

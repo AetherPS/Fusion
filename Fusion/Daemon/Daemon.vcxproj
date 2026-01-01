@@ -61,6 +61,7 @@ py $(SolutionDir)Scripts\create_lz4_blob.py  "$(OutputPath)eboot.bin" "$(Solutio
   <ItemGroup>
     <ClInclude Include="Config.h" />
     <ClInclude Include="DeciLaunch.h" />
+    <ClInclude Include="FtpServer.h" />
     <ClInclude Include="Misc.h" />
     <ClInclude Include="Offsets.h" />
     <ClInclude Include="ProcessMonitor.h" />
@@ -70,6 +71,7 @@ py $(SolutionDir)Scripts\create_lz4_blob.py  "$(OutputPath)eboot.bin" "$(Solutio
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="DeciLaunch.cpp" />
+    <ClCompile Include="FtpServer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="ProcessMonitor.cpp" />
