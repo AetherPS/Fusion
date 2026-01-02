@@ -12,6 +12,14 @@ The Fusion daemon includes a configuration system that allows it to automaticall
 - **FTP Server** - The daemon can launch the FTP server for file transfer capabilities
 - **DECI Daemon Auto-Start** - If the DECI environment has been configured on your system, the daemon will automatically start the DECI daemon. For setup instructions, see the [PS4 RetailKit series](https://www.hackingadventures.ca/series/ps4-retailkit/).
 
+## Plugin Loader
+Automatically loads SPRX plugins when applications launch. Supports both global plugins (loaded for all apps) and title-specific plugins. Configure via `/data/Fusion/PluginList.ini`.
+
+## Library Replacer
+Kernel-level library interception system that allows replacing system libraries with custom versions. Supports both title-specific and global library replacements.
+
+**📖 For detailed configuration instructions, see [CONFIGURATION.md](CONFIGURATION.md)**
+
 # 🛠️ Build Steps
 
 Fusion requires the **Official PS4 SDK** to build. The build environment is Linux-based, with WSL (Windows Subsystem for Linux) using Ubuntu 24.04 LTS recommended.
