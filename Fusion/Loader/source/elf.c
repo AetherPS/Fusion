@@ -1,6 +1,7 @@
 #include "common.h"
 
-// thank you osdev for some help
+// Credits: https://github.com/jogolden/jkpatch
+
 static inline struct Elf64_Phdr* elf_pheader(struct Elf64_Ehdr* hdr) {
 	if (!hdr->e_phoff)
 	{
@@ -9,6 +10,7 @@ static inline struct Elf64_Phdr* elf_pheader(struct Elf64_Ehdr* hdr) {
 
 	return (struct Elf64_Phdr*)((uint64_t)hdr + hdr->e_phoff);
 }
+
 static inline struct Elf64_Phdr* elf_segment(struct Elf64_Ehdr* hdr, int idx) {
 	uint64_t addr = (uint64_t)elf_pheader(hdr);
 	if (!addr)
@@ -18,6 +20,7 @@ static inline struct Elf64_Phdr* elf_segment(struct Elf64_Ehdr* hdr, int idx) {
 
 	return (struct Elf64_Phdr*)(addr + (hdr->e_phentsize * idx));
 }
+
 static inline struct Elf64_Shdr* elf_sheader(struct Elf64_Ehdr* hdr) {
 	if (!hdr->e_shoff)
 	{
@@ -26,6 +29,7 @@ static inline struct Elf64_Shdr* elf_sheader(struct Elf64_Ehdr* hdr) {
 
 	return (struct Elf64_Shdr*)((uint64_t)hdr + hdr->e_shoff);
 }
+
 static inline struct Elf64_Shdr* elf_section(struct Elf64_Ehdr* hdr, int idx) {
 	uint64_t addr = (uint64_t)elf_sheader(hdr);
 	if (!addr)

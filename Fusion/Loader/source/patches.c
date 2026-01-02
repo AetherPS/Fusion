@@ -7,7 +7,7 @@ void InstallPatches(uint64_t kernelBase)
 
 	cpu_disable_wp();
 
-	// Patch memcpy to avoid kernel panics when copying from/to userland addresses.
+	// Patch memcpy: bypass stack bounds check (jcc -> jmp)
 	*(uint8_t*)(kernelBase + patch_memcpy) = 0xEB;
 
 	// Patch kmem_alloc to allow VM_PROT_ALL for kernel excutable memory allocations.
