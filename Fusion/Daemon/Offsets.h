@@ -76,29 +76,29 @@ public:
 		case 0x13008002:
 
 			// ShellCore
-			IsGenuineCEX1 = 0x0;
-			IsGenuineCEX2 = 0x0;
-			IsGenuineCEX3 = 0x0;
-			IsGenuineCEX4 = 0x0;
-			IsAssistMode1 = 0x0;
-			IsAssistMode2 = 0x0;
-			IsAssistMode3 = 0x0;
-			IsAssistMode4 = 0x0;
-			EnableFakePkg = 0x0;
-			FakeText = 0x0;
-			MountDataIntoSandbox = 0x0;
-			DisablePkgPatchCheck1 = 0x0;
-			DisablePkgPatchCheck2 = 0x0;
-			DisablePkgPatchCheck3 = 0x0;
+			IsGenuineCEX1 = 0x0016F5A4;
+			IsGenuineCEX2 = 0x00874674;
+			IsGenuineCEX3 = 0x008C4992;
+			IsGenuineCEX4 = 0x00A28244;
+			IsAssistMode1 = 0x0016F5D2;
+			IsAssistMode2 = 0x0024E11C;
+			IsAssistMode3 = 0x008746A2;
+			IsAssistMode4 = 0x00A28272;
+			EnableFakePkg = 0x003DE07F;
+			FakeText = 0x00FD0E59;
+			MountDataIntoSandbox = 0x00323380;
+			DisablePkgPatchCheck1 = 0x001389A0;
+			DisablePkgPatchCheck2 = 0x003CA3A7;
+			DisablePkgPatchCheck3 = 0x003CD5F0;
 
 			// ShellUI
-			DebugMenuPatch1 = 0x0;
-			DebugMenuPatch2 = 0x0;
+			DebugMenuPatch1 = 0x0001D100;
+			DebugMenuPatch2 = 0x0001D460;
 
 			// DECI
-			StartDecidServer = 0x0;
-			MountFuse = 0x0;
-			DevPortThread = 0x0;
+			StartDecidServer = 0x00255E90;
+			MountFuse = 0x12A0;
+			DevPortThread = 0x1480;
 
 			break;
 
