@@ -12,6 +12,7 @@
 #pragma comment(lib, "libSceJson2_stub_weak.a")
 #pragma comment(lib, "libSceSysmodule_stub_weak.a")
 #pragma comment(lib, "libSceSysmodule_gen_stub_weak.a")
+#pragma comment(lib, "libSceSysCore_gen_stub_weak.a")
 
 // Additional Libraries
 #pragma comment(lib, "libFusionDriver.a")

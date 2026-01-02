@@ -9,10 +9,13 @@
 #include <variant>
 #include <SysmoduleInternal.h>
 #include <libsysmodule.h>
+#include <atomic>
+#include <set>
 
 // StubMaker
 #include <LncUtil.h>
 #include <KernelExt.h>
+#include <SysCoreUtil.h>
 
 // libUtils
 #include <StringExt.h>
@@ -38,13 +41,16 @@
 // libFusionDriver
 #include <DriverDefinitions.h>
 #include <FusionDriver.h>
+#include <RemoteSprx.h>
 
 #include "Misc.h"
 #include "Config.h"
 #include "Offsets.h"
 #include "ProcessMonitor.h"
 #include "SystemPatcher.h"
+#include "IniParser.h"
 
 // Extensions
 #include "DeciLaunch.h"
 #include "FtpServer.h"
+#include "PluginExtension.h"

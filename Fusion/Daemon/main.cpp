@@ -38,6 +38,9 @@ int main(int argc, char** arg)
 
 	// Initialize the system patcher which currently just takes over the job of patching shellcore & shellui for fpkg & debug settings.
 	SystemPatcher::Init();
+
+	// Initialize the plugin extension system.
+	PluginExtension::Init();
 	
 	// Load the config file.
 	Config config("/data/Fusion/Settings.cfg");

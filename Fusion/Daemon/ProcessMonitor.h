@@ -10,8 +10,8 @@ public:
 	std::function<void()> OnExit;
 	std::function<void(int)> OnException;
 private:
-	bool ShouldRun;
-	int ProcessId;
+	std::atomic<bool> ShouldRun;
+	std::atomic<int> ProcessId;
 	std::string ProcessName;
 
 	void WatchThread();
