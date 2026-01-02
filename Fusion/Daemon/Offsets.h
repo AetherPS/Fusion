@@ -73,6 +73,35 @@ public:
 
 			break;
 
+		case 0x13008002:
+
+			// ShellCore
+			IsGenuineCEX1 = 0x0;
+			IsGenuineCEX2 = 0x0;
+			IsGenuineCEX3 = 0x0;
+			IsGenuineCEX4 = 0x0;
+			IsAssistMode1 = 0x0;
+			IsAssistMode2 = 0x0;
+			IsAssistMode3 = 0x0;
+			IsAssistMode4 = 0x0;
+			EnableFakePkg = 0x0;
+			FakeText = 0x0;
+			MountDataIntoSandbox = 0x0;
+			DisablePkgPatchCheck1 = 0x0;
+			DisablePkgPatchCheck2 = 0x0;
+			DisablePkgPatchCheck3 = 0x0;
+
+			// ShellUI
+			DebugMenuPatch1 = 0x0;
+			DebugMenuPatch2 = 0x0;
+
+			// DECI
+			StartDecidServer = 0x0;
+			MountFuse = 0x0;
+			DevPortThread = 0x0;
+
+			break;
+
 		default:
 			return false;
 		}

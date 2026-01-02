@@ -9,6 +9,10 @@
       <Configuration>900Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release1300|x64">
+      <Configuration>Release1300</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -26,6 +30,11 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release1300|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -35,6 +44,9 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release1300|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -58,6 +70,24 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'">
     <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1202</NMakePreprocessorDefinitions>
+    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+
+xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Fusion\Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
+
+xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Fusion\Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
+del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine>
+    <NMakeOutput>Kernel.elf</NMakeOutput>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
+    <OutDir>$(SolutionDir)Build\</OutDir>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir)include\Utils;$(ProjectDir)include\Utils\Detours;$(ProjectDir)include\Driver;$(ProjectDir)include\Homebrew;$(ProjectDir)include\Misc</IncludePath>
+    <IntDir>$(ProjectDir)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release1300|x64'">
+    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1300</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 
