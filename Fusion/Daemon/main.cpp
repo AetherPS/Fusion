@@ -22,6 +22,10 @@ int main(int argc, char** arg)
 		return 0;
 	}
 
+	// Set a friendly name so we dont just have eboot.bin.
+	sceKernelSetProcessName("Fusion Daemon");
+
+	// Initialize Offsets.
 	if (!Offsets::Init())
 	{
 		Notify("Failed to initialize offsets...");
@@ -29,9 +33,13 @@ int main(int argc, char** arg)
 		return 0;
 	}
 
+	// Initialize the thread pool with a few threads for us to use.
 	ThreadPool::Init(5);
+
+	// Initialize the system patcher which currently just takes over the job of patching shellcore & shellui for fpkg & debug settings.
 	SystemPatcher::Init();
 	
+	// Load the config file.
 	Config config("/data/Fusion/Settings.cfg");
 
 	if (config.Get<bool>("EnableFTP", false))
@@ -46,6 +54,7 @@ int main(int argc, char** arg)
 
 	Notify("Fusion 3 Loaded\nDownload More RAM Edition");
 
+	// Keep the daemon running.
 	while (true) { sceKernelSleep(1); }
 
 	ExitGraceful();

@@ -44,6 +44,38 @@ void MountFuse(int processId, const char* to, const char* from)
 	caller->Call<void>(MountFuseAddress, to, from);
 }
 
+void StartDevPortThread(int sysCorePid)
+{
+	uint64_t DevPortThreadAddress = Fusion::GetRemoteAddress(sysCorePid, (int)0, Offsets::DevPortThread);
+	if (DevPortThreadAddress <= 0)
+	{
+		Logger::Error("Failed to get DevPortThread address.");
+		return;
+	}
+
+	uint64_t scePthreadCreateAddress = 0;
+	auto result = Fusion::Resolve(sysCorePid, 8193, "libkernel", "scePthreadCreate", 0, &scePthreadCreateAddress);
+	if (result != 0 || scePthreadCreateAddress == 0)
+	{
+		Logger::Error("Failed to resolve scePthreadCreate for reason %llX.", result);
+		return;
+	}
+
+	uint64_t scePthreadDetachAddress = 0;
+	result = Fusion::Resolve(sysCorePid, 8193, "libkernel", "scePthreadDetach", 0, &scePthreadDetachAddress);
+	if (result != 0 || scePthreadDetachAddress == 0)
+	{
+		Logger::Error("Failed to resolve scePthreadDetach for reason %llX.", result);
+		return;
+	}
+
+	auto caller = Fusion::RemoteCallerManager::GetInstance(sysCorePid);
+
+	ScePthread thr;
+	caller->Call<int>(scePthreadCreateAddress, &thr, 0, DevPortThreadAddress, 0, 0);
+	caller->Call<int>(scePthreadDetachAddress, &thr);
+}
+
 void StartDECI()
 {
 	auto decidPid = GetPidByName("decid.elf");
@@ -67,13 +99,6 @@ void StartDECI()
 	MountFuse(sysCorePid, "/hostapp", "/dev/fuse0");
 	MountFuse(sysCorePid, "/host", "/dev/fuse1");
 
-	uint64_t DevPortThreadAddress = Fusion::GetRemoteAddress(sysCorePid, (int)0, Offsets::DevPortThread);
-	if (DevPortThreadAddress <= 0)
-	{
-		Logger::Error("Failed to get DevPortThread address.");
-		return;
-	}
-	
 	// Start the devport thread that spawns the decid.elf daemon process.
-	Fusion::StartPThread(sysCorePid, DevPortThreadAddress);
+	StartDevPortThread(sysCorePid);
 }
