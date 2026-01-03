@@ -12,6 +12,9 @@ The Fusion daemon includes a configuration system that allows it to automaticall
 - **FTP Server** - The daemon can launch the FTP server for file transfer capabilities
 - **DECI Daemon Auto-Start** - If the DECI environment has been configured on your system, the daemon will automatically start the DECI daemon. For setup instructions, see the [PS4 RetailKit series](https://www.hackingadventures.ca/series/ps4-retailkit/).
 
+## Daemon Loader
+Automatically mounts and launches custom daemon applications at Fusion startup. Uses an overlay filesystem to seamlessly integrate custom daemons alongside system applications without modifying the original `/system/vsh/app` directory. Daemons are configured via `/data/Fusion/Settings.cfg` and stored in `/data/Fusion/Daemons/`.
+
 ## Plugin Loader
 Automatically loads SPRX plugins when applications launch. Supports both global plugins (loaded for all apps) and title-specific plugins. Configure via `/data/Fusion/PluginList.ini`.
 

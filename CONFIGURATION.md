@@ -3,9 +3,93 @@
 This guide explains how to use Fusion's plugin loader, configuration system, and library replacer features.
 
 ## Table of Contents
+- [Daemon Loader](#daemon-loader)
 - [Plugin Loader](#plugin-loader)
 - [Configuration System](#configuration-system)
 - [Library Replacer](#library-replacer)
+
+---
+
+## Daemon Loader
+
+The Daemon Loader allows you to automatically mount and launch custom daemon applications at system startup. 
+
+This approach ensures:
+- No permanent modifications to system directories
+- Original system apps remain accessible
+- Custom daemons integrate seamlessly
+- Changes persist only during runtime
+
+### Directory Structure
+
+Place your daemon applications in:
+```
+/data/Fusion/Daemons/[TITLEID]/
+```
+
+Each daemon should follow the standard PS4 application structure:
+```
+/data/Fusion/Daemons/CUSA00000/
+├── eboot.bin
+└── sce_sys/
+    └── param.sfo
+```
+
+### Configuration
+
+Daemons are configured in `/data/Fusion/Settings.cfg`. Add daemon Title IDs to the `Daemons` array:
+
+```json
+{
+    "EnableFTP": false,
+    "StartDECI": true,
+    "Daemons": [
+        "CUSA00001",
+        "CUSA00002"
+    ]
+}
+```
+
+### Usage Examples
+
+#### Example
+
+1. Create the daemon directory:
+```
+/data/Fusion/Daemons/MYAP00001/
+```
+
+2. Place your daemon files:
+```
+/data/Fusion/Daemons/MYAP00001/eboot.bin
+/data/Fusion/Daemons/MYAP00001/sce_sys/param.sfo
+```
+
+3. Update configuration:
+```json
+{
+    "Daemons": ["MYAP00001"]
+}
+```
+
+4. Restart the Fusion daemon
+
+### Important Notes
+
+- Daemon Title IDs must be exactly 9 characters (e.g., `CUSA00000`)
+- Each daemon must have a valid `param.sfo` file
+- Daemons are launched with user ID `-1` (all users)
+- Failed daemon mounts/launches are logged but don't prevent other daemons from loading
+- Daemons are launched in the order they appear in the configuration
+
+### Troubleshooting
+
+If daemons aren't loading:
+1. Verify the Title ID is exactly 9 characters
+2. Check that `eboot.bin` and `param.sfo` exist
+3. Ensure the daemon files are properly signed
+4. Review the console output for error messages
+5. Confirm `/data/Fusion/Settings.cfg` has valid JSON syntax
 
 ---
 
@@ -86,7 +170,8 @@ If the configuration file doesn't exist, Fusion will automatically create it wit
 ```json
 {
     "EnableFTP": false,
-    "StartDECI": true
+    "StartDECI": true,
+    "Daemons": []
 }
 ```
 
@@ -96,6 +181,7 @@ If the configuration file doesn't exist, Fusion will automatically create it wit
 |--------|------|---------|-------------|
 | `EnableFTP` | boolean | `false` | Enables the FTP server for file transfer |
 | `StartDECI` | boolean | `true` | Automatically starts the DECI daemon if configured |
+| `Daemons` | array | `[]` | List of daemon Title IDs to mount and launch at startup |
 
 ### Nested Configuration
 
@@ -127,7 +213,8 @@ You can manually edit the configuration file:
 ```json
 {
     "EnableFTP": true,
-    "StartDECI": false
+    "StartDECI": false,
+    "Daemons": ["MYAP00001", "SERV00001"]
 }
 ```
 
@@ -217,6 +304,7 @@ To replace `libScePad.prx` only for title `CUSA12345`:
 ### File Paths
 
 All Fusion data is stored under `/data/Fusion/`:
+- `/data/Fusion/Daemons/` - Custom daemon applications
 - `/data/Fusion/PluginList.ini` - Plugin loader configuration
 - `/data/Fusion/Settings.cfg` - Daemon configuration
 - `/data/Fusion/ReplacementLibs/` - Library replacer storage
