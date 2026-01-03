@@ -41,13 +41,19 @@ int main(int argc, char** arg)
 
 	// Initialize the plugin extension system.
 	PluginExtension::Init();
-	
+
+	// Install the FTP Daemon.
+	InstallDaemon();
+
 	// Load the config file.
 	Config config("/data/Fusion/Settings.cfg");
+	DaemonExtension daemons(config);
+
+	sceKernelSleep(1);
 
 	if (config.Get<bool>("EnableFTP", false))
 	{
-		StartFTP();
+		daemons.MountAndLaunchDaemon(FTP_DAEMON_TITLEID);
 	}
 
 	if (config.Get<bool>("StartDECI", false))

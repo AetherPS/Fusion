@@ -99,6 +99,7 @@ py $(SolutionDir)Scripts\create_lz4_blob.py  "$(OutputPath)eboot.bin" "$(Solutio
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
+    <ClInclude Include="DaemonExtension.h" />
     <ClInclude Include="DeciLaunch.h" />
     <ClInclude Include="FtpServer.h" />
     <ClInclude Include="IniParser.h" />
@@ -111,6 +112,7 @@ py $(SolutionDir)Scripts\create_lz4_blob.py  "$(OutputPath)eboot.bin" "$(Solutio
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="DaemonExtension.cpp" />
     <ClCompile Include="DeciLaunch.cpp" />
     <ClCompile Include="FtpServer.cpp" />
     <ClCompile Include="main.cpp" />
