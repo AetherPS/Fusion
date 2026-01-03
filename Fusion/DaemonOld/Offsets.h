@@ -5,11 +5,11 @@ class Offsets
 public:
 	static bool Init()
 	{
-		OrbisKernelSwVersion SoftwareVersion;
-		SoftwareVersion.Size = sizeof(OrbisKernelSwVersion);
+		SceKernelSwVersion SoftwareVersion;
+		SoftwareVersion.Size = sizeof(SceKernelSwVersion);
 		if (sceKernelGetSystemSwVersion(&SoftwareVersion) != 0)
 		{
-			klog("Failed to get the software version.");
+			Logger::Error("Failed to get the software version.");
 			return false;
 		}
 

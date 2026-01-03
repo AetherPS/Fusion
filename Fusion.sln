@@ -14,7 +14,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kernel", "Fusion\Kernel\Ker
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Loader", "Fusion\Loader\Loader.vcxproj", "{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Daemon", "Fusion\Daemon\Daemon.vcxproj", "{E93827B7-2511-47A1-9190-032A66E72A82}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Daemon", "Fusion\Daemon\Daemon.vcxproj", "{BABF6224-D68B-1FAD-B4FF-EAD1124D581E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,10 +30,10 @@ Global
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.Release1200|ORBIS.Build.0 = 1202Release|x64
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.Release900|ORBIS.ActiveCfg = 900Release|x64
 		{A9ED466D-2F9E-41D8-A6D8-0AE4079F5712}.Release900|ORBIS.Build.0 = 900Release|x64
-		{E93827B7-2511-47A1-9190-032A66E72A82}.Release1200|ORBIS.ActiveCfg = Release|ORBIS
-		{E93827B7-2511-47A1-9190-032A66E72A82}.Release1200|ORBIS.Build.0 = Release|ORBIS
-		{E93827B7-2511-47A1-9190-032A66E72A82}.Release900|ORBIS.ActiveCfg = Release|ORBIS
-		{E93827B7-2511-47A1-9190-032A66E72A82}.Release900|ORBIS.Build.0 = Release|ORBIS
+		{BABF6224-D68B-1FAD-B4FF-EAD1124D581E}.Release1200|ORBIS.ActiveCfg = Release|x64
+		{BABF6224-D68B-1FAD-B4FF-EAD1124D581E}.Release1200|ORBIS.Build.0 = Release|x64
+		{BABF6224-D68B-1FAD-B4FF-EAD1124D581E}.Release900|ORBIS.ActiveCfg = Release|x64
+		{BABF6224-D68B-1FAD-B4FF-EAD1124D581E}.Release900|ORBIS.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

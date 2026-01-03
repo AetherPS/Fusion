@@ -1,134 +1,103 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|ORBIS">
+    <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
-      <Platform>ORBIS</Platform>
+      <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|ORBIS">
+    <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
-      <Platform>ORBIS</Platform>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{e93827b7-2511-47a1-9190-032a66e72a82}</ProjectGuid>
-    <ProjectName>Daemon</ProjectName>
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <ProjectGuid>{BABF6224-D68B-1FAD-B4FF-EAD1124D581E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <PropertyGroup Condition="'$(DebuggerFlavor)'=='ORBISDebugger'" Label="OverrideDebuggerDefaults">
-    <!--LocalDebuggerCommand>$(TargetPath)</LocalDebuggerCommand-->
-    <!--LocalDebuggerCommandArguments></LocalDebuggerCommandArguments-->
-    <!--LocalDebuggerTarget></LocalDebuggerTarget-->
-    <!--LocalDebuggerWorkingDirectory>$(ProjectDir)</LocalDebuggerWorkingDirectory-->
-    <!--LocalRunCommandLine></LocalRunCommandLine-->
-  </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
-    <Import Condition="Exists('$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.props')" Project="$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.props" />
-    <Import Condition="Exists('$(VCTargetsPath)\BuildCustomizations\SCU.props')" Project="$(VCTargetsPath)\BuildCustomizations\SCU.props" />
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
-    <OutDir>$(SolutionDir)Build\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NMakeOutput>Daemon.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>$(OO_PS4_TOOLCHAIN)\include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(IncludePath)</IncludePath>
+    <NMakeBuildCommandLine>wsl make</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl make</NMakeReBuildCommandLine>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
-    <OutDir>$(SolutionDir)Build\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeOutput>Daemon.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">
-    <ClCompile>
-      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
-      <OptimizationLevel>Level2</OptimizationLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <CppExceptions>true</CppExceptions>
-      <CppLanguageStd>Cpp17</CppLanguageStd>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-    </ClCompile>
-    <PostBuildEvent>
-      <Command>py "$(SolutionDir)Scripts\make_fself.py" "$(OutputPath)$(TargetName).elf" "$(OutputPath)eboot.bin" --paid 0x3800000000010003 --auth-info 070000000000003800000000001C004000FF000000000080000000000000000000000000000000000000008000400040000000000000008000000000000000080040FFFF000000F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
-py $(SolutionDir)Scripts\create_lz4_blob.py  "$(OutputPath)eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</Command>
-    </PostBuildEvent>
-    <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker\Build;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(Configuration)\FusionFTP.o</AdditionalDependencies>
-    </Link>
-    <PreBuildEvent>
-      <Command>cd $(SolutionDir)External\Fusion-FTP\Build
-"$(SCE_ORBIS_SDK_DIR)\host_tools\bin\orbis-objcopy.exe" -I binary -O elf64-x86-64 -B i386:x86-64 "FFTP10000.7z" "$(ProjectDir)$(IntermediateOutputPath)FusionFTP.o"</Command>
-    </PreBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">
-    <ClCompile>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
-      <OptimizationLevel>Level2</OptimizationLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <CppExceptions>true</CppExceptions>
-      <CppLanguageStd>Cpp17</CppLanguageStd>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </ClCompile>
-    <PostBuildEvent>
-      <Command>py "$(SolutionDir)Scripts\make_fself.py" "$(OutputPath)$(TargetName).elf" "$(OutputPath)eboot.bin" --paid 0x3800000000010003 --auth-info 070000000000003800000000001C004000FF000000000080000000000000000000000000000000000000008000400040000000000000008000000000000000080040FFFF000000F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-
-py $(SolutionDir)Scripts\create_lz4_blob.py  "$(OutputPath)eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</Command>
-    </PostBuildEvent>
-    <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\libFusionDriver\Build;$(SolutionDir)External\StubMaker\Build;$(SolutionDir)External\libUtils\Build;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(Configuration)\FusionFTP.o</AdditionalDependencies>
-    </Link>
-    <PreBuildEvent>
-      <Command>cd $(SolutionDir)External\Fusion-FTP\Build
-"$(SCE_ORBIS_SDK_DIR)\host_tools\bin\orbis-objcopy.exe" -I binary -O elf64-x86-64 -B i386:x86-64 "FFTP10000.7z" "$(ProjectDir)$(IntermediateOutputPath)FusionFTP.o"</Command>
-    </PreBuildEvent>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeOutput>Daemon.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <IncludePath>$(OO_PS4_TOOLCHAIN)\include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(IncludePath)</IncludePath>
+    <NMakeBuildCommandLine>wsl make</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl make</NMakeReBuildCommandLine>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeOutput>Daemon.exe</NMakeOutput>
+    <NMakePreprocessorDefinitions>WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="DaemonExtension.h" />
-    <ClInclude Include="DeciLaunch.h" />
-    <ClInclude Include="FtpServer.h" />
-    <ClInclude Include="IniParser.h" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Makefile" />
+    <ClCompile Include="Misc.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="Misc.h" />
     <ClInclude Include="Offsets.h" />
-    <ClInclude Include="PluginExtension.h" />
-    <ClInclude Include="ProcessMonitor.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SystemPatcher.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Config.cpp" />
-    <ClCompile Include="DaemonExtension.cpp" />
-    <ClCompile Include="DeciLaunch.cpp" />
-    <ClCompile Include="FtpServer.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Misc.cpp" />
-    <ClCompile Include="PluginExtension.cpp" />
-    <ClCompile Include="ProcessMonitor.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="SystemPatcher.cpp" />
-  </ItemGroup>
-  <Import Condition="'$(ConfigurationType)' == 'Makefile' and Exists('$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets')" Project="$(VCTargetsPath)\Platforms\$(Platform)\SCE.Makefile.$(Platform).targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Condition="Exists('$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.targets')" Project="$(VCTargetsPath)\BuildCustomizations\OrbisWavePsslc.targets" />
-    <Import Condition="Exists('$(VCTargetsPath)\BuildCustomizations\SCU.targets')" Project="$(VCTargetsPath)\BuildCustomizations\SCU.targets" />
   </ImportGroup>
 </Project>
