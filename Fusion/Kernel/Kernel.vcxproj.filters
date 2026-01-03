@@ -101,9 +101,6 @@
     <ClCompile Include="source\Misc\LibraryReplacer.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="source\Misc\Patches.cpp">
-      <Filter>source\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="source\Misc\TTYRedirector.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
@@ -173,9 +170,6 @@
       <Filter>include\Misc</Filter>
     </ClInclude>
     <ClInclude Include="include\Misc\LibraryReplacer.h">
-      <Filter>include\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Misc\Patches.h">
       <Filter>include\Misc</Filter>
     </ClInclude>
     <ClInclude Include="include\Misc\TTYRedirector.h">

@@ -17,7 +17,6 @@ void InitFusion()
 	KernelBase = (uint8_t*)Readmsr(0xC0000082) - addr_Xfast_syscall;
 
 	ResolveFunctions();				// Resolve all needed functions.
-	InstallPatches();				// Install all needed patches.
 	PrintFeatureFlags();			// Print the active feature flags.
 	MkDir("/data/Fusion", 0777);	// Ensure the fusion dir is made.
 
