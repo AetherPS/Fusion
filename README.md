@@ -28,7 +28,7 @@ Kernel-level library interception system that allows replacing system libraries 
 Fusion requires the **Official PS4 SDK** to build. The build environment is Linux-based, with WSL (Windows Subsystem for Linux) using Ubuntu 24.04 LTS recommended.
 
 ## Build Dependencies
-- **Official PlayStation 4 SDK** - Required for building the kernel driver and userland components
+- **Official PlayStation 4 SDK** - Required for building the Daemon
 - **Python 3** - Required for build scripts and tooling
 - **WSL Ubuntu 24.04 LTS** (Windows users) or native Linux environment
 - **GCC/G++** - C/C++ compiler toolchain
