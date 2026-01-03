@@ -29,6 +29,11 @@ void PluginExtension::Monitor()
             int currentPid = GetPidByAppId(appId);
             if (currentPid > 0 && currentPid != LastPid)
             {
+                if (!IsProcessReady(currentPid))
+                {
+                    continue;
+                }
+
                 LoadPlugins(currentPid);
                 LastPid = currentPid;
             }
@@ -38,15 +43,12 @@ void PluginExtension::Monitor()
             LastPid = -1;  // Reset when no app running
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
 void PluginExtension::LoadPlugins(int pid)
 {
-	// Small delay to ensure the app is fully initialized
-    std::this_thread::sleep_for(std::chrono::milliseconds(1800));
-
     // Get the app info for the title Id.
     SceAppInfo info{};
     if (sceKernelGetAppInfo(pid, &info) != 0) return;
@@ -82,4 +84,18 @@ void PluginExtension::LoadPlugins(int pid)
             }
         }
     }
+}
+
+bool PluginExtension::IsProcessReady(int pid)
+{
+    OrbisLibraryInfo ModuleList[256]{};
+    int realCount = 0;
+    int result = Fusion::GetLibraryList(pid, ModuleList, sizeof(ModuleList), &realCount);
+
+    if (result != 0)
+    {
+        return false;
+    }
+
+    return realCount > 3;
 }
