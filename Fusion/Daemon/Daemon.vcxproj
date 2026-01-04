@@ -53,7 +53,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppExceptions>true</CppExceptions>
       <CppLanguageStd>Cpp17</CppLanguageStd>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -77,7 +77,7 @@ py $(SolutionDir)Scripts\create_lz4_blob.py  "$(OutputPath)eboot.bin" "$(Solutio
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\libFusionDriver;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libSysInt;$(SolutionDir)External\libUtils\lib7z;$(SolutionDir)External\libUtils\libAppCtrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppExceptions>true</CppExceptions>
       <CppLanguageStd>Cpp17</CppLanguageStd>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
