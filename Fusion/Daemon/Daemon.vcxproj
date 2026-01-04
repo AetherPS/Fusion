@@ -66,8 +66,13 @@
     <NMakeOutput>Daemon.exe</NMakeOutput>
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IncludePath>$(OO_PS4_TOOLCHAIN)\include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(IncludePath)</IncludePath>
-    <NMakeBuildCommandLine>wsl make</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>wsl make
+
+py $(SolutionDir)Scripts\create_lz4_blob.py  "$(SolutionDir)Build\eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl make
+
+py $(SolutionDir)Scripts\create_lz4_blob.py  "$(SolutionDir)Build\eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</NMakeReBuildCommandLine>
+    <OutDir>$(SolutionDir)Build</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakeOutput>Daemon.exe</NMakeOutput>
@@ -77,8 +82,13 @@
     <NMakeOutput>Daemon.exe</NMakeOutput>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IncludePath>$(OO_PS4_TOOLCHAIN)\include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(IncludePath)</IncludePath>
-    <NMakeBuildCommandLine>wsl make</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make</NMakeReBuildCommandLine>
+    <NMakeBuildCommandLine>wsl make
+
+py $(SolutionDir)Scripts\create_lz4_blob.py  "$(SolutionDir)Build\eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl make
+
+py $(SolutionDir)Scripts\create_lz4_blob.py  "$(SolutionDir)Build\eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</NMakeReBuildCommandLine>
+    <OutDir>$(SolutionDir)Build</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>Daemon.exe</NMakeOutput>
@@ -87,15 +97,43 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Config.cpp" />
+    <ClCompile Include="DaemonExtension.cpp" />
+    <ClCompile Include="DeciExtension.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="FileUtils.cpp" />
+    <ClCompile Include="FtpExtension.cpp" />
+    <ClCompile Include="LncUtils.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Makefile" />
     <ClCompile Include="Misc.cpp" />
+    <ClCompile Include="Notify.cpp" />
+    <ClCompile Include="PluginExtension.cpp" />
+    <ClCompile Include="Process.cpp" />
+    <ClCompile Include="ProcessMonitor.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="SystemPatcher.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="DaemonExtension.h" />
+    <ClInclude Include="DeciExtension.h" />
+    <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="FileUtils.h" />
+    <ClInclude Include="FtpExtension.h" />
+    <ClInclude Include="IniParser.h" />
+    <ClInclude Include="Json.h" />
+    <ClInclude Include="LncUtils.h" />
     <ClInclude Include="Misc.h" />
+    <ClInclude Include="Notify.h" />
     <ClInclude Include="Offsets.h" />
+    <ClInclude Include="PluginExtension.h" />
+    <ClInclude Include="Process.h" />
+    <ClInclude Include="ProcessMonitor.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SystemPatcher.h" />
+    <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

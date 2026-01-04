@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "DeciLaunch.h"
+#include "DeciExtension.h"
 #include "Offsets.h"
 
 #include <RemoteThread.h>
@@ -10,7 +10,7 @@ void StartDecidServer()
 	auto shellCorePid = GetPidByName("SceShellCore");
 	if (shellCorePid <= 0)
 	{
-		Logger::Error("Failed to get pid of SceShellCore.");
+		klog("Failed to get pid of SceShellCore.");
 		return;
 	}
 
@@ -21,7 +21,7 @@ void StartDecidServer()
 	uint64_t StartDecidServerAddress = Fusion::GetRemoteAddress(shellCorePid, (int)0, Offsets::StartDecidServer);
 	if (StartDecidServerAddress <= 0)
 	{
-		Logger::Error("Failed to get StartDecidServer address.");
+		klog("Failed to get StartDecidServer address.");
 		return;
 	}
 
@@ -37,7 +37,7 @@ void MountFuse(int processId, const char* to, const char* from)
 	uint64_t MountFuseAddress = Fusion::GetRemoteAddress(processId, (int)0, Offsets::MountFuse);
 	if (MountFuseAddress <= 0)
 	{
-		Logger::Error("Failed to get MountFuse address.");
+		klog("Failed to get MountFuse address.");
 		return;
 	}
 
@@ -49,7 +49,7 @@ void StartDevPortThread(int sysCorePid)
 	uint64_t DevPortThreadAddress = Fusion::GetRemoteAddress(sysCorePid, (int)0, Offsets::DevPortThread);
 	if (DevPortThreadAddress <= 0)
 	{
-		Logger::Error("Failed to get DevPortThread address.");
+		klog("Failed to get DevPortThread address.");
 		return;
 	}
 
@@ -57,7 +57,7 @@ void StartDevPortThread(int sysCorePid)
 	auto result = Fusion::Resolve(sysCorePid, 8193, "libkernel", "scePthreadCreate", 0, &scePthreadCreateAddress);
 	if (result != 0 || scePthreadCreateAddress == 0)
 	{
-		Logger::Error("Failed to resolve scePthreadCreate for reason %llX.", result);
+		klog("Failed to resolve scePthreadCreate for reason %llX.", result);
 		return;
 	}
 
@@ -65,13 +65,13 @@ void StartDevPortThread(int sysCorePid)
 	result = Fusion::Resolve(sysCorePid, 8193, "libkernel", "scePthreadDetach", 0, &scePthreadDetachAddress);
 	if (result != 0 || scePthreadDetachAddress == 0)
 	{
-		Logger::Error("Failed to resolve scePthreadDetach for reason %llX.", result);
+		klog("Failed to resolve scePthreadDetach for reason %llX.", result);
 		return;
 	}
 
 	auto caller = Fusion::RemoteCallerManager::GetInstance(sysCorePid);
 
-	ScePthread thr;
+	OrbisPthread thr;
 	caller->Call<int>(scePthreadCreateAddress, &thr, 0, DevPortThreadAddress, 0, 0);
 	caller->Call<int>(scePthreadDetachAddress, &thr);
 }
@@ -81,14 +81,14 @@ void StartDECI()
 	auto decidPid = GetPidByName("decid.elf");
 	if (decidPid > 0)
 	{
-		Logger::Warn("DECI already running.");
+		klog("DECI already running.");
 		return;
 	}
 
 	auto sysCorePid = GetPidByName("SceSysCore");
 	if (sysCorePid <= 0)
 	{
-		Logger::Error("Failed to get pid of SceSysCore.");
+		klog("Failed to get pid of SceSysCore.");
 		return;
 	}
 

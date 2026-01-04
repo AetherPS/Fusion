@@ -13,8 +13,8 @@ bool Config::Load(const std::string& configPath)
         // Check if file exists
         if (!FileSystem::Exists(configPath))
         {
-            Logger::Warn("Config file does not exist: %s", configPath.c_str());
-            Logger::Info("Creating default config...");
+            klog("Config file does not exist: %s", configPath.c_str());
+            klog("Creating default config...");
 
             // Create default config
             jsonConfig = json::object();
@@ -24,12 +24,12 @@ bool Config::Load(const std::string& configPath)
             // Save default config
             if (!Save(configPath))
             {
-                Logger::Error("Failed to save default config");
+                klog("Failed to save default config");
                 return false;
             }
 
             lastLoadPath = configPath;
-            Logger::Success("Default config created and saved to: %s", configPath.c_str());
+            klog("Default config created and saved to: %s", configPath.c_str());
             return true;
         }
 
@@ -37,7 +37,7 @@ bool Config::Load(const std::string& configPath)
         size_t fileSize = FileSystem::GetSize(configPath);
         if (fileSize == 0)
         {
-            Logger::Error("Config file is empty: %s", configPath.c_str());
+            klog("Config file is empty: %s", configPath.c_str());
             return false;
         }
 
@@ -46,24 +46,24 @@ bool Config::Load(const std::string& configPath)
 
         if (res != 0)
         {
-            Logger::Error("Failed to read config file: %s", configPath.c_str());
+            klog("Failed to read config file: %s", configPath.c_str());
             return false;
         }
 
         // Parse JSON
         jsonConfig = json::parse(buffer);
         lastLoadPath = configPath;
-        Logger::Success("Config loaded successfully from: %s", configPath.c_str());
+        klog("Config loaded successfully from: %s", configPath.c_str());
         return true;
     }
     catch (const nlohmann::json::parse_error& e)
     {
-        Logger::Error("JSON parse error while loading config: %s", e.what());
+        klog("JSON parse error while loading config: %s", e.what());
         return false;
     }
     catch (const std::exception& e)
     {
-        Logger::Error("Unexpected error loading config: %s", e.what());
+        klog("Unexpected error loading config: %s", e.what());
         return false;
     }
 }
@@ -80,16 +80,16 @@ bool Config::Save(const std::string& configPath) const
 
         if (res != 0)
         {
-            Logger::Error("Failed to write config file: %s", configPath.c_str());
+            klog("Failed to write config file: %s", configPath.c_str());
             return false;
         }
 
-        Logger::Success("Config saved successfully to: %s", configPath.c_str());
+        klog("Config saved successfully to: %s", configPath.c_str());
         return true;
     }
     catch (const std::exception& e)
     {
-        Logger::Error("Failed to save config: %s", e.what());
+        klog("Failed to save config: %s", e.what());
         return false;
     }
 }
@@ -110,14 +110,14 @@ json* Config::GetJsonValue(const std::string& name)
 
         if (!current->is_object())
         {
-            Logger::Warn("Cannot traverse config path '%s': expected object at '%s'",
+            klog("Cannot traverse config path '%s': expected object at '%s'",
                 name.c_str(), key.c_str());
             return nullptr;
         }
 
         if (current->find(key) == current->end())
         {
-            Logger::Warn("Config key '%s' not found in path '%s'", key.c_str(), name.c_str());
+            klog("Config key '%s' not found in path '%s'", key.c_str(), name.c_str());
             return nullptr;
         }
 
@@ -144,7 +144,7 @@ const json* Config::GetJsonValue(const std::string& name) const
 
         if (!current->is_object())
         {
-            Logger::Warn("Cannot traverse config path '%s': expected object at '%s'",
+            klog("Cannot traverse config path '%s': expected object at '%s'",
                 name.c_str(), key.c_str());
             return nullptr;
         }
@@ -152,7 +152,7 @@ const json* Config::GetJsonValue(const std::string& name) const
         auto it = current->find(key);
         if (it == current->end())
         {
-            Logger::Warn("Config key '%s' not found in path '%s'", key.c_str(), name.c_str());
+            klog("Config key '%s' not found in path '%s'", key.c_str(), name.c_str());
             return nullptr;
         }
 

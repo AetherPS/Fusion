@@ -14,7 +14,7 @@ void PluginExtension::Init()
     });
 }
 
-void PluginExtension::Term() 
+void PluginExtension::Term()
 {
     IsRunning = false;
 }
@@ -50,14 +50,14 @@ void PluginExtension::Monitor()
 void PluginExtension::LoadPlugins(int pid)
 {
     // Get the app info for the title Id.
-    SceAppInfo info{};
+    OrbisAppInfo info{};
     if (sceKernelGetAppInfo(pid, &info) != 0) return;
 
-	// Fetch the INI file.
+    // Fetch the INI file.
     IniParser ini;
     if (!ini.Load(INI_PATH)) return;
 
-	// Keep track of loaded plugin paths to avoid duplicates.
+    // Keep track of loaded plugin paths to avoid duplicates.
     std::set<std::string> loadedPaths;
 
     // Load plugins that apply to all titles.

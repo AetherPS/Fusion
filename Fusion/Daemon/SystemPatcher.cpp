@@ -23,7 +23,7 @@ void SystemPatcher::ShellCore()
 	int res = Fusion::GetLibraryList(pid, libraries, 255, &libraryCount);
 	if (res != 0)
 	{
-		Logger::Error("Failed to get process libraries for pid %d for reason %llX", pid, res);
+		klog("Failed to get process libraries for pid %d for reason %llX", pid, res);
 		return;
 	}
 
@@ -65,13 +65,13 @@ void SystemPatcher::ShellCore()
 void SystemPatcher::ShellUI()
 {
 	auto pid = GetPidByName("SceShellUI");
-	
+
 	OrbisLibraryInfo libraries[255];
 	int libraryCount;
 	int res = Fusion::GetLibraryList(pid, libraries, 255, &libraryCount);
 	if (res != 0)
 	{
-		Logger::Error("Failed to get process libraries for pid %d for reason %llX", pid, res);
+		klog("Failed to get process libraries for pid %d for reason %llX", pid, res);
 		return;
 	}
 

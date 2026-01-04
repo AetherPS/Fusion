@@ -5,10 +5,10 @@
 #include <unordered_map>
 #include <vector>
 
-class IniParser 
+class IniParser
 {
 public:
-    bool Load(const std::string& filename) 
+    bool Load(const std::string& filename)
     {
         std::ifstream file(filename);
         if (!file.is_open()) return false;
@@ -31,13 +31,13 @@ public:
         return true;
     }
 
-    const std::vector<std::string>* GetSection(const std::string& section) const 
+    const std::vector<std::string>* GetSection(const std::string& section) const
     {
         auto it = sections_.find(section);
         return it != sections_.end() ? &it->second : nullptr;
     }
 
-    bool HasSection(const std::string& section) const 
+    bool HasSection(const std::string& section) const
     {
         return sections_.find(section) != sections_.end();
     }

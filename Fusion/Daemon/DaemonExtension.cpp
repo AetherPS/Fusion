@@ -20,14 +20,14 @@ bool DaemonExtension::SetupOverlay()
 	// Backup original /system/vsh/app
 	if (MountNullfs(SYSTEM_APP_DIR, FUSION_BACKUP_DIR) < 0)
 	{
-		Logger::Error("Failed to backup %s", SYSTEM_APP_DIR);
+		klog("Failed to backup %s", SYSTEM_APP_DIR);
 		return false;
 	}
 
 	// Overlay tmpfs on /system/vsh/app
 	if (MountTmpfs(SYSTEM_APP_DIR) < 0)
 	{
-		Logger::Error("Failed to mount tmpfs on %s", SYSTEM_APP_DIR);
+		klog("Failed to mount tmpfs on %s", SYSTEM_APP_DIR);
 		return false;
 	}
 
@@ -35,7 +35,7 @@ bool DaemonExtension::SetupOverlay()
 	int fd = sceKernelOpen(FUSION_BACKUP_DIR, 0, 0);
 	if (fd < 0)
 	{
-		Logger::Error("Failed to open %s", FUSION_BACKUP_DIR);
+		klog("Failed to open %s", FUSION_BACKUP_DIR);
 		return false;
 	}
 
@@ -72,7 +72,7 @@ int DaemonExtension::MountDaemon(const char* titleId)
 {
 	if (!overlayReady)
 	{
-		Logger::Error("Overlay not ready, cannot mount daemon: %s", titleId);
+		klog("Overlay not ready, cannot mount daemon: %s", titleId);
 		return -1;
 	}
 
@@ -85,7 +85,7 @@ int DaemonExtension::MountDaemon(const char* titleId)
 
 	if (ret < 0)
 	{
-		Logger::Error("Failed to mount daemon: %s", titleId);
+		klog("Failed to mount daemon: %s", titleId);
 	}
 
 	return ret;
@@ -100,12 +100,12 @@ int DaemonExtension::MountAndLaunchDaemon(const char* titleId)
 	auto result = StartRestartApp(titleId, nullptr, -1);
 	if (result < 0)
 	{
-		Logger::Error("Failed to launch daemon: %s", titleId);
+		klog("Failed to launch daemon: %s", titleId);
 		return result;
 	}
 
 	loadedDaemons.push_back(titleId);
-	Logger::Success("Launched daemon: %s", titleId);
+	klog("Launched daemon: %s", titleId);
 
 	return 0;
 }
@@ -115,7 +115,7 @@ int DaemonExtension::LoadDaemonsFromConfig(Config& config)
 	auto daemons = config.Get<std::vector<std::string>>("Daemons");
 	if (!daemons.has_value())
 	{
-		Logger::Info("No daemons configured");
+		klog("No daemons configured");
 		return 0;
 	}
 
@@ -129,7 +129,7 @@ int DaemonExtension::LoadDaemonsFromConfig(Config& config)
 		}
 	}
 
-	Logger::Info("Loaded %d/%zu daemons from config", count, daemons.value().size());
+	klog("Loaded %d/%zu daemons from config", count, daemons.value().size());
 	return count;
 }
 
@@ -142,7 +142,7 @@ void DaemonExtension::AddDaemonToConfig(Config& config, const std::string& title
 	{
 		if (d == titleId)
 		{
-			Logger::Warn("Daemon %s already in config", titleId.c_str());
+			klog("Daemon %s already in config", titleId.c_str());
 			return;
 		}
 	}
@@ -163,7 +163,7 @@ void DaemonExtension::RemoveDaemonFromConfig(Config& config, const std::string& 
 	}
 	else
 	{
-		Logger::Warn("Daemon %s not found in config", titleId.c_str());
+		klog("Daemon %s not found in config", titleId.c_str());
 	}
 }
 

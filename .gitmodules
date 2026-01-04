@@ -1,9 +1,6 @@
 [submodule "External/FusionShared"]
 	path = External/FusionShared
 	url = https://github.com/AetherPS/FusionShared
-[submodule "External/libFusionDriver"]
-	path = External/libFusionDriver
-	url = https://github.com/AetherPS/libFusionDriver
 [submodule "External/StubMaker"]
 	path = External/StubMaker
 	url = https://github.com/OSM-Made/StubMaker
@@ -13,3 +10,6 @@
 [submodule "External/Fusion-FTP"]
 	path = External/Fusion-FTP
 	url = https://github.com/AetherPS/Fusion-FTP
+[submodule "External/libFusionDriver"]
+	path = External/libFusionDriver
+	url = https://github.com/AetherPS/libFusionDriver

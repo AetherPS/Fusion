@@ -50,7 +50,7 @@ std::optional<T> Config::Get(const std::string& name) const
         const auto* value = GetJsonValue(name);
         if (value == nullptr || value->is_null())
         {
-            Logger::Warn("Config key '%s' not found or is null", name.c_str());
+            klog("Config key '%s' not found or is null", name.c_str());
             return std::nullopt;
         }
 
@@ -58,7 +58,7 @@ std::optional<T> Config::Get(const std::string& name) const
     }
     catch (const nlohmann::json::exception& e)
     {
-        Logger::Error("Failed to retrieve config value '%s': %s", name.c_str(), e.what());
+        klog("Failed to retrieve config value '%s': %s", name.c_str(), e.what());
         return std::nullopt;
     }
 }
@@ -79,15 +79,15 @@ void Config::Set(const std::string& name, const T& value)
         if (jsonValue != nullptr)
         {
             *jsonValue = value;
-            Logger::Info("Config value '%s' set successfully", name.c_str());
+            klog("Config value '%s' set successfully", name.c_str());
         }
         else
         {
-            Logger::Error("Failed to set config value '%s': path not found", name.c_str());
+            klog("Failed to set config value '%s': path not found", name.c_str());
         }
     }
     catch (const nlohmann::json::exception& e)
     {
-        Logger::Error("Failed to set config value '%s': %s", name.c_str(), e.what());
+        klog("Failed to set config value '%s': %s", name.c_str(), e.what());
     }
 }

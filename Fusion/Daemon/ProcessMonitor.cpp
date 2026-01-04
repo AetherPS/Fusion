@@ -6,7 +6,7 @@ ProcessMonitor::ProcessMonitor(int pid)
 	kinfo_proc info;
 	if (GetProcInfo(pid, &info) != 0)
 	{
-		Logger::Error("Invalid PID(%d) passed to ProcessMonitor.", pid);
+		klog("Invalid PID(%d) passed to ProcessMonitor.", pid);
 		return;
 	}
 
@@ -46,7 +46,7 @@ void ProcessMonitor::WatchThread()
 		}
 
 		int status;
-		auto debuggeePid = wait4(ProcessId, &status, WNOHANG, nullptr);
+		auto debuggeePid = wait4(ProcessId, &status, WNOHANG, nullptr); // TODO: OOSDK PR.
 		if (debuggeePid == ProcessId)
 		{
 			if (OnException != nullptr)
