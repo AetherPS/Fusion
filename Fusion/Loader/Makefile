@@ -5,7 +5,7 @@ ODIR	:=	build
 SDIR	:=	source
 RDIR	:=  resources
 IDIRS	:=  -I../../Shared -Iinclude -I../../External/FusionShared
-CFLAGS	:=	$(IDIRS) -Os -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -DSOFTWARE_VERSION=$(SOFTWARE_VERSION)
+CFLAGS	:=	$(IDIRS) -Os -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -DSOFTWARE_VERSION=$(SOFTWARE_VERSION) -D_LOADER
 SFLAGS	:=	-nostartfiles -nostdlib -march=btver2 -mtune=btver2
 LFLAGS	:=	-Xlinker -T Linker -Wl,--build-id=none -Wl,--gc-sections
 CFILES	:=	$(wildcard $(SDIR)/*.c)

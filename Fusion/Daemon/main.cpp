@@ -55,7 +55,7 @@ int main(void)
 		StartDECI();
 	}
 
-	Notify("Fusion 3 Loaded\nDownload More RAM Edition");
+	Notify("Fusion 3 Loaded\nOOSDK Edition");
 
 	// Keep the daemon running.
 	while (true) { sceKernelSleep(1); }
