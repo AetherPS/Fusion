@@ -23,7 +23,7 @@ size_t FileSystem::GetSize(const std::string filePath)
 	}
 
 	OrbisKernelStat stat;
-	auto res = sceKernelFstat(fd, &stat);
+	auto res = sceKernelFstat(fd, (OrbisKernelStat*)&stat);
 	if (res != 0)
 	{
 		sceKernelClose(fd);
@@ -31,7 +31,7 @@ size_t FileSystem::GetSize(const std::string filePath)
 	}
 
 	sceKernelClose(fd);
-	return static_cast<size_t>(stat.st_size);
+	return *(size_t*)(((uint64_t)&stat) + 0x48); // TODO: PR for OOSDK to fix this.
 }
 
 int FileSystem::Rename(std::string from, std::string to)

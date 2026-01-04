@@ -14,9 +14,7 @@ LIBS := -lc -lc++ -lkernel -lSceSysmodule -lSceSysCore
 FUSIONDRIVER_LIB := ../../External/libFusionDriver/Build/libFusionDriverOOSDK.a
 
 # Additional compile flags.
-EXTRAFLAGS := -D_OOSDK
-
-# You likely won't need to touch anything below this point.
+EXTRAFLAGS := -D_OOSDK -frtti -fexceptions
 
 # Root vars
 TOOLCHAIN := $(OO_PS4_TOOLCHAIN)

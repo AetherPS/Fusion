@@ -18,9 +18,10 @@ bool DaemonExtension::SetupOverlay()
 	sceKernelMkdir(FUSION_BACKUP_DIR, 0777);
 
 	// Backup original /system/vsh/app
-	if (MountNullfs(SYSTEM_APP_DIR, FUSION_BACKUP_DIR) < 0)
+	auto res = MountNullfs(SYSTEM_APP_DIR, FUSION_BACKUP_DIR);
+	if (res < 0)
 	{
-		klog("Failed to backup %s", SYSTEM_APP_DIR);
+		klog("Failed to backup %s %X", SYSTEM_APP_DIR, res);
 		return false;
 	}
 

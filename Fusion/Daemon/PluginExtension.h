@@ -1,5 +1,7 @@
 #pragma once
 
+#define INI_PATH "/data/Fusion/PluginList.ini"
+
 class PluginExtension
 {
 public:
@@ -7,7 +9,6 @@ public:
     static void Term();
 
 private:
-    static constexpr const char* INI_PATH = "/data/Fusion/PluginList.ini";
     static std::atomic<bool> IsRunning;
     static std::atomic<int> LastPid;
 

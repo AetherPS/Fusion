@@ -39,9 +39,3 @@
 
 #include "Offsets.h"
 #include "Config.h"
-
-// Extensions
-#include "PluginExtension.h"
-#include "FtpExtension.h"
-#include "DaemonExtension.h"
-#include "DeciExtension.h"

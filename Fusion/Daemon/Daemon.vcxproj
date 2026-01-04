@@ -63,32 +63,36 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakeOutput>Daemon.exe</NMakeOutput>
+    <NMakeOutput>eboot.bin</NMakeOutput>
     <NMakePreprocessorDefinitions>NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IncludePath>$(OO_PS4_TOOLCHAIN)\include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(IncludePath)</IncludePath>
     <NMakeBuildCommandLine>wsl make
 
 py $(SolutionDir)Scripts\create_lz4_blob.py  "$(SolutionDir)Build\eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make
+    <NMakeReBuildCommandLine>wsl make clean
+wsl make
 
 py $(SolutionDir)Scripts\create_lz4_blob.py  "$(SolutionDir)Build\eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</NMakeReBuildCommandLine>
     <OutDir>$(SolutionDir)Build</OutDir>
+    <NMakeCleanCommandLine>wsl make clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <NMakeOutput>Daemon.exe</NMakeOutput>
     <NMakePreprocessorDefinitions>WIN32;_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <NMakeOutput>Daemon.exe</NMakeOutput>
+    <NMakeOutput>eboot.bin</NMakeOutput>
     <NMakePreprocessorDefinitions>_DEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IncludePath>$(OO_PS4_TOOLCHAIN)\include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(IncludePath)</IncludePath>
     <NMakeBuildCommandLine>wsl make
 
 py $(SolutionDir)Scripts\create_lz4_blob.py  "$(SolutionDir)Build\eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl make
+    <NMakeReBuildCommandLine>wsl make clean
+wsl make
 
 py $(SolutionDir)Scripts\create_lz4_blob.py  "$(SolutionDir)Build\eboot.bin" "$(SolutionDir)Fusion\Loader\resources\eboot.bin.compressed"</NMakeReBuildCommandLine>
     <OutDir>$(SolutionDir)Build</OutDir>
+    <NMakeCleanCommandLine>wsl make clean</NMakeCleanCommandLine>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeOutput>Daemon.exe</NMakeOutput>

@@ -43,29 +43,14 @@ bool LoadModules()
 		return false;
 	}
 
-	res = sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_SYSCORE);
-	if (res != ORBIS_OK)
-	{
-		klog("%s: Failed to load SCE_SYSMODULE_INTERNAL_SYS_CORE (%llX)", __FUNCTION__, res);
-		return false;
-	}
-
-	res = sceApplicationInitialize(); // TODO: PR to update OOSDK
-	if (res != ORBIS_OK)
-	{
-		klog("%s: sceApplicationInitialize failed (%llX)", __FUNCTION__, res);
-		return false;
-	}
-
 	ResolveLncUtils();
-
+	
 	res = sceLncUtilInitialize();
 	if (res != ORBIS_OK)
 	{
 		klog("%s: sceLncUtilInitialize failed (%llX)", __FUNCTION__, res);
 		return false;
 	}
-
 
 	klog("%s: Success!", __FUNCTION__);
 	return true;

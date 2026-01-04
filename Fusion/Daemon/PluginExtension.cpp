@@ -52,14 +52,14 @@ void PluginExtension::LoadPlugins(int pid)
     // Get the app info for the title Id.
     OrbisAppInfo info{};
     if (sceKernelGetAppInfo(pid, &info) != 0) return;
-
+    
     // Fetch the INI file.
     IniParser ini;
     if (!ini.Load(INI_PATH)) return;
-
+    
     // Keep track of loaded plugin paths to avoid duplicates.
     std::set<std::string> loadedPaths;
-
+    
     // Load plugins that apply to all titles.
     if (auto* defaults = ini.GetSection("default"))
     {
@@ -71,7 +71,7 @@ void PluginExtension::LoadPlugins(int pid)
             }
         }
     }
-
+    
     // Load title-specific plugins.
     std::string titleId(info.TitleId, strnlen(info.TitleId, 10));
     if (auto* titlePlugins = ini.GetSection(titleId))

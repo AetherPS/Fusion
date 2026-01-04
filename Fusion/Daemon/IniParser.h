@@ -12,13 +12,13 @@ public:
     {
         std::ifstream file(filename);
         if (!file.is_open()) return false;
-
+        
         std::string line, currentSection;
         while (std::getline(file, line))
         {
             line = trim(line);
             if (line.empty() || line[0] == ';' || line[0] == '#') continue;
-
+        
             if (line.front() == '[' && line.back() == ']')
             {
                 currentSection = line.substr(1, line.size() - 2);
