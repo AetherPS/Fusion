@@ -7,7 +7,7 @@ int DriverKernel::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
     switch (cmd)
     {
     case CMD_KERN_GET_BASE:
-		return KernelBase(data);
+		return GetKernelBase(data);
 
 	case CMD_KERN_READ_WRITE_MEMORY:
 		return KernelReadWrite(data);
@@ -20,7 +20,7 @@ int DriverKernel::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
     }
 }
 
-int DriverKernel::KernelBase(caddr_t data)
+int DriverKernel::GetKernelBase(caddr_t data)
 {
     Input_KernelBase* input = (Input_KernelBase*)data;
     input->KernelBase = (uint64_t)KernelBase;

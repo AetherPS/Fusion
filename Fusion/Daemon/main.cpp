@@ -47,18 +47,20 @@ int main(int argc, char** arg)
 
 	// Load the config file.
 	Config config("/data/Fusion/Settings.cfg");
-	DaemonExtension daemons(config);
 
-	sceKernelSleep(1);
-
-	if (config.Get<bool>("EnableFTP", false))
-	{
-		daemons.MountAndLaunchDaemon(FTP_DAEMON_TITLEID);
-	}
-
+	// Start DECI first so it becomes the debug agent connected to syscore.
 	if (config.Get<bool>("StartDECI", false))
 	{
 		StartDECI();
+	}
+
+	// Load any deamons from the config.
+	DaemonExtension daemons(config);
+
+	// Load the FTP Daemon.
+	if (config.Get<bool>("EnableFTP", false))
+	{
+		daemons.MountAndLaunchDaemon(FTP_DAEMON_TITLEID);
 	}
 
 	Notify("Fusion 3 Loaded\nDownload More RAM Edition");
