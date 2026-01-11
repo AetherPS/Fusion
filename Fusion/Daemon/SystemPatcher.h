@@ -7,7 +7,4 @@ public:
 
 private:
 	static void ShellCore();
-	static void ShellUI();
-
-	static inline ProcessMonitor* ShellUIMonitor;
 };

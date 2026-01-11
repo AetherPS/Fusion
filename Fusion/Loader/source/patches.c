@@ -178,10 +178,20 @@ void InstallPatches(uint64_t kernelBase)
 	*(uint8_t*)(kernelBase + addr_QAFlags + 0x3D) = 0x81;
 	*(uint8_t*)(kernelBase + addr_QAFlags + 0x3E) = 0x02;
 
+	// Feature gates?
+	*(uint8_t*)(kernelBase + addr_QAFlags + 0x36) |= 0x14;
+
 	// Enable UL/SL debugger
-	*(uint8_t*)(kernelBase + addr_QAFlags + 0x36) |= 0x4;
-	*(uint8_t*)(kernelBase + addr_QAFlags + 0x59) |= 0x2;
-	*(uint8_t*)(kernelBase + addr_QAFlags + 0x59) |= 0x1;
+	*(uint8_t*)(kernelBase + addr_QAFlags + 0x59) |= 0x3;
+
+	// Enable PSM int dev & int dev
+	*(uint8_t*)(kernelBase + addr_QAFlags + 0x58) |= 0x14;
+
+	// Debug menu
+	*(uint8_t*)(kernelBase + addr_QAFlags + 0x5A) |= 0x1;
+
+	// Store Mode
+	*(uint8_t*)(kernelBase + addr_QAFlags + 0x78) |= 0x1;
 
 	// Patch to remove devkit check in dmamini_initialize_ioctl
 	kmem = (uint8_t*)kernelBase + patch_dmamini0;

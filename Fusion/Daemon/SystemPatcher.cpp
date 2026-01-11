@@ -3,15 +3,7 @@
 
 void SystemPatcher::Init()
 {
-	ShellUIMonitor = new ProcessMonitor(GetPidByName("SceShellUI"));
-	ShellUIMonitor->OnRespawn = [=]() -> void
-	{
-		sceKernelSleep(5);
-		ShellUI();
-	};
-
 	ShellCore();
-	ShellUI();
 }
 
 void SystemPatcher::ShellCore()
@@ -58,31 +50,6 @@ void SystemPatcher::ShellCore()
 			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DisablePkgPatchCheck1, (void*)"\xEB", 1, true);
 			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DisablePkgPatchCheck2, (void*)"\xEB", 1, true);
 			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DisablePkgPatchCheck3, (void*)"\x48\x31\xC0\xC3", 4, true);
-		}
-	}
-}
-
-void SystemPatcher::ShellUI()
-{
-	auto pid = GetPidByName("SceShellUI");
-	
-	OrbisLibraryInfo libraries[255];
-	int libraryCount;
-	int res = Fusion::GetLibraryList(pid, libraries, 255, &libraryCount);
-	if (res != 0)
-	{
-		Logger::Error("Failed to get process libraries for pid %d for reason %llX", pid, res);
-		return;
-	}
-
-	for (int i = 0; i < libraryCount; i++)
-	{
-		auto baseAddress = libraries[i].MapBase;
-
-		if (strstr(libraries[i].Path, "libkernel_sys.sprx"))
-		{
-			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DebugMenuPatch1, (void*)"\xB8\x01\x00\x00\x00\xC3", 6, true); // sceKernelGetDebugMenuModeForRcmgr
-			Fusion::ReadWriteMemory(pid, baseAddress + Offsets::DebugMenuPatch2, (void*)"\xB8\x01\x00\x00\x00\xC3", 6, true); // sceKernelGetUtokenStoreModeForRcmgr
 		}
 	}
 }
