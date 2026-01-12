@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3F5FEC7C-3907-409F-AF99-A14BACC1B2F2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Fusion</RootNamespace>
+    <AssemblyName>ShellUIManaged</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="app">
+      <HintPath>..\..\..\External\ShellUI Libs\app.exe</HintPath>
+    </Reference>
+    <Reference Include="I18N.CJK">
+      <HintPath>..\..\..\External\ShellUI Libs\I18N.CJK.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.MidEast">
+      <HintPath>..\..\..\External\ShellUI Libs\I18N.MidEast.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.Other">
+      <HintPath>..\..\..\External\ShellUI Libs\I18N.Other.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.Rare">
+      <HintPath>..\..\..\External\ShellUI Libs\I18N.Rare.dll</HintPath>
+    </Reference>
+    <Reference Include="I18N.West">
+      <HintPath>..\..\..\External\ShellUI Libs\I18N.West.dll</HintPath>
+    </Reference>
+    <Reference Include="JSC.Net">
+      <HintPath>..\..\..\External\ShellUI Libs\JSC.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.CSharp">
+      <HintPath>..\..\..\External\ShellUI Libs\Mono.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite">
+      <HintPath>..\..\..\External\ShellUI Libs\Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Tds">
+      <HintPath>..\..\..\External\ShellUI Libs\Mono.Data.Tds.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Security">
+      <HintPath>..\..\..\External\ShellUI Libs\Mono.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.PlayStation">
+      <HintPath>..\..\..\External\ShellUI Libs\Newtonsoft.Json.PlayStation.dll</HintPath>
+    </Reference>
+    <Reference Include="platform">
+      <HintPath>..\..\..\External\ShellUI Libs\platform.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactNative.Components.Vsh">
+      <HintPath>..\..\..\External\ShellUI Libs\ReactNative.Components.Vsh.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactNative.Debug.DevSupport">
+      <HintPath>..\..\..\External\ShellUI Libs\ReactNative.Debug.DevSupport.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactNative.Modules.Vsh">
+      <HintPath>..\..\..\External\ShellUI Libs\ReactNative.Modules.Vsh.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactNative.Modules.Vsh.Gct.Telemetry">
+      <HintPath>..\..\..\External\ShellUI Libs\ReactNative.Modules.Vsh.Gct.Telemetry.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactNative.Modules.Vsh.Gct.Telemetry2">
+      <HintPath>..\..\..\External\ShellUI Libs\ReactNative.Modules.Vsh.Gct.Telemetry2.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactNative.PUI">
+      <HintPath>..\..\..\External\ShellUI Libs\ReactNative.PUI.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactNative.Vsh.Common">
+      <HintPath>..\..\..\External\ShellUI Libs\ReactNative.Vsh.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Facebook.CSSLayout">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Facebook.CSSLayout.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.PlayStation.BclExtensions">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.PlayStation.BclExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.PlayStation.Core">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.PlayStation.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.PlayStation.Ime">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.PlayStation.Ime.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.PlayStation.Json">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.PlayStation.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.PlayStation.Orbis">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.PlayStation.Orbis.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.PlayStation.Orbis.Speech">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.PlayStation.Orbis.Speech.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.PlayStation.PUI">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.PlayStation.PUI.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.PlayStation.PUIPlatform">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.PlayStation.PUIPlatform.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Accessor">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Accessor.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Accessor.Db">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Accessor.Db.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Accessor.Db.Notify">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Accessor.Db.Notify.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.AppDbWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.AppDbWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.AppInstUtilWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.AppInstUtilWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.AutoMounterWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.AutoMounterWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.BackupRestoreUtil">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.BackupRestoreUtil.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.CloudClient">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.CloudClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.DataTransfer">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.DataTransfer.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Db.Shared">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Db.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.DbPreparationWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.DbPreparationWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.DbRecoveryUtilityWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.DbRecoveryUtilityWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.ErrorDialogUtilWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.ErrorDialogUtilWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.EventServiceWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.EventServiceWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.FileSelector">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.FileSelector.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.FileSelectorAdvance">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.FileSelectorAdvance.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Friend">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Friend.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.GameListRetrieverWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.GameListRetrieverWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Gls.GlsSharedMediaView">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Gls.GlsSharedMediaView.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Gls.NativeCall">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Gls.NativeCall.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.GriefReportStorage">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.GriefReportStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.JsExtension">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.JsExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.KernelSysWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.KernelSysWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.LncUtilWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.LncUtilWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Lx">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Lx.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.MarlinDownloaderWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.MarlinDownloaderWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Messages.DbAccessLib">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Messages.DbAccessLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.MimeType">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.MimeType.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.MorpheusUpdWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.MorpheusUpdWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.MyGameList">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.MyGameList.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.AppInfo">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.AppInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Asm">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Asm.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.AuCheck">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.AuCheck.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Common">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.GameIntent">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.GameIntent.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.IdMapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.IdMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Manager">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Manager.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Papc">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Papc.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Pbtc">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Pbtc.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.RifManager">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.RifManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.ServiceChecker">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.ServiceChecker.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.ServiceChecker2">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.ServiceChecker2.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Sns">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Sns.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Tmdb">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Tmdb.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Trophy">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Trophy.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Uds">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Uds.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Webapi">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Webapi.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Np.Webapi2">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Np.Webapi2.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Orbis.AbstractStorage">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Orbis.AbstractStorage.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Orbis.Bgft">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Orbis.Bgft.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Orbis.ContentManager">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Orbis.ContentManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.PartyCommon">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.PartyCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Passcode">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Passcode.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.PatchCheckerClientWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.PatchCheckerClientWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.ProfileCache">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.ProfileCache.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.PsnMessageUtil">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.PsnMessageUtil.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.PsnUtil">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.PsnUtil.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Registry">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Registry.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.RequestShareScreen">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.RequestShareScreen.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.RequestShareStorageWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.RequestShareStorageWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.RnpsAppMgrWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.RnpsAppMgrWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.SessionInvitation">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.SessionInvitation.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.ShareGuideScene">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.ShareGuideScene.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.ShareServerPostWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.ShareServerPostWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.ShellCoreUtilWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.ShellCoreUtilWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Sl2.NativeQueueClient">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Sl2.NativeQueueClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Sl2.Sl2Client">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Sl2.Sl2Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Sl2.Sl2Common">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Sl2.Sl2Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Sl2.Sl2Deliver">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Sl2.Sl2Deliver.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.SQLite">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.SQLiteAux">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.SQLiteAux.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Sticker.StickerLibAccessor">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Sticker.StickerLibAccessor.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.SyscallWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.SyscallWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.SysfileUtilWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.SysfileUtilWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.SystemLoggerUtilWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.SystemLoggerUtilWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.SystemLoggerWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.SystemLoggerWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.SysUtilWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.SysUtilWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.TeamChat.TeamChatAccessor">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.TeamChat.TeamChatAccessor.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Theme">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Theme.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.UpdateServiceWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.UpdateServiceWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.UsbStorageScene">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.UsbStorageScene.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.UserServiceWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.UserServiceWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.VideoPlayer">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.VideoPlayer.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.VideoServiceWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.VideoServiceWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.VoiceAndAgent">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.VoiceAndAgent.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.VoiceMsg.VoiceMsgWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.VoiceMsg.VoiceMsgWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.VrEnvironment">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.VrEnvironment.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.WebBrowser">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.WebBrowser.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Webbrowser.XdbWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Webbrowser.XdbWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.Webbrowser.XutilWrapper">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.Webbrowser.XutilWrapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Sce.Vsh.WebViewDialog">
+      <HintPath>..\..\..\External\ShellUI Libs\Sce.Vsh.WebViewDialog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp">
+      <HintPath>..\..\..\External\ShellUI Libs\websocket-sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Custom Menu\CustomMenu.cs" />
+    <Compile Include="Features\Devkit\DebugTitleIdLabel.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\Detour.cs" />
+    <Compile Include="Custom Menu\Fusion Menu\FusionMenuHandler.cs" />
+    <Compile Include="Custom Menu\Fusion Menu\FusionPlugin.cs" />
+    <Compile Include="ModuleMain.cs" />
+    <Compile Include="Features\PackageInstaller.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Custom Menu\ResourceManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Fusion\Shell UI\ShellUI\Resources\" /Y /I</PostBuildEvent>
+  </PropertyGroup>
+</Project>
