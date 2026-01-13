@@ -165,7 +165,7 @@ void InstallPatches(uint64_t kernelBase)
 	kmem[0] = 0xEB;
 	kmem[1] = 0x1B;
 
-	// Mount Fuse filesystem as root. Credi: Z80 & Faultz
+	// Mount Fuse filesystem as root. Credit: Z80 & Faultz
 	kmem = (uint8_t*)kernelBase + patch_fuseroot1;
 	kmem[0] = 0x90;
 	kmem[1] = 0x90;
