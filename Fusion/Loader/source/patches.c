@@ -206,7 +206,7 @@ void InstallPatches(uint64_t kernelBase)
 	uint64_t mdbgAssistModePatches[] = offsets_mdbgAssistMode;
 	for (int i = 0; i < sizeof(mdbgAssistModePatches) / sizeof(uint64_t); i++)
 	{
-		kmem = (uint8_t*)kernelBase + patch_isAssistMode + mdbgAssistModePatches[i];
+		kmem = (uint8_t*)kernelBase + patch_mdbg_basic + mdbgAssistModePatches[i];
 		kmem[0] = 0xB8;
 		kmem[1] = 0x01;
 		kmem[2] = 0x00;
