@@ -13,8 +13,13 @@
 #include <monosgen.h>
 
 // libUtils
-#include "StringExt.h"
-#include "Logging.h"
-#include "Logger.h"
-#include "Patcher.h"
-#include "PatchManager.h"
+#include <StringExt.h>
+#include <Logging.h>
+#include <Logger.h>
+#include <Patcher.h>
+
+// libDetour
+#include <Detour.h>
+#include <DetourManager.h>
+
+extern DetourManager* Manager;

@@ -8,3 +8,4 @@
 
 // Additional Libraries
 #pragma comment(lib, "libUtils.a")
+#pragma comment(lib, "libDetour.a")

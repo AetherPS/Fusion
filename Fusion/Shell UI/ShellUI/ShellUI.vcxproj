@@ -58,7 +58,7 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(SolutionDir)External\libUtils\libUtils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libDetour;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppExceptions>true</CppExceptions>
       <CppLanguageStd>Cpp17</CppLanguageStd>
     </ClCompile>
@@ -80,7 +80,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <OptimizationLevel>Level2</OptimizationLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(SolutionDir)External\libUtils\libUtils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\StubMaker\Include;$(SolutionDir)External\FusionShared;$(SolutionDir)External\libFusionDriver\Include;$(SolutionDir)External\libUtils\libUtils;$(SolutionDir)External\libUtils\libDetour;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CppExceptions>true</CppExceptions>
       <CppLanguageStd>Cpp17</CppLanguageStd>
     </ClCompile>
@@ -100,6 +100,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Exports.cpp" />
     <ClCompile Include="prx.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">Create</PrecompiledHeader>
@@ -107,6 +108,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Exports.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

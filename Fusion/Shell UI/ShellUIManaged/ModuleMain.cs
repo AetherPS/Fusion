@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fusion.Internal;
+using System;
 
 namespace Fusion
 {
@@ -11,14 +12,10 @@ namespace Fusion
             {
                 Console.WriteLine("=== Fusion UI Loading ===");
 
-                // Initialize managers
-                ResourceManager.Install();
-                PackageInstaller.Install();
-                CustomMenu.Initialize();
-
-                DebugTitleIdLabel.Install();
+                ResourceManager.Initialize();
+                MethodOverrideManager.Initialize();
                 DebugTitleIdLabel.ShowLabels = true;
-
+                
                 // Register custom plugin
                 CustomMenu.RegisterPlugin<FusionPlugin>(FusionPlugin.PluginName);
 

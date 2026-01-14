@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fusion.Internal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -8,25 +9,12 @@ namespace Fusion
     public static class ResourceManager
     {
         private static readonly Dictionary<string, byte[]> _resources = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
-        private static Detour _detour;
 
-        public static void Install()
+        public static void Initialize()
         {
-            var hook = typeof(ResourceManager).GetMethod(nameof(GetManifestResourceStream_Hook),
-                BindingFlags.Static | BindingFlags.Public);
-
-            _detour = Detour.Create(
-                typeof(Assembly),
-                "GetManifestResourceStream",
-                new[] { typeof(string) },
-                hook
-            );
-            
-            // Can probably store these as a resource.
             LoadFromFile("/user/data/Fusion/Resources/settings_root.xml", "settings_root.xml");
             LoadFromFile("/user/data/Fusion/Resources/fusion_menu.xml", "fusion_menu.xml");
-
-            Console.WriteLine("[ResourceManager] Installed");
+            Console.WriteLine("[ResourceManager] Initialized");
         }
 
         public static void Register(string name, string xml)
@@ -50,10 +38,6 @@ namespace Fusion
                     _resources[resourceName] = File.ReadAllBytes(path);
                     Console.WriteLine($"[ResourceManager] Loaded: {resourceName}");
                 }
-                else
-                {
-                    Console.WriteLine($"[ResourceManager] File not found: {path}");
-                }
             }
             catch (Exception ex)
             {
@@ -61,20 +45,17 @@ namespace Fusion
             }
         }
 
-        public static Stream GetManifestResourceStream_Hook(Assembly instance, string name)
+        [MethodOverride(typeof(Assembly))]
+        public static Stream GetManifestResourceStream(Assembly instance, string name)
         {
-            Console.WriteLine($"[ResourceManager] Request: '{name}'");
-
             if (!string.IsNullOrEmpty(name))
             {
-                // Direct match
                 if (_resources.TryGetValue(name, out var data))
                 {
                     Console.WriteLine($"[ResourceManager] Override (exact): {name}");
                     return new MemoryStream(data);
                 }
 
-                // Suffix match
                 foreach (var kvp in _resources)
                 {
                     if (name.EndsWith(kvp.Key, StringComparison.OrdinalIgnoreCase) ||
@@ -86,16 +67,13 @@ namespace Fusion
                 }
             }
 
-            return _detour.CallOriginal(() => instance.GetManifestResourceStream(name));
+            return MethodOverrideManager.InvokeOriginal<Stream>(instance, new object[] { name });
         }
 
-        public static void Uninstall()
+        public static void Clear()
         {
-            _detour?.Dispose();
-            _detour = null;
             _resources.Clear();
-
-            Console.WriteLine("[ResourceManager] Uninstalled");
+            Console.WriteLine("[ResourceManager] Cleared");
         }
     }
 }

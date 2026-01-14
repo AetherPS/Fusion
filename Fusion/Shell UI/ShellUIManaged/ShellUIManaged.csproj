@@ -410,13 +410,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Custom Menu\CustomMenu.cs" />
+    <Compile Include="Features\CheckRunningOnMainThreadFix.cs" />
     <Compile Include="Features\Devkit\DebugTitleIdLabel.cs" />
+    <Compile Include="Internal\MethodOverrideAttribute.cs" />
+    <Compile Include="Internal\MethodOverrideManager.cs" />
+    <Compile Include="Internal\Reflect.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Utils\Detour.cs" />
     <Compile Include="Custom Menu\Fusion Menu\FusionMenuHandler.cs" />
     <Compile Include="Custom Menu\Fusion Menu\FusionPlugin.cs" />
     <Compile Include="ModuleMain.cs" />
@@ -433,6 +436,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)$(TargetFileName)" "$(SolutionDir)Fusion\Shell UI\ShellUI\Resources\" /Y /I</PostBuildEvent>

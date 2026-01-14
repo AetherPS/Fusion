@@ -1,5 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using Fusion.Internal;
+using Sce.Vsh.ShellUI.Settings.PkgInstaller;
+using System;
 
 namespace Fusion
 {
@@ -11,44 +12,8 @@ namespace Fusion
             "/user/data/Fusion/pkg",
         };
 
-        private static Detour _detour;
-        private static MethodInfo _searchDirMethod;
-
-        public static void Install()
-        {
-            var searchJobType = Type.GetType("Sce.Vsh.ShellUI.Settings.PkgInstaller.SearchJob, app");
-
-            if (searchJobType == null)
-            {
-                Console.WriteLine("[PackageInstaller] SearchJob type not found");
-                return;
-            }
-
-            _searchDirMethod = searchJobType.GetMethod("SearchDir", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            if (_searchDirMethod == null)
-            {
-                Console.WriteLine("[PackageInstaller] SearchDir method not found");
-                return;
-            }
-
-            var hook = typeof(PackageInstaller).GetMethod(nameof(SearchDisc_Hook), BindingFlags.Static | BindingFlags.Public);
-
-            _detour = Detour.Create(searchJobType, "SearchDisc", Type.EmptyTypes, hook);
-
-            Console.WriteLine("[PackageInstaller] Installed");
-        }
-
-        public static void Uninstall()
-        {
-            _detour?.Dispose();
-            _detour = null;
-            _searchDirMethod = null;
-
-            Console.WriteLine("[PackageInstaller] Uninstalled");
-        }
-
-        public static void SearchDisc_Hook(object instance)
+        [MethodOverride(typeof(SearchJob))]
+        public static void SearchDisc(SearchJob instance)
         {
             Console.WriteLine("[PackageInstaller] SearchDisc -> custom paths");
 
@@ -57,11 +22,11 @@ namespace Fusion
                 try
                 {
                     Console.WriteLine($"[PackageInstaller] Searching: {path}");
-                    _searchDirMethod.Invoke(instance, new object[] { path, null });
+                    Reflect.Call(instance, "SearchDir", path, null);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[PackageInstaller] Error searching {path}: {ex.Message}");
+                    Console.WriteLine($"[PackageInstaller] Error: {ex.Message}");
                 }
             }
         }
