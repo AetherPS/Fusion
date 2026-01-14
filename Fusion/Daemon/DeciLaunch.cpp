@@ -95,6 +95,19 @@ void StartDECI()
 	// Start the DECI server that runs on SceShellCore.
 	StartDecidServer();
 
+	// Patch a bug on newer firmwares for launching DECI.
+	if (Offsets::SyscoreDECIPatch != 0)
+	{
+		uint64_t bugPatchAddress = Fusion::GetRemoteAddress(sysCorePid, (int)0, Offsets::SyscoreDECIPatch);
+		if (bugPatchAddress <= 0)
+		{
+			Logger::Error("Failed to get BugPatchAddress address.");
+			return;
+		}
+
+		Fusion::ReadWriteMemory(sysCorePid, bugPatchAddress, (void*)"\xC3", 1, true);
+	}
+
 	// Mount the fuse directories.
 	MountFuse(sysCorePid, "/hostapp", "/dev/fuse0");
 	MountFuse(sysCorePid, "/host", "/dev/fuse1");

@@ -41,10 +41,11 @@ public:
 			StartDecidServer = 0x251F60;
 			MountFuse = 0x12C0;
 			DevPortThread = 0x1480;
+			SyscoreDECIPatch = 0x0;
 
 			break;
 
-		case 0x12020001:
+		case 0x12020011:
 
 			// ShellCore
 			IsGenuineCEX1 = 0x0016F5A4;
@@ -70,10 +71,12 @@ public:
 			StartDecidServer = 0x255EC0;
 			MountFuse = 0x12A0;
 			DevPortThread = 0x1480;
+			SyscoreDECIPatch = 0x3A3D0;
 
 			break;
 
 		default:
+			Logger::Info("Unknown Firmware: %X\n", SoftwareVersion.Version);
 			return false;
 		}
 
@@ -104,6 +107,7 @@ public:
 	static inline uint64_t StartDecidServer;
 	static inline uint64_t MountFuse;
 	static inline uint64_t DevPortThread;
+	static inline uint64_t SyscoreDECIPatch;
 
 private:
 
