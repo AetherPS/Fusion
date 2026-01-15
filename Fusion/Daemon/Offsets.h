@@ -33,10 +33,6 @@ public:
 			DisablePkgPatchCheck2 = 0x003C5EA7;
 			DisablePkgPatchCheck3 = 0x003C8540;
 
-			// ShellUI
-			DebugMenuPatch1 = 0x0001D1C0;
-			DebugMenuPatch2 = 0x0001D520;
-
 			// DECI
 			StartDecidServer = 0x251F60;
 			MountFuse = 0x12C0;
@@ -63,15 +59,63 @@ public:
 			DisablePkgPatchCheck2 = 0x003CA567;
 			DisablePkgPatchCheck3 = 0x003CD7B0;
 
-			// ShellUI
-			DebugMenuPatch1 = 0x0001D100;
-			DebugMenuPatch2 = 0x0001D460;
-
 			// DECI
 			StartDecidServer = 0x255EC0;
 			MountFuse = 0x12A0;
 			DevPortThread = 0x1480;
 			SyscoreDECIPatch = 0x3A3D0;
+
+			break;
+
+		case 0x12508001:
+
+			// ShellCore
+			IsGenuineCEX1 = 0x0016F5A4;
+			IsGenuineCEX2 = 0x00874644;
+			IsGenuineCEX3 = 0x008C4962;
+			IsGenuineCEX4 = 0x00A28224;
+			IsAssistMode1 = 0x0016F5D2;
+			IsAssistMode2 = 0x0024E11C;
+			IsAssistMode3 = 0x00874672;
+			IsAssistMode4 = 0x00A28252;
+			EnableFakePkg = 0x003DE07F;
+			FakeText = 0x00FD0E19;
+			MountDataIntoSandbox = 0x00323380;
+			DisablePkgPatchCheck1 = 0x001389A0;
+			DisablePkgPatchCheck2 = 0x003CA3A7;
+			DisablePkgPatchCheck3 = 0x003CD5F0;
+
+			// DECI
+			StartDecidServer = 0x00255E90;
+			MountFuse = 0x12A0;
+			DevPortThread = 0x1480;
+			SyscoreDECIPatch = 0x3A3D0;
+
+			break;
+
+		case 0x13008001:
+
+			// ShellCore
+			IsGenuineCEX1 = 0x0016F5A4;
+			IsGenuineCEX2 = 0x00874674;
+			IsGenuineCEX3 = 0x008C4992;
+			IsGenuineCEX4 = 0x00A28244;
+			IsAssistMode1 = 0x0016F5D2;
+			IsAssistMode2 = 0x0024E11C;
+			IsAssistMode3 = 0x008746A2;
+			IsAssistMode4 = 0x00A28272;
+			EnableFakePkg = 0x003DE07F;
+			FakeText = 0x00FD0E59;
+			MountDataIntoSandbox = 0x00323380;
+			DisablePkgPatchCheck1 = 0x001389A0;
+			DisablePkgPatchCheck2 = 0x003CA3A7;
+			DisablePkgPatchCheck3 = 0x003CD5F0;
+
+			// DECI
+			StartDecidServer = 0x00255E90;
+			MountFuse = 0x12A0;
+			DevPortThread = 0x1480;
+			SyscoreDECIPatch = 0x0;
 
 			break;
 
