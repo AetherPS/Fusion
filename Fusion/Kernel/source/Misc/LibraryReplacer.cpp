@@ -29,12 +29,14 @@ int LibraryReplacer::sys_dynlib_load_prxHook(thread* td, dynlib_load_prx_args* a
 	kprintf("sys_dynlib_load_prx: %s %d, %s\n", titleId, td->td_proc->p_pid, fileName);
 #endif
 
+#ifdef FF_SHELL_JIT
 	// Load the razer cpu profiler for the ShellUI JIT mode.
 	if (strstr(fileName, "libScePsm.sprx"))
 	{
 		int handleOut = 0;
 		dynlib_load_prx(td, "/system_ex/common_ex/lib/libSceRazorCpu.sprx", 0, &handleOut);
 	}
+#endif
 
 	// Get the path of the title specific replacement library.
 	char prxReplacePath[0x200];

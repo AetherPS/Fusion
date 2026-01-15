@@ -16,5 +16,6 @@
 #define FF_DevAct
 #define FF_Dipsw
 // #define FF_TTYRedirect
+// #define FF_SHELL_JIT
 
 void PrintFeatureFlags();
