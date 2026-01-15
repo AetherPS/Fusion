@@ -4,10 +4,12 @@ using Sce.Vsh.ShellUI;
 using Sce.Vsh.ShellUI.Settings.Core;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace Fusion
 {
-    public static class CustomMenu
+    public static class SettingsApplicationHooks
     {
         private static readonly Dictionary<string, Func<AssetManager, SettingsPlugin>> _customPlugins
             = new Dictionary<string, Func<AssetManager, SettingsPlugin>>();
@@ -40,6 +42,36 @@ namespace Fusion
             }
 
             return MethodOverrideManager.InvokeOriginal<SettingsPlugin>(instance, new object[] { pluginName });
+        }
+
+        [MethodOverride(typeof(SettingsApplication))]
+        public static Stream ReadFromAssembly(SettingsApplication instance, string fileName)
+        {
+            var sanitizedFileName = fileName.Replace("/", ".");
+
+            var execuringAssembly = Assembly.GetExecutingAssembly();
+            var callingAssembly = Assembly.GetCallingAssembly();
+
+            return execuringAssembly.GetManifestResourceStream("Fusion.Settings." + sanitizedFileName) ?? callingAssembly.GetManifestResourceStream("Sce.Vsh.ShellUI.src.Sce.Vsh.ShellUI.Settings.Plugins." + sanitizedFileName);
+        }
+
+        [MethodOverride(typeof(SettingsApplication))]
+        public static void StartSettingsPage(SettingsApplication instance)
+        {
+            var function = instance["function"];
+            if (function == "fusion_menu")
+            {
+                var uiManager = Reflect.Get<UIManager>(instance, "uiManager");
+
+                uiManager.Push(
+                    "FusionSettings/data/fusion_menu.xml",
+                    "id_fusion_menu",
+                    TransitionAnimationType.Fade
+                );
+                return;
+            }
+
+            MethodOverrideManager.InvokeOriginal(instance, new object[] { });
         }
     }
 }

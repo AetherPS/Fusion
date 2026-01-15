@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<system_settings version="1.0" plugin="fusion_plugin">
+
+	<!-- Fusion Menu -->
+	<setting_list id="id_fusion_menu" title="Fusion Menu" initial_focus_to="id_game_package_installer">
+
+		<!-- Package Installer -->
+		<link id="id_game_package_installer" title="Package Installer" icon="manifest://FusionSettings/data/icon_pkg.png" file="PkgInstaller/data/pkginstaller.xml" />
+
+		<!-- Disable System Updates -->
+		<button id="id_disable_system_updates" title="Disable System Updates"/>
+
+		<!-- System Settings -->
+		<setting_list id="system_settings" title="System Settings" icon="manifest://FusionSettings/data/icon_system_settings.png" initial_focus_to="id_licenseactivation">
+
+			<!-- License Activation -->
+			<setting_list id="id_licenseactivation" title="License Activation" second_title="Enable and disable codecs for consuming media.">
+
+				<!-- MPEG-2 -->
+				<toggle_switch id="id_licenseactivation_mpeg2" title="MPEG-2" key="/SYSTEM/ACTIVATION/mpeg2"/>
+
+				<!-- VC-1 -->
+				<toggle_switch id="id_licenseactivation_vc1" title="VC-1" key="/SYSTEM/ACTIVATION/vc1"/>
+
+				<!-- HEVC -->
+				<toggle_switch id="id_licenseactivation_hevc" title="HEVC" key="/SYSTEM/ACTIVATION/hevc"/>
+
+				<!-- HEVC software decoder -->
+				<toggle_switch id="id_licenseactivation_hevc_soft" title="HEVC software decoder" key="/SYSTEM/ACTIVATION/hevc_soft"/>
+
+			</setting_list>
+
+			<!-- External HDD -->
+			<link id="id_external_hdd" title="External HDD" file="external_hdd.xml" />
+
+			<!-- NP Debug -->
+			<toggle_switch id="id_np_debug" title="NP Debug" second_title="Shows NP debugging popups." key="/NP/debug"/>
+
+		</setting_list>
+		
+	</setting_list>
+
+</system_settings>

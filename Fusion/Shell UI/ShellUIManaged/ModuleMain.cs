@@ -1,4 +1,6 @@
 ﻿using Fusion.Internal;
+using Fusion.TopMenu;
+using Sce.Vsh.ShellUI.TopMenu;
 using System;
 
 namespace Fusion
@@ -12,19 +14,22 @@ namespace Fusion
             {
                 Console.WriteLine("=== Fusion UI Loading ===");
 
-                ResourceManager.Initialize();
+                ManifestFileUriScheme.Initialize();
                 MethodOverrideManager.Initialize();
                 DebugTitleIdLabel.ShowLabels = true;
                 
                 // Register custom plugin
-                CustomMenu.RegisterPlugin<FusionPlugin>(FusionPlugin.PluginName);
+                SettingsApplicationHooks.RegisterPlugin<FusionPlugin>(FusionPlugin.PluginName);
+
+                var m_systemAreaPanel = Reflect.Get<SystemAreaPanel>(SystemAreaManager.Instance, "m_systemAreaPanel");
+                SystemAreaPanelHooks.AddFusionMenu(m_systemAreaPanel);
 
                 Console.WriteLine("=== Fusion UI Loaded ===");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 // Log exception (if you have logging)
-                System.Console.WriteLine($"OnLoad failed: {ex.Message}");
+                Console.WriteLine($"OnLoad failed: {ex.Message}");
                 throw;
             }
         }
@@ -35,9 +40,9 @@ namespace Fusion
             {
 
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
-                System.Console.WriteLine($"OnUnload failed: {ex.Message}");
+                Console.WriteLine($"OnUnload failed: {ex.Message}");
             }
         }
     }

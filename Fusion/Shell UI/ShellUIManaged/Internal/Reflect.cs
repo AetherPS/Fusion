@@ -32,6 +32,7 @@ namespace Fusion.Internal
     public static class Reflect
     {
         private static readonly Dictionary<string, MethodInfo> _methodCache = new Dictionary<string, MethodInfo>();
+        private static readonly Dictionary<string, Type> _typeCache = new Dictionary<string, Type>();
         private const BindingFlags All = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
         /// <summary>
@@ -118,6 +119,73 @@ namespace Fusion.Internal
         {
             var p = instance.GetType().GetProperty(property, All);
             p?.SetValue(instance, value);
+        }
+
+        /// <summary>
+        /// Find a type by name (supports internal types): Reflect.FindType("MyNamespace.MyInternalClass")
+        /// </summary>
+        public static Type FindType(string fullName, Assembly assembly = null)
+        {
+            if (_typeCache.TryGetValue(fullName, out var cached))
+                return cached;
+
+            Type type = null;
+
+            if (assembly != null)
+            {
+                type = assembly.GetType(fullName, false);
+            }
+            else
+            {
+                // Search all loaded assemblies
+                foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    type = asm.GetType(fullName, false);
+                    if (type != null)
+                        break;
+                }
+            }
+
+            if (type == null)
+                throw new TypeLoadException($"Type not found: {fullName}");
+
+            _typeCache[fullName] = type;
+            return type;
+        }
+
+        /// <summary>
+        /// Create an instance of an internal type: Reflect.Create("MyNamespace.MyClass", arg1, arg2)
+        /// </summary>
+        public static object Create(string typeName, params object[] args)
+        {
+            var type = FindType(typeName);
+            return Activator.CreateInstance(type, All, null, args, null);
+        }
+
+        /// <summary>
+        /// Create an instance with return type: Reflect.Create&lt;T&gt;("MyNamespace.MyClass", arg1)
+        /// </summary>
+        public static T Create<T>(string typeName, params object[] args)
+        {
+            return (T)Create(typeName, args);
+        }
+
+        /// <summary>
+        /// Call a method on an internal type by name: Reflect.CallByType("MyNamespace.MyClass", instance, "Method", args)
+        /// </summary>
+        public static void CallByType(string typeName, object instance, string method, params object[] args)
+        {
+            var type = FindType(typeName);
+            GetMethod(type, method, args.Length).Invoke(instance, args);
+        }
+
+        /// <summary>
+        /// Call a method with return on an internal type: Reflect.CallByType&lt;T&gt;("MyNamespace.MyClass", instance, "Method", args)
+        /// </summary>
+        public static T CallByType<T>(string typeName, object instance, string method, params object[] args)
+        {
+            var type = FindType(typeName);
+            return (T)GetMethod(type, method, args.Length).Invoke(instance, args);
         }
 
         private static MethodInfo GetMethod(Type type, string name, int paramCount)
