@@ -115,7 +115,7 @@ public:
 			StartDecidServer = 0x00255E90;
 			MountFuse = 0x12A0;
 			DevPortThread = 0x1480;
-			SyscoreDECIPatch = 0x0;
+			SyscoreDECIPatch = 0x3A3D0;
 
 			break;
 
