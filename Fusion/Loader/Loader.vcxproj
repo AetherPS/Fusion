@@ -45,14 +45,10 @@
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
-
-xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
-
-xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
@@ -66,14 +62,10 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
-
-xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy
-
-xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 </NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
@@ -91,7 +83,6 @@ xcopy "$(ProjectDir)$(NMakeOutput)" "$(OutDir)" /K /D /H /Y</NMakeReBuildCommand
     <None Include="resources\param.sfo.compressed" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\asm.s" />
     <ClCompile Include="source\compressedblob.c" />
     <ClCompile Include="source\dynlib.c" />
     <ClCompile Include="source\elf.c" />

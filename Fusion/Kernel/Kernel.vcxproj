@@ -42,12 +42,10 @@
     <NMakePreprocessorDefinitions>SOFTWARE_VERSION=900</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-
-xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Fusion\Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-
-xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Fusion\Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
@@ -60,12 +58,10 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1202</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-
-xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Fusion\Loader\resources\" /K /D /H /Y</NMakeBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-
-xcopy "$(ProjectDir)Kernel.elf" "$(SolutionDir)Fusion\Loader\resources\" /K /D /H /Y</NMakeReBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
@@ -80,7 +76,6 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <None Include="crt0.s" />
     <None Include="Linker" />
     <None Include="Makefile" />
-    <None Include="source\Utils\Asm.s" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Driver\DriverKernel.cpp" />

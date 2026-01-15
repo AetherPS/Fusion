@@ -1,6 +1,5 @@
 OUTPUT_FORMAT("elf64-x86-64", "elf64-x86-64", "elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
-
 ENTRY(_start)
 
 PHDRS
@@ -14,16 +13,25 @@ PHDRS
 SECTIONS
 {
 	. = 0x926200000;
-	.text : {
+	
+	.text : ALIGN(0x1000) {
 		*(.text.start)
-		*(.text*)
+		*(.text .text.*)
 	} : code_seg
-	.rodata : {
-		*(.rodata)
-		*(.rodata*)
+	
+	.rodata : ALIGN(0x1000) {
+		*(.rodata .rodata.*)
 	} : rdata_seg
-	.data : { *(.data) } : data_seg
-	.bss  : { *(.bss) } : bss_seg
+	
+	.data : ALIGN(0x1000) { 
+		*(.data .data.*)
+	} : data_seg
+	
+	.bss : ALIGN(0x1000) { 
+		*(.bss .bss.*)
+		*(COMMON)
+	} : bss_seg
+	
 	/DISCARD/ : {
 		*(.comment)
 		*(.note.GNU-stack)

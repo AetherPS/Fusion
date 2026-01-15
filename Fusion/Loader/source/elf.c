@@ -141,7 +141,7 @@ int relocate_elf(void* elf, void* exec) {
 		struct Elf64_Shdr* shdr = elf_section(ehdr, i);
 
 		// check table
-		if (shdr->sh_type == SHT_REL)
+		if (shdr->sh_type == SHT_RELA)
 		{
 			// process each entry in the table
 			for (int j = 0; j < shdr->sh_size / shdr->sh_entsize; j++)

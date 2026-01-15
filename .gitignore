@@ -17,6 +17,7 @@
 *.7z
 Fusion-*.bin
 eboot.bin.compressed
+*.sym
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

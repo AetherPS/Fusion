@@ -42,9 +42,6 @@
     <None Include="Linker" />
     <None Include="Makefile" />
     <None Include="crt0.s" />
-    <None Include="source\Utils\Asm.s">
-      <Filter>source\Utils</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">

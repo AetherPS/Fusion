@@ -50,9 +50,6 @@
     <ClCompile Include="source\kernel.c">
       <Filter>source\Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="source\asm.s">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="source\dynlib.c">
       <Filter>source\Utils</Filter>
     </ClCompile>
