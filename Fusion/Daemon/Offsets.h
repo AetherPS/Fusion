@@ -143,10 +143,6 @@ public:
 	static inline uint64_t DisablePkgPatchCheck2;
 	static inline uint64_t DisablePkgPatchCheck3;
 
-	// ShellUI
-	static inline uint64_t DebugMenuPatch1;
-	static inline uint64_t DebugMenuPatch2;
-
 	// DECI
 	static inline uint64_t StartDecidServer;
 	static inline uint64_t MountFuse;
