@@ -26,6 +26,7 @@ $(ODIR)/%.o: $(SDIR)/%.c
 $(ODIR)/%.o: $(RDIR)/%
 	@mkdir -p $(dir $@)
 	@ld -r -b binary -o "$@" "$<"
+	@objcopy --add-section .note.GNU-stack=/dev/null --set-section-flags .note.GNU-stack=noload,readonly "$@"
 
 $(ODIR):
 	@mkdir $@

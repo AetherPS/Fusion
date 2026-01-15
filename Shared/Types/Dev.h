@@ -1,5 +1,9 @@
 #pragma once
 
+// Forward declarations
+struct cdev;
+struct thread;
+
 typedef uint32_t devfs_rid;
 typedef uint16_t devfs_rsnum;
 typedef uint32_t uid_t;

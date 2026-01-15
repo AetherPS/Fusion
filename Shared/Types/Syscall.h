@@ -1,5 +1,8 @@
 #pragma once
 
+// Forward declaration
+struct thread;
+
 typedef	void (*systrace_args_func_t)(int, void*, uint64_t*, int*);
 typedef	int	sy_call_t(struct thread*, void*);
 
