@@ -137,21 +137,25 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <None Include="Linker" />
     <None Include="Makefile" />
     <None Include="resources\eboot.bin.compressed" />
-    <None Include="resources\Kernel.elf" />
-    <None Include="resources\param.sfo.compressed" />
+    <None Include="resources\Kernel.elf.compressed" />
+    <None Include="resources\param.sfo" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\adler32.c" />
     <ClCompile Include="source\compressedblob.c" />
+    <ClCompile Include="source\crc32.c" />
     <ClCompile Include="source\dynlib.c" />
     <ClCompile Include="source\elf.c" />
     <ClCompile Include="source\file.c" />
     <ClCompile Include="source\fusiondriver.c" />
     <ClCompile Include="source\kernel.c" />
-    <ClCompile Include="source\Lz4.c" />
     <ClCompile Include="source\main.c" />
     <ClCompile Include="source\patches.c" />
     <ClCompile Include="source\resolver.c" />
     <ClCompile Include="source\daemon.c" />
+    <ClCompile Include="source\tinfgzip.c" />
+    <ClCompile Include="source\tinflate.c" />
+    <ClCompile Include="source\tinfzlib.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\asm.h" />
@@ -161,10 +165,10 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClInclude Include="include\elf.h" />
     <ClInclude Include="include\file.h" />
     <ClInclude Include="include\kernel.h" />
-    <ClInclude Include="include\Lz4.h" />
     <ClInclude Include="include\patches.h" />
     <ClInclude Include="include\resolver.h" />
     <ClInclude Include="include\daemon.h" />
+    <ClInclude Include="include\tinf.h" />
     <ClInclude Include="source\fusiondriver.h" />
   </ItemGroup>
   <ItemGroup>

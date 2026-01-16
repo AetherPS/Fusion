@@ -6,6 +6,7 @@ typedef struct {
 	uint32_t magic;
 	uint32_t decompressed_size;
 	uint32_t compressed_size;
+	uint32_t crc32;
 } BlobHeader;
 
 uint8_t* DecompressBlob(const uint8_t* blobData, size_t* outSize);

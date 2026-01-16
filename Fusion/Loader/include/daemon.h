@@ -8,8 +8,8 @@
 
 extern uint8_t _binary_resources_eboot_bin_compressed_start[];
 extern uint8_t _binary_resources_eboot_bin_compressed_end[];
-extern uint8_t _binary_resources_param_sfo_compressed_start[];
-extern uint8_t _binary_resources_param_sfo_compressed_end[];
+extern uint8_t _binary_resources_param_sfo_start[];
+extern uint8_t _binary_resources_param_sfo_end[];
 
 struct LaunchAppParam
 {

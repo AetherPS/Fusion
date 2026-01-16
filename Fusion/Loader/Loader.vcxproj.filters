@@ -22,18 +22,24 @@
     <Filter Include="include\Utils">
       <UniqueIdentifier>{2d503d40-16a7-4cf0-8c00-581cd672a478}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\tinf">
+      <UniqueIdentifier>{f4bcc3f4-52b2-4faf-a640-65bd23de62f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\tinf">
+      <UniqueIdentifier>{5bcd7a49-94c9-4f6d-b861-1788b201cd7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="crt0.s" />
     <None Include="Linker" />
     <None Include="Makefile" />
-    <None Include="resources\Kernel.elf">
-      <Filter>resources</Filter>
-    </None>
     <None Include="resources\eboot.bin.compressed">
       <Filter>resources</Filter>
     </None>
-    <None Include="resources\param.sfo.compressed">
+    <None Include="resources\Kernel.elf.compressed">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\param.sfo">
       <Filter>resources</Filter>
     </None>
   </ItemGroup>
@@ -62,14 +68,26 @@
     <ClCompile Include="source\resolver.c">
       <Filter>source\Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="source\Lz4.c">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="source\compressedblob.c">
       <Filter>source\Utils</Filter>
     </ClCompile>
     <ClCompile Include="source\fusiondriver.c">
       <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\adler32.c">
+      <Filter>source\tinf</Filter>
+    </ClCompile>
+    <ClCompile Include="source\crc32.c">
+      <Filter>source\tinf</Filter>
+    </ClCompile>
+    <ClCompile Include="source\tinfgzip.c">
+      <Filter>source\tinf</Filter>
+    </ClCompile>
+    <ClCompile Include="source\tinflate.c">
+      <Filter>source\tinf</Filter>
+    </ClCompile>
+    <ClCompile Include="source\tinfzlib.c">
+      <Filter>source\tinf</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,14 +118,14 @@
     <ClInclude Include="include\resolver.h">
       <Filter>include\Kernel</Filter>
     </ClInclude>
-    <ClInclude Include="include\Lz4.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="include\compressedblob.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="source\fusiondriver.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tinf.h">
+      <Filter>include\tinf</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

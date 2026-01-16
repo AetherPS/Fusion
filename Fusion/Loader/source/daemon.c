@@ -35,7 +35,7 @@ void InstallDaemon()
 	// Decompress and write the param.sfo if it does not exist.
 	if (!FileExist(DAEMON_PARAM_PATH))
 	{
-		int result = DecompressToFile(_binary_resources_param_sfo_compressed_start, DAEMON_PARAM_PATH);
+		int result = WriteFile(DAEMON_PARAM_PATH, _binary_resources_param_sfo_start, (uint64_t)&_binary_resources_param_sfo_end - (uint64_t)&_binary_resources_param_sfo_start);
 		if (result != 0)
 		{
 			klog("Failed to write the param.sfo %llX.\n", result);

@@ -1,6 +1,6 @@
 #include "common.h"
 #include "compressedblob.h"
-#include "Lz4.h"
+#include "tinf.h"
 
 uint8_t* DecompressBlob(const uint8_t* blobData, size_t* outSize)
 {
@@ -13,21 +13,30 @@ uint8_t* DecompressBlob(const uint8_t* blobData, size_t* outSize)
 	if (!dst)
 		return NULL;
 
-	size_t result = lz4_decompress(
-		blobData + sizeof(BlobHeader),
-		hdr->compressed_size,
+	unsigned int destLen = hdr->decompressed_size;
+	int result = tinf_zlib_uncompress(
 		dst,
-		hdr->decompressed_size
+		&destLen,
+		blobData + sizeof(BlobHeader),
+		hdr->compressed_size
 	);
 
-	if (result != hdr->decompressed_size)
+	if (result != TINF_OK || destLen != hdr->decompressed_size)
+	{
+		free(dst);
+		return NULL;
+	}
+
+	// Verify CRC32 checksum
+	unsigned int actual_crc32 = tinf_crc32(dst, destLen);
+	if (actual_crc32 != hdr->crc32)
 	{
 		free(dst);
 		return NULL;
 	}
 
 	if (outSize)
-		*outSize = result;
+		*outSize = destLen;
 
 	return dst;
 }

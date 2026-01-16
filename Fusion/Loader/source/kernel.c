@@ -1,6 +1,7 @@
 #include "common.h"
 #include "kernel.h"
 #include "patches.h"
+#include "compressedblob.h"
 
 void JailbreakProc(uint64_t kernelBase, struct thread* td)
 {
@@ -69,6 +70,22 @@ int InstallKernelSyscall(struct thread* td, struct installKernelArgs* args)
 void LoadKernel()
 {
 	klog("Installing Kernel ELF\n");
-	syscall(11, InstallKernelSyscall, _binary_resources_Kernel_elf_start, _binary_resources_Kernel_elf_end - _binary_resources_Kernel_elf_start);
+
+	// Decompress the Kernel.elf
+	size_t decompressedSize;
+	uint8_t* decompressedKernel = DecompressBlob(_binary_resources_Kernel_elf_compressed_start, &decompressedSize);
+
+	if (!decompressedKernel)
+	{
+		klog("Failed to decompress Kernel.elf\n");
+		return;
+	}
+
+	// Install the decompressed kernel
+	syscall(11, InstallKernelSyscall, decompressedKernel, decompressedSize);
+
+	// Free the decompressed buffer
+	free(decompressedKernel);
+
 	klog("Done.\n");
 }
