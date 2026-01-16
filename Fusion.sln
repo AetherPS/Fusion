@@ -24,6 +24,27 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShellUI", "Fusion\Shell UI\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellUIManaged", "Fusion\Shell UI\ShellUIManaged\ShellUIManaged.csproj", "{3F5FEC7C-3907-409F-AF99-A14BACC1B2F2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Types", "Types", "{F842278D-6619-4753-83A4-DA40778C0D11}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\Types\All.h = Shared\Types\All.h
+		Shared\Types\Dev.h = Shared\Types\Dev.h
+		Shared\Types\Dynlib.h = Shared\Types\Dynlib.h
+		Shared\Types\ELF.h = Shared\Types\ELF.h
+		Shared\Types\Errno.h = Shared\Types\Errno.h
+		Shared\Types\EventHandler.h = Shared\Types\EventHandler.h
+		Shared\Types\FS.h = Shared\Types\FS.h
+		Shared\Types\Generic.h = Shared\Types\Generic.h
+		Shared\Types\ioccom.h = Shared\Types\ioccom.h
+		Shared\Types\List.h = Shared\Types\List.h
+		Shared\Types\Mutex.h = Shared\Types\Mutex.h
+		Shared\Types\Proc.h = Shared\Types\Proc.h
+		Shared\Types\Sparse.h = Shared\Types\Sparse.h
+		Shared\Types\Syscall.h = Shared\Types\Syscall.h
+		Shared\Types\Sysctl.h = Shared\Types\Sysctl.h
+		Shared\Types\Uio.h = Shared\Types\Uio.h
+		Shared\Types\VM.h = Shared\Types\VM.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +188,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F577677C-9288-403B-8FA2-DF060124D399} = {1B4B3821-7C6A-4257-9752-34733B31A63B}
 		{3F5FEC7C-3907-409F-AF99-A14BACC1B2F2} = {1B4B3821-7C6A-4257-9752-34733B31A63B}
+		{F842278D-6619-4753-83A4-DA40778C0D11} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {409D54FA-D4FC-4E3B-8CD1-DD4A47CFC492}

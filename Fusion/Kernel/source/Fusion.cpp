@@ -17,6 +17,7 @@ void InitFusion()
 	KernelBase = (uint8_t*)Readmsr(0xC0000082) - addr_Xfast_syscall;
 
 	ResolveFunctions();				// Resolve all needed functions.
+	FusionSysctl::Init();			// Initialize sysctl interface.
 	PrintFeatureFlags();			// Print the active feature flags.
 	MkDir("/data/Fusion", 0777);	// Ensure the fusion dir is made.
 
@@ -24,9 +25,7 @@ void InitFusion()
 	DetourMemoryPool::Init(PAGE_SIZE); // 4 MB Pool
 	printf("Done.\n");
 
-#ifdef FF_BETA
 	dmamini_initialize_ioctl();
-#endif
 
 #ifdef FF_HomeBrew
 	printf("Initializing Fake Packages...");
@@ -38,11 +37,9 @@ void InitFusion()
 	printf("Done.\n");
 #endif
 
-#ifdef FF_DirectMemory
 	printf("Initializing Direct Memory Reservation...");
 	DirectMemory::Init();
 	printf("Done.\n");
-#endif
 
 #ifdef FF_Driver
 	printf("Initializing Driver...");
@@ -50,33 +47,25 @@ void InitFusion()
 	printf("Done.\n");
 #endif
 
-#ifdef FF_DevAct
 	printf("Initializing Dev Activation Spoofer...");
 	DevActSpoofer::Init();
 	printf("Done.\n");
-#endif
 
-#ifdef FF_Dipsw
 	printf("Initializing Dip Switch Spoofer...");
 	DipSwitchSpoofer::Init();
 	printf("Done.\n");
-#endif
 
-#ifdef FF_LibraryReplacer
 	printf("Initializing Library Replacer...");
 	LibraryReplacer::Init();
 	printf("Done.\n");
-#endif
 
 #ifdef FF_Fuse
 	printf("Starting Fuse...");
 	printf(fuse_loader(NULL, 0, NULL) == 0 ? "Done.\n" : "Failed.\n");
 #endif
 
-#ifdef FF_TTYRedirect
-	kprintf("Initializing TTY Redirector...");
+	printf("Initializing TTY Redirector...");
 	TTYRedirector::Init();
-	kprintf("Done.\n");
-#endif
+	printf("Done.\n");
 
 }

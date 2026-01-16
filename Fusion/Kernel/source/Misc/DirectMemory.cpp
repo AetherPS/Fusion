@@ -8,6 +8,10 @@ int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t d
 {
     auto res = OnDirectMemoryIoctlDetour->Invoke<int>(device, cmd, data, fflag, td);
 
+    // Skip if disabled.
+    if (!FusionSysctl::fusion_feature_direct_memory)
+        return res;
+
     // Skip ghosts for now since it is broken.
     if (strstr(td->td_proc->titleId, "CUSA00018"))
         return res;
@@ -16,7 +20,7 @@ int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t d
     {
     case 0x4008800A:
     {
-        size_t allocationSpace = 300 * 1024 * 1024;
+        size_t allocationSpace = (size_t)FusionSysctl::fusion_direct_memory_pages * 1024 * 1024;
 
         *(uint64_t*)data -= allocationSpace;
 

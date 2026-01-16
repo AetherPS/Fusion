@@ -20,4 +20,5 @@
 #include "FakeSelfs.h"
 
 #include "FusionDriver.h"
+#include "FusionSysctl.h"
 #include "Fusion.h"

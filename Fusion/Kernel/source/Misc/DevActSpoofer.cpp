@@ -7,6 +7,11 @@ uint8_t actId[] = { 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 0x13, 0x37, 
 
 int DevActSpoofer::DevActOnIoctlHook(cdev* dev, unsigned long cmd, caddr_t data, int fflag, thread* td)
 {
+	if (!FusionSysctl::fusion_feature_devact)
+	{
+		return DevActOnIoctlDetour->Invoke<int>(dev, cmd, data, fflag, td);
+	}
+
 	switch (cmd)
 	{
 	case 0x40105303:

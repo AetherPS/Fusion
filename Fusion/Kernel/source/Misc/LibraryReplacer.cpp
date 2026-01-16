@@ -29,31 +29,32 @@ int LibraryReplacer::sys_dynlib_load_prxHook(thread* td, dynlib_load_prx_args* a
 	kprintf("sys_dynlib_load_prx: %s %d, %s\n", titleId, td->td_proc->p_pid, fileName);
 #endif
 
-#ifdef FF_SHELL_JIT
 	// Load the razer cpu profiler for the ShellUI JIT mode.
-	if (strstr(fileName, "libScePsm.sprx"))
+	if (strstr(fileName, "libScePsm.sprx") && FusionSysctl::fusion_feature_jit)
 	{
 		int handleOut = 0;
 		dynlib_load_prx(td, "/system_ex/common_ex/lib/libSceRazorCpu.sprx", 0, &handleOut);
 	}
-#endif
 
-	// Get the path of the title specific replacement library.
-	char prxReplacePath[0x200];
-	sprintf(prxReplacePath, "/data/Fusion/ReplacementLibs/%s/%s", titleId, fileName);
-
-	// Get the path of the any process replacement library.
-	char prxReplacePathAll[0x200];
-	sprintf(prxReplacePathAll, "/data/Fusion/ReplacementLibs/Any/%s", fileName);
-
-	// Load the replaced library if it exists.
-	int loadedHandleOut = 0;
-	if (!dynlib_load_prx(td, prxReplacePath, args->flags, &loadedHandleOut) || !dynlib_load_prx(td, prxReplacePathAll, args->flags, &loadedHandleOut))
+	if (FusionSysctl::fusion_feature_library_replacer)
 	{
-		copyout(&loadedHandleOut, args->handle_out, sizeof(int));
+		// Get the path of the title specific replacement library.
+		char prxReplacePath[0x200];
+		sprintf(prxReplacePath, "/data/Fusion/ReplacementLibs/%s/%s", titleId, fileName);
 
-		printf("Replaced \"%s\" on %s(%d)\n", fileName, titleId, td->td_proc->p_pid);
-		return 0;
+		// Get the path of the any process replacement library.
+		char prxReplacePathAll[0x200];
+		sprintf(prxReplacePathAll, "/data/Fusion/ReplacementLibs/Any/%s", fileName);
+
+		// Load the replaced library if it exists.
+		int loadedHandleOut = 0;
+		if (!dynlib_load_prx(td, prxReplacePath, args->flags, &loadedHandleOut) || !dynlib_load_prx(td, prxReplacePathAll, args->flags, &loadedHandleOut))
+		{
+			copyout(&loadedHandleOut, args->handle_out, sizeof(int));
+
+			printf("Replaced \"%s\" on %s(%d)\n", fileName, titleId, td->td_proc->p_pid);
+			return 0;
+		}
 	}
 
 	// All others just go as normal.

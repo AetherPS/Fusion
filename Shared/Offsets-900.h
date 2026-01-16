@@ -95,6 +95,14 @@
 #define addr_icc_nvs_read						0x0010B310
 #define addr_icc_nvs_write						0x0010B150
 
+/* Sysctl */
+#define addr_sysctl__children					0x021F0300
+#define addr_sysctl_ctx_init					0x002A1760
+#define addr_sysctl_ctx_free					0x002A1780
+#define addr_sysctl_add_oid						0x002A1DC0
+#define addr_sysctl_handle_int					0x002A2240
+#define addr_sysctl_handle_string				0x002A24E0
+
 /* FSelfs */
 #define addr_sceSblAuthMgrGetSelfInfo						0x006441E0
 #define addr_sceSblAuthMgrSmStart							0x0063FEE0

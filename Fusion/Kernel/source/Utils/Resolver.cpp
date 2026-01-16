@@ -121,6 +121,15 @@ void(*devfs_rule_applyde_recursive)(struct devfs_krule* dk, struct devfs_dirent*
 int (*icc_nvs_read)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value) = nullptr;
 int (*icc_nvs_write)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value) = nullptr;
 
+/* Sysctl */
+sysctl_oid_list* sysctl__children = nullptr;
+void (*sysctl_ctx_init)(sysctl_ctx_list* ctx) = nullptr;
+void (*sysctl_ctx_free)(sysctl_ctx_list* ctx) = nullptr;
+sysctl_oid* (*sysctl_add_oid)(struct sysctl_ctx_list* clist,
+struct sysctl_oid_list* parent, int nbr, const char* name, int kind, void* arg1, intptr_t arg2, int (*handler) (SYSCTL_HANDLER_ARGS), const char* fmt, const char* descr) = nullptr;
+int (*sysctl_handle_int)(SYSCTL_HANDLER_ARGS) = nullptr;
+int (*sysctl_handle_string)(SYSCTL_HANDLER_ARGS) = nullptr;
+
 void ResolveFunctions()
 {
     /* Util */
@@ -236,4 +245,12 @@ void ResolveFunctions()
     /* Flash & NVS */
     NATIVE_RESOLVE(icc_nvs_read);
     NATIVE_RESOLVE(icc_nvs_write);
+
+    /* Sysctl */
+    NATIVE_RESOLVE(sysctl__children);
+    NATIVE_RESOLVE(sysctl_ctx_init);
+    NATIVE_RESOLVE(sysctl_ctx_free);
+    NATIVE_RESOLVE(sysctl_add_oid);
+    NATIVE_RESOLVE(sysctl_handle_int);
+    NATIVE_RESOLVE(sysctl_handle_string);
 }

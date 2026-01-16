@@ -146,4 +146,12 @@ extern void(*devfs_rule_applyde_recursive)(struct devfs_krule* dk, struct devfs_
 extern int (*icc_nvs_read)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value);
 extern int (*icc_nvs_write)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value);
 
+/* Sysctl */
+extern sysctl_oid_list* sysctl__children;
+extern void (*sysctl_ctx_init)(sysctl_ctx_list* ctx);
+extern void (*sysctl_ctx_free)(sysctl_ctx_list* ctx);
+extern sysctl_oid* (*sysctl_add_oid)(struct sysctl_ctx_list* clist, struct sysctl_oid_list* parent, int nbr, const char* name, int kind, void* arg1, intptr_t arg2, int (*handler) (SYSCTL_HANDLER_ARGS), const char* fmt, const char* descr);
+extern int (*sysctl_handle_int)(SYSCTL_HANDLER_ARGS);
+extern int (*sysctl_handle_string)(SYSCTL_HANDLER_ARGS);
+
 void ResolveFunctions();

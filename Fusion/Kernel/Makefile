@@ -10,7 +10,7 @@ CFILES    	:=    $(shell find $(SDIR) -name \*.cpp)
 OBJS	    :=	  $(patsubst $(SDIR)/%.cpp, $(ODIR)/%.o, $(CFILES))
 TARGET = $(shell basename "$(CURDIR)").elf
 
-$(TARGET): $(ODIR) $(OBJS)
+$(TARGET): increment_version $(ODIR) $(OBJS)
 	$(CC) crt0.s $(OBJS) -o $(TARGET) $(CFLAGS) $(LFLAGS)
 
 $(ODIR)/%.o: $(SDIR)/%.cpp
@@ -19,6 +19,10 @@ $(ODIR)/%.o: $(SDIR)/%.cpp
 
 $(ODIR):
 	@mkdir $@
+
+increment_version:
+	@echo "Incrementing version..."
+	@python3 ../../increment_version.py
 
 copy:
 	@echo "Extracting debug symbols..."
@@ -41,4 +45,4 @@ copy:
 clean:
 	rm -f $(TARGET) $(TARGET).sym $(ODIR)/*.o
 
-.PHONY: copy clean
+.PHONY: increment_version copy clean

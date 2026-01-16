@@ -104,6 +104,9 @@
     <ClCompile Include="source\Utils\Detours\DetourMemoryPool.cpp">
       <Filter>source\Utils\Detours</Filter>
     </ClCompile>
+    <ClCompile Include="source\Misc\FusionSysctl.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FeatureFlags.h">
@@ -177,6 +180,9 @@
     </ClInclude>
     <ClInclude Include="include\Common.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\FusionSysctl.h">
+      <Filter>include\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

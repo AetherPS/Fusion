@@ -5,6 +5,11 @@ Detour* DipSwitchSpoofer::sceKernelCheckDipswDetour;
 
 int DipSwitchSpoofer::sceKernelCheckDipswHook(unsigned int dipswitch)
 {
+	if (!FusionSysctl::fusion_feature_dipsw)
+	{
+		return sceKernelCheckDipswDetour->Invoke<int>(dipswitch);
+	}
+
 	switch (dipswitch)
 	{
 	case 0:			// IsDevelopmentMode
