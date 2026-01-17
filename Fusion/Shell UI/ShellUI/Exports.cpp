@@ -74,6 +74,11 @@ extern "C"
 
         MonoMethod* method = it->second;
 
+        // Check if method returns void
+        MonoMethodSignature* sig = mono_method_signature(method);
+        MonoType* returnType = mono_signature_get_return_type(sig);
+        bool isVoid = (mono_type_get_type(returnType) == MONO_TYPE_VOID);
+
         // Convert GCHandles
         MonoObject* instance = nullptr;
         if (instanceHandle != nullptr)
@@ -82,14 +87,19 @@ extern "C"
             instance = mono_gchandle_get_target(handle);
         }
 
+        int argCount = 0;
         MonoArray* argsArray = nullptr;
+
         if (argsHandle != nullptr)
         {
             uint32_t handle = (uint32_t)(uintptr_t)argsHandle;
             argsArray = (MonoArray*)mono_gchandle_get_target(handle);
+            if (argsArray != nullptr)
+            {
+                argCount = mono_array_length(argsArray);
+            }
         }
 
-        int argCount = argsArray ? mono_array_length(argsArray) : 0;
         bool isInstance = !(mono_method_get_flags(method, nullptr) & 0x0010);
 
         int totalArgs = isInstance ? (argCount + 1) : argCount;
@@ -99,11 +109,11 @@ extern "C"
         if (isInstance)
             args[idx++] = instance;
 
-        for (int i = 0; i < argCount; i++)
-            args[idx++] = mono_array_get(argsArray, MonoObject*, i);
-
-        // Call helper function
-        void* result = CallStubWithArgs(stub, args, totalArgs);
+        if (argsArray != nullptr)
+        {
+            for (int i = 0; i < argCount; i++)
+                args[idx++] = mono_array_get(argsArray, MonoObject*, i);
+        }
 
         if (totalArgs > 10)
         {
@@ -111,7 +121,11 @@ extern "C"
             return nullptr;
         }
 
-        if (result != nullptr)
+        // Call helper function
+        void* result = CallStubWithArgs(stub, args, totalArgs);
+
+        // Only create GCHandle if method doesn't return void and result is not null
+        if (!isVoid && result != nullptr)
         {
             uint32_t resultHandle = mono_gchandle_new((MonoObject*)result, false);
             return (void*)(uintptr_t)resultHandle;

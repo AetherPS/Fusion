@@ -72,7 +72,8 @@ void ascii()
         case 53: tagline = "ITER? I hardly know her!"; break;
         case 54: tagline = "Fission? That's so 1940s!"; break;
         case 55: tagline = "Sun envy intensifies"; break;
-        default: tagline = "Fusion!"; break;
+        case 56: tagline = "Does anyone else taste metal?"; break;
+        default: tagline = "Woah this is super secret."; break;
     }
 
     int tagline_len = strlen(tagline);

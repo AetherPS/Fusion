@@ -430,7 +430,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Settings\SettingsApplicationHooks.cs" />
-    <Compile Include="Features\CheckRunningOnMainThreadFix.cs" />
     <Compile Include="Features\Devkit\DebugTitleIdLabel.cs" />
     <Compile Include="Internal\ManifestFileAssetLoader.cs" />
     <Compile Include="Internal\ManifestFileUriScheme.cs" />

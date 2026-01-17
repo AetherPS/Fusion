@@ -144,52 +144,66 @@ namespace Fusion.Internal
                 return null;
             }
 
+            GCHandle instanceHandle = default(GCHandle);
+            GCHandle argsHandle = default(GCHandle);
+
             try
             {
-                // Convert instance to GCHandle
                 IntPtr instancePtr = IntPtr.Zero;
-                GCHandle instanceHandle = default(GCHandle);
                 if (instance != null)
                 {
                     instanceHandle = GCHandle.Alloc(instance);
                     instancePtr = GCHandle.ToIntPtr(instanceHandle);
                 }
 
-                // Convert args array to GCHandle
                 IntPtr argsPtr = IntPtr.Zero;
-                GCHandle argsHandle = default(GCHandle);
                 if (args != null && args.Length > 0)
                 {
                     argsHandle = GCHandle.Alloc(args);
                     argsPtr = GCHandle.ToIntPtr(argsHandle);
                 }
 
+                IntPtr resultPtr = CallOriginal(hookKey, instancePtr, argsPtr);
+
+                // Validate the pointer before trying to convert it
+                if (resultPtr == IntPtr.Zero)
+                {
+                    return null;
+                }
+
+                // Additional validation - GCHandle values should be reasonable
+                long ptrValue = resultPtr.ToInt64();
+                if (ptrValue < 0 || ptrValue > 0x7FFFFFFF)
+                {
+                    Console.WriteLine($"[MethodOverride] Invalid GCHandle value: 0x{ptrValue:X}");
+                    return null;
+                }
+
                 try
                 {
-                    // Call native function
-                    IntPtr resultPtr = CallOriginal(hookKey, instancePtr, argsPtr);
-
-                    // Convert result back from GCHandle
-                    if (resultPtr != IntPtr.Zero)
-                    {
-                        GCHandle resultHandle = GCHandle.FromIntPtr(resultPtr);
-                        object result = resultHandle.Target;
-                        resultHandle.Free();
-                        return result;
-                    }
+                    GCHandle resultHandle = GCHandle.FromIntPtr(resultPtr);
+                    object result = resultHandle.Target;
+                    resultHandle.Free();
+                    return result;
                 }
-                finally
+                catch (Exception ex)
                 {
-                    // Clean up handles
-                    if (instanceHandle.IsAllocated)
-                        instanceHandle.Free();
-                    if (argsHandle.IsAllocated)
-                        argsHandle.Free();
+                    Console.WriteLine($"[MethodOverride] Failed to convert result GCHandle: {ex.Message}");
+                    Console.WriteLine($"[MethodOverride] Result pointer was: 0x{resultPtr.ToInt64():X}");
+                    return null;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[MethodOverride] InvokeOriginal failed for {hookKey}: {ex.Message}");
+                Console.WriteLine($"[MethodOverride] Stack trace: {ex.StackTrace}");
+            }
+            finally
+            {
+                if (instanceHandle.IsAllocated)
+                    instanceHandle.Free();
+                if (argsHandle.IsAllocated)
+                    argsHandle.Free();
             }
 
             return null;

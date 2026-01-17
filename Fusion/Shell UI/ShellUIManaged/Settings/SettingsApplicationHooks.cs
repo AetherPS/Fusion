@@ -71,7 +71,7 @@ namespace Fusion
                 return;
             }
 
-            MethodOverrideManager.InvokeOriginal(instance, new object[] { });
+            MethodOverrideManager.InvokeOriginal(instance, null);
         }
     }
 }

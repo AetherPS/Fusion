@@ -1,5 +1,7 @@
 ﻿using Fusion.Internal;
 using Fusion.TopMenu;
+using Sce.PlayStation.Core.Runtime;
+using Sce.PlayStation.PUI;
 using Sce.Vsh.ShellUI.TopMenu;
 using System;
 
@@ -10,6 +12,12 @@ namespace Fusion
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
         public static void OnLoad()
         {
+            if (!Diagnostics.IsMainThread)
+            {
+                FrameTask.CallOnce(OnLoad);
+                return;
+            }
+
             try
             {
                 Console.WriteLine("=== Fusion UI Loading ===");
