@@ -191,6 +191,9 @@ static inline void InitKernel900(uint64_t kernelBase, KernelAddrs* addrs)
     addrs->patch_dmamini0 = (void*)(kernelBase + 0x005D1EDB);
     addrs->patch_dmamini1 = (void*)(kernelBase + 0x005D1EDF);
     addrs->patch_mdbg_basic = kernelBase + 0x0075CD30;
+    addrs->patch_mpage_panic = (void*)(kernelBase + 0x00884BE);
+    addrs->patch_vputx_panic = (void*)(kernelBase + 0x0235D72);
+    addrs->patch_vm_fault_panic = (void*)(kernelBase + 0x00152966);
 
     /* mdbg Assist Mode offsets */
     uint64_t mdbg_offsets[] = { 0x54, 0x238, 0x1416, 0x2120, 0x2146, 0x216C, 0x2192, 0x21B8, 0x21DE, 0x2204, 0x222A, 0x2250, 0x2276, 0x229C, 0x22C2, 0x22E8, 0x230E, 0x2334, 0x236A, 0x2390, 0x23B6, 0x23DC };

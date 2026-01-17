@@ -18,7 +18,7 @@ bool Config::Load(const std::string& configPath)
 
             // Create default config
             jsonConfig = json::object();
-            jsonConfig["EnableFTP"] = false;
+            jsonConfig["EnableFTP"] = true;
             jsonConfig["StartDECI"] = true;
 
             // Save default config

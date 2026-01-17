@@ -197,6 +197,9 @@ typedef struct _KernelAddrs
     void* patch_dmamini1;
     uint64_t patch_mdbg_basic;
     uint64_t mdbgAssistMode[22];
+    void* patch_mpage_panic;
+    void* patch_vputx_panic;
+    void* patch_vm_fault_panic;
 } KernelAddrs;
 
 /* Include implementation files */

@@ -217,7 +217,33 @@ void InstallPatches()
 
 	// ==========================================================================
 
+	// remove panic: mpage
+	kmem = (uint8_t*)g_KernelAddrs.patch_mpage_panic;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+	kmem[2] = 0x90;
+	kmem[3] = 0x90;
+	kmem[4] = 0x90;
+	kmem[5] = 0x90;
 
+	// remove panic: vputx: negative ref count
+	kmem = (uint8_t*)g_KernelAddrs.patch_vputx_panic;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+	kmem[2] = 0x90;
+	kmem[3] = 0x90;
+	kmem[4] = 0x90;
+	kmem[5] = 0x90;
 
+	// Patch to remove vm_fault: fault on nofault entry, addr %llx
+	kmem = (uint8_t*)g_KernelAddrs.patch_vm_fault_panic;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+	kmem[2] = 0x90;
+	kmem[3] = 0x90;
+	kmem[4] = 0x90;
+	kmem[5] = 0x90;
+
+	// ==========================================================================
 	cpu_enable_wp();
 }

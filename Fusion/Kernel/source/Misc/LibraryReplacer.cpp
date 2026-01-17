@@ -26,14 +26,22 @@ int LibraryReplacer::sys_dynlib_load_prxHook(thread* td, dynlib_load_prx_args* a
 	auto fileName = basename(path);
 
 #ifdef DEBUG
-	kprintf("sys_dynlib_load_prx: %s %d, %s\n", titleId, td->td_proc->p_pid, fileName);
+	printf("sys_dynlib_load_prx: %s %d, %s\n", titleId, td->td_proc->p_pid, fileName);
 #endif
 
 	// Load the razer cpu profiler for the ShellUI JIT mode.
 	if (strstr(fileName, "libScePsm.sprx") && FusionSysctl::fusion_feature_jit)
 	{
+		// libSceRazorCpu.sprx
 		int handleOut = 0;
-		dynlib_load_prx(td, "/system_ex/common_ex/lib/libSceRazorCpu.sprx", 0, &handleOut);
+
+		auto res = dynlib_load_prx(td, "/system/common/lib/libSceRazorCpu.sprx", 0, &handleOut);
+
+		if (res != 0)
+		{
+			printf("Trying system_ex\n");
+			dynlib_load_prx(td, "/system_ex/common_ex/lib/libSceRazorCpu.sprx", 0, &handleOut);
+		}
 	}
 
 	if (FusionSysctl::fusion_feature_library_replacer)
