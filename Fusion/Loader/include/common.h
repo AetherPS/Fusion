@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <Types/All.h>
 #include "Offsets.h"
+#include "log.h"
 
 #include "asm.h"
 #include "dynlib.h"

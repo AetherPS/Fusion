@@ -90,6 +90,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClCompile Include="source\file.c" />
     <ClCompile Include="source\fusiondriver.c" />
     <ClCompile Include="source\kernel.c" />
+    <ClCompile Include="source\log.c" />
     <ClCompile Include="source\main.c" />
     <ClCompile Include="source\patches.c" />
     <ClCompile Include="source\resolver.c" />
@@ -107,6 +108,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClInclude Include="include\elf.h" />
     <ClInclude Include="include\file.h" />
     <ClInclude Include="include\kernel.h" />
+    <ClInclude Include="include\log.h" />
     <ClInclude Include="include\patches.h" />
     <ClInclude Include="include\resolver.h" />
     <ClInclude Include="include\daemon.h" />

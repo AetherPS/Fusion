@@ -26,7 +26,6 @@ extern char* (*strcat)(char*, const char*);
 extern int (*sprintf)(char*, const char*, ...);
 
 // libkernel
-extern int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
 extern int (*sceKernelOpen)(const char* path, int flags, SceKernelMode mode);
 extern int (*sceKernelClose)(int fd);
 extern int (*sceKernelUnlink)(const char* path);
@@ -36,7 +35,6 @@ extern uint64_t (*sceKernelGetProcessTime)(void);
 extern int (*ioctl)(int fd, unsigned long request, ...);
 extern int (*getpid)(void);
 
-void klog(const char* fmt, ...);
 int sys_dynlib_dlsym(int loadedModuleID, const char* name, void* destination);
 int sys_dynlib_load_prx(const char* name, int* idDestination);
-void ResolveDynlib();
+int ResolveDynlib();

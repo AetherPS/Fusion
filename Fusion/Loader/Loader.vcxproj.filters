@@ -92,6 +92,9 @@
     <ClCompile Include="source\ascii.c">
       <Filter>source\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="source\log.c">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common.h">
@@ -131,6 +134,9 @@
       <Filter>include\tinf</Filter>
     </ClInclude>
     <ClInclude Include="include\ascii.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\log.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>
