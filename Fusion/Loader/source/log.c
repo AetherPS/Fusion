@@ -79,7 +79,6 @@ int kvsnprintf(char* str, int size, const char* fmt, __builtin_va_list ap)
 		if (*p == '*')
 		{
 			width = __builtin_va_arg(ap, int);
-			width_from_arg = 1;
 			p++;
 		}
 		else
