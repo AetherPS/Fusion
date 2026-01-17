@@ -22,6 +22,8 @@ extern void (*free)(void* ptr);
 extern void* (*realloc)(void* ptr, size_t size);
 extern char* (*strdup)(const char* s);
 extern size_t(*strlen)(const char* s);
+extern char* (*strcat)(char*, const char*);
+extern int (*sprintf)(char*, const char*, ...);
 
 // libkernel
 extern int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
@@ -30,6 +32,7 @@ extern int (*sceKernelClose)(int fd);
 extern int (*sceKernelUnlink)(const char* path);
 extern int (*sceKernelWrite)(int fd, const void* data, size_t size);
 extern int (*sceKernelMkdir)(const char* path, SceKernelMode mode);
+extern uint64_t (*sceKernelGetProcessTime)(void);
 extern int (*ioctl)(int fd, unsigned long request, ...);
 extern int (*getpid)(void);
 

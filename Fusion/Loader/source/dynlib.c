@@ -2,14 +2,16 @@
 #include "dynlib.h"
 
 // libSceLibcInternal
-int(*vsprintf)(char* s, const char* format, va_list arg);
+int (*vsprintf)(char* s, const char* format, va_list arg);
 char* (*strcpy)(char* destination, const char* source);
 void* (*memcpy)(void* destination, const void* source, size_t size);
 void* (*malloc)(size_t size);
 void (*free)(void* ptr);
 void* (*realloc)(void* ptr, size_t size);
 char* (*strdup)(const char* s);
-size_t(*strlen)(const char* s);
+size_t (*strlen)(const char* s);
+char* (*strcat)(char*, const char*);
+int (*sprintf)(char*, const char*, ...);
 
 // libkernel
 int (*sceKernelDebugOutText)(int dbg_channel, const char* text, ...);
@@ -18,6 +20,7 @@ int (*sceKernelClose)(int fd);
 int (*sceKernelUnlink)(const char* path);
 int (*sceKernelWrite)(int fd, const void* data, size_t size);
 int (*sceKernelMkdir)(const char* path, SceKernelMode mode);
+uint64_t (*sceKernelGetProcessTime)(void);
 int (*ioctl)(int fd, unsigned long request, ...);
 int (*getpid)(void);
 
@@ -55,6 +58,8 @@ void ResolveDynlib()
 	sys_dynlib_dlsym(2, "realloc", &realloc);
 	sys_dynlib_dlsym(2, "strdup", &strdup);
 	sys_dynlib_dlsym(2, "strlen", &strlen);
+	sys_dynlib_dlsym(2, "strcat", &strcat);
+	sys_dynlib_dlsym(2, "sprintf", &sprintf);
 
 	// Libkernel is always module 8193
 	sys_dynlib_dlsym(8193, "sceKernelDebugOutText", &sceKernelDebugOutText);
@@ -63,6 +68,7 @@ void ResolveDynlib()
 	sys_dynlib_dlsym(8193, "sceKernelWrite", &sceKernelWrite);
 	sys_dynlib_dlsym(8193, "sceKernelUnlink", &sceKernelUnlink);
 	sys_dynlib_dlsym(8193, "sceKernelMkdir", &sceKernelMkdir);
+	sys_dynlib_dlsym(8193, "sceKernelGetProcessTime", &sceKernelGetProcessTime);
 	sys_dynlib_dlsym(8193, "ioctl", &ioctl);
 	sys_dynlib_dlsym(8193, "getpid", &getpid);
 }

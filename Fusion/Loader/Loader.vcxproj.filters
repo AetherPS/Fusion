@@ -89,6 +89,9 @@
     <ClCompile Include="source\tinfzlib.c">
       <Filter>source\tinf</Filter>
     </ClCompile>
+    <ClCompile Include="source\ascii.c">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common.h">
@@ -126,6 +129,9 @@
     </ClInclude>
     <ClInclude Include="include\tinf.h">
       <Filter>include\tinf</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ascii.h">
+      <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

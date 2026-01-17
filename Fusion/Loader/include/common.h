@@ -12,3 +12,4 @@
 #include "elf.h"
 #include "file.h"
 #include "compressedblob.h"
+#include "ascii.h"

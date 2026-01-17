@@ -82,6 +82,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\adler32.c" />
+    <ClCompile Include="source\ascii.c" />
     <ClCompile Include="source\compressedblob.c" />
     <ClCompile Include="source\crc32.c" />
     <ClCompile Include="source\dynlib.c" />
@@ -98,6 +99,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClCompile Include="source\tinfzlib.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\ascii.h" />
     <ClInclude Include="include\asm.h" />
     <ClInclude Include="include\common.h" />
     <ClInclude Include="include\compressedblob.h" />
@@ -110,14 +112,6 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClInclude Include="include\daemon.h" />
     <ClInclude Include="include\tinf.h" />
     <ClInclude Include="source\fusiondriver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Daemon\Daemon.vcxproj">
-      <Project>{e93827b7-2511-47a1-9190-032a66e72a82}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Kernel\Kernel.vcxproj">
-      <Project>{7f7e2757-4cba-4203-8eeb-5b317a8c2d4d}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
