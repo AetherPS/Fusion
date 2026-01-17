@@ -26,7 +26,7 @@ $(ODIR):
 
 increment_version:
 	@echo "Incrementing version..."
-	@python3 ../../increment_version.py
+	@python3 ../../Scripts/increment_version.py
 
 copy:
 	@echo "Extracting debug symbols..."

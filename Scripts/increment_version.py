@@ -70,7 +70,7 @@ def increment_version(file_path):
 def main():
     # Default path to FusionSysctl.cpp
     script_dir = Path(__file__).parent
-    default_path = script_dir / "Fusion" / "Kernel" / "source" / "Misc" / "FusionSysctl.cpp"
+    default_path = script_dir / ".." / "Fusion" / "Kernel" / "source" / "Misc" / "FusionSysctl.cpp"
 
     # Allow custom path from command line
     file_path = Path(sys.argv[1]) if len(sys.argv) > 1 else default_path

@@ -75,7 +75,6 @@ int kvsnprintf(char* str, int size, const char* fmt, __builtin_va_list ap)
 
 		// Handle field width
 		int width = 0;
-		int width_from_arg = 0;
 
 		if (*p == '*')
 		{
