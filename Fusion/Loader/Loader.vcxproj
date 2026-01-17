@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="1202Release|x64">
-      <Configuration>1202Release</Configuration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="900Release|x64">
-      <Configuration>900Release</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release1250|x64">
-      <Configuration>Release1250</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release1300|x64">
-      <Configuration>Release1300</Configuration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
@@ -24,22 +16,12 @@
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release1250|x64'" Label="Configuration">
-    <ConfigurationType>Makefile</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release1300|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -49,23 +31,18 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release1250|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release1300|x64'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='900Release|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <AdditionalSourcesToCopyMapping />
-    <NMakeOutput>Fusion-900.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=900</NMakePreprocessorDefinitions>
+    <NMakeOutput>Fusion.bin</NMakeOutput>
+    <NMakePreprocessorDefinitions>
+    </NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
@@ -76,30 +53,12 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
-    <PublicIncludeDirectories>
-    </PublicIncludeDirectories>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='1202Release|x64'">
-    <AdditionalSourcesToCopyMapping />
-    <NMakeOutput>Fusion-1202.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1202</NMakePreprocessorDefinitions>
-    <OutDir>$(SolutionDir)Build\</OutDir>
-    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-</NMakeCleanCommandLine>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
-    <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release1250|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <AdditionalSourcesToCopyMapping />
-    <NMakeOutput>Fusion-1250.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1250</NMakePreprocessorDefinitions>
+    <NMakeOutput>Fusion.bin</NMakeOutput>
+    <NMakePreprocessorDefinitions>DEBUG=1</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
@@ -107,26 +66,8 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommand
     <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
 wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-</NMakeCleanCommandLine>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
-    <IncludePath>$(IncludePath)</IncludePath>
-    <PublicIncludeDirectories />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release1300|x64'">
-    <AdditionalSourcesToCopyMapping />
-    <NMakeOutput>Fusion-1300.bin</NMakeOutput>
-    <NMakePreprocessorDefinitions>SOFTWARE_VERSION=1300</NMakePreprocessorDefinitions>
-    <OutDir>$(SolutionDir)Build\</OutDir>
-    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-</NMakeCleanCommandLine>
-    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
+    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
+    <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
   </PropertyGroup>

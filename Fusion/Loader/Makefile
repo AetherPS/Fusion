@@ -4,7 +4,7 @@ ODIR	:=	build
 SDIR	:=	source
 RDIR	:=  resources
 IDIRS	:=  -I../../Shared -Iinclude -I../../External/FusionShared
-CFLAGS	:=	$(IDIRS) -Os -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -DSOFTWARE_VERSION=$(SOFTWARE_VERSION) -D_LOADER
+CFLAGS	:=	$(IDIRS) -Os -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -D_LOADER
 LFLAGS	:=	-Xlinker -T Linker -Wl,--build-id=none -Wl,--gc-sections
 CFILES	:=	$(wildcard $(SDIR)/*.c)
 RFILES  :=  $(shell find $(RDIR) -name \* -type f 2>/dev/null)
@@ -14,8 +14,12 @@ ifneq ($(wildcard $(RDIR)/eboot.bin.compressed), )
 	CFLAGS += -DHAS_DAEMON
 endif
 
-TARGET = Fusion-$(SOFTWARE_VERSION).bin
-ELF_TARGET = Fusion-$(SOFTWARE_VERSION).elf
+ifeq ($(DEBUG), 1)
+    CFLAGS += -DDEBUG
+endif
+
+TARGET = Fusion.bin
+ELF_TARGET = Fusion.elf
 
 $(ELF_TARGET): $(ODIR) $(OBJS)
 	$(CC) crt0.s $(ODIR)/*.o -o $(ELF_TARGET) $(CFLAGS) $(LFLAGS)
@@ -35,7 +39,7 @@ $(ODIR):
 
 clean:
 	@echo "Cleaning project files..."
-	rm -f Fusion-*.bin Fusion-*.elf $(ODIR)/*.o
+	rm -f Fusion.bin Fusion.elf $(ODIR)/*.o
 
 copy: $(ELF_TARGET)
 	@echo "Converting to binary..."

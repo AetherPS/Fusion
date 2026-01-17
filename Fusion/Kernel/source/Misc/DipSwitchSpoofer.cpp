@@ -28,7 +28,7 @@ int DipSwitchSpoofer::sceKernelCheckDipswHook(unsigned int dipswitch)
 
 void DipSwitchSpoofer::Init()
 {
-	Detour::Detour32(&sceKernelCheckDipswDetour, KernelBase + addr_sceKernelCheckDipsw_Hook, (void*)sceKernelCheckDipswHook);
+	Detour::Detour32(&sceKernelCheckDipswDetour, (void*)g_KernelAddrs.sceKernelCheckDipsw_Hook, (void*)sceKernelCheckDipswHook);
 }
 
 void DipSwitchSpoofer::Term()

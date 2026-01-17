@@ -9,14 +9,10 @@
 #include "DipSwitchSpoofer.h"
 #include "TTYRedirector.h"
 
-uint8_t* KernelBase;
-
 void InitFusion()
 {
-	// Resolve the Kernel Base.
-	KernelBase = (uint8_t*)Readmsr(0xC0000082) - addr_Xfast_syscall;
+	printf("Fusion Kernel Started!\n");
 
-	ResolveFunctions();				// Resolve all needed functions.
 	FusionSysctl::Init();			// Initialize sysctl interface.
 	PrintFeatureFlags();			// Print the active feature flags.
 	MkDir("/data/Fusion", 0777);	// Ensure the fusion dir is made.
@@ -67,5 +63,4 @@ void InitFusion()
 	printf("Initializing TTY Redirector...");
 	TTYRedirector::Init();
 	printf("Done.\n");
-
 }

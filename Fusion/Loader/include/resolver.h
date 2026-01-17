@@ -1,6 +1,5 @@
 #pragma once
 
-uint64_t kernel_getbase();
 void* kernel_alloc(uint32_t size);
 void kernel_dealloc(void* addr);
 
@@ -15,4 +14,4 @@ extern vm_offset_t(*kmem_alloc)(vm_map_t map, vm_size_t size);
 extern void(*kmem_free)(void* map, void* addr, size_t size);
 extern vm_map_t kernel_map;
 
-void ResolveKernelFunctions(uint64_t kernelBase);
+void ResolveKernelFunctions();

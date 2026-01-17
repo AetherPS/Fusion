@@ -29,7 +29,7 @@ void FusionDriver::Init()
 	else if (ret != 0)
 		printf("could not create device driver (%d).", ret);
 
-	Detour::Detour32(&getnewvnodeDetour, KernelBase + addr_getnewvnode, (uint8_t*)&getnewvnodeHook);
+	Detour::Detour32(&getnewvnodeDetour, (void*)g_KernelAddrs.getnewvnode, (uint8_t*)&getnewvnodeHook);
 }
 
 void FusionDriver::Term()

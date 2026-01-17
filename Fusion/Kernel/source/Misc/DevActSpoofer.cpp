@@ -46,7 +46,7 @@ int DevActSpoofer::DevActOnIoctlHook(cdev* dev, unsigned long cmd, caddr_t data,
 
 void DevActSpoofer::Init()
 {
-	Detour::Detour64(&DevActOnIoctlDetour, KernelBase + addr_devact_onioctl_hook, (void*)DevActOnIoctlHook);
+	Detour::Detour64(&DevActOnIoctlDetour, (void*)g_KernelAddrs.devact_onioctl_hook, (void*)DevActOnIoctlHook);
 }
 
 void DevActSpoofer::Term()

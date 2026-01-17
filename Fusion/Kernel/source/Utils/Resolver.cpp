@@ -1,256 +1,250 @@
 #include "Common.h"
 #include "Resolver.h"
-
-#define NATIVE_RESOLVE(_Ty) _Ty = (decltype(_Ty))(void*)((uint8_t *)&KernelBase[addr_ ## _Ty]);
+#include "Offsets.h"
 
 /* Util */
-sysentvec* sysvec;
-prison* prison0;
-vnode* rootvnode;
-int (*copyout)(const void* kaddr, void* udaddr, size_t len) = nullptr;
-int (*copyin)(const void* uaddr, void* kaddr, size_t len) = nullptr;
-int (*copyout_nofault)(const void* kaddr, void* udaddr, size_t len) = nullptr;
-int (*copyin_nofault)(const void* uaddr, void* kaddr, size_t len) = nullptr;
-int (*copyinstr)(const void* uaddr, void* kaddr, size_t len, size_t*) = nullptr;
-int (*kern_open)(thread* td, const char* path, int pathseg, int flags, int mode) = nullptr;
-int (*kern_mkdir)(thread* td, char* path, int pathseg, int mode) = nullptr;
-vm_map_t kernel_map;
-vm_offset_t(*kmem_alloc)(vm_map_t map, vm_size_t size);
-void(*kmem_free)(void* map, void* addr, size_t size) = nullptr;
-int (*vn_fullpath)(struct thread* td, struct vnode* vp, char** retbuf, char** freebuf) = nullptr;
-int (*fuse_loader)(void* m, int op, void* arg) = nullptr;
-void (*dmamini_initialize_ioctl)() = nullptr;
+struct sysentvec* sysvec = NULL;
+struct prison* prison0 = NULL;
+struct vnode* rootvnode = NULL;
+int (*copyout)(const void* kaddr, void* udaddr, size_t len) = NULL;
+int (*copyin)(const void* uaddr, void* kaddr, size_t len) = NULL;
+int (*copyout_nofault)(const void* kaddr, void* udaddr, size_t len) = NULL;
+int (*copyin_nofault)(const void* uaddr, void* kaddr, size_t len) = NULL;
+int (*copyinstr)(const void* uaddr, void* kaddr, size_t len, size_t*) = NULL;
+int (*kern_open)(struct thread* td, const char* path, int pathseg, int flags, int mode) = NULL;
+int (*kern_mkdir)(struct thread* td, char* path, int pathseg, int mode) = NULL;
+vm_map_t kernel_map = NULL;
+vm_offset_t(*kmem_alloc)(vm_map_t map, vm_size_t size) = NULL;
+void(*kmem_free)(void* map, void* addr, size_t size) = NULL;
+int (*vn_fullpath)(struct thread* td, struct vnode* vp, char** retbuf, char** freebuf) = NULL;
+int (*fuse_loader)(void* m, int op, void* arg) = NULL;
+void (*dmamini_initialize_ioctl)() = NULL;
 
 /* STD Lib */
-void* M_TEMP = 0;
-void* M_MOUNT = 0;
-void* (*malloc)(unsigned long size, void* type, int flags) = 0;
-void (*free)(void* addr, void* type) = 0;
-void (*memcpy)(void* dst, const void* src, size_t len) = 0;
-void* (*memset)(void* ptr, int value, size_t num) = 0;
-int (*memcmp)(const void* ptr1, const void* ptr2, size_t num) = 0;
-size_t(*strlen)(const char* str) = 0;
-int (*strcpy)(char* str1, char* str2) = 0;
-char* (*strncpy)(char* destination, const char* source, size_t num) = 0;
-int (*strcmp)(const char* str1, const char* str2) = 0;
-char* (*strstr)(const char* str1, const char* str2) = 0;
-int (*sprintf)(char* dst, const char* fmt, ...) = 0;
-int (*snprintf)(char* str, size_t size, const char* format, ...) = 0;
-int (*vsprintf)(char* dst, const char* fmt, va_list ap);
-int (*vprintf)(const char* fmt, va_list arg) = 0;
-int(*sscanf)(const char* str, const char* format, ...) = 0;
-char* (*strdup)(const char* s, void* type) = 0;
-char* (*realloc)(void* addr, unsigned long size, void* mtp, int flags) = 0;
-void(*printf)(const char* fmt, ...) = nullptr;
-void(*hexdump)(const void* ptr, int length, const char* hdr, int flags) = nullptr;
-bool (*dynlib_is_host_path)(char* s) = nullptr;
-char* (*dynlib_basename)(char* s) = nullptr;
-char* (*dynlib_basename_host)(char* s) = nullptr;
+void* M_TEMP = NULL;
+void* M_MOUNT = NULL;
+void* (*malloc)(unsigned long size, void* type, int flags) = NULL;
+void (*free)(void* addr, void* type) = NULL;
+void (*memcpy)(void* dst, const void* src, size_t len) = NULL;
+void* (*memset)(void* ptr, int value, size_t num) = NULL;
+int (*memcmp)(const void* ptr1, const void* ptr2, size_t num) = NULL;
+size_t(*strlen)(const char* str) = NULL;
+int (*strcpy)(char* str1, char* str2) = NULL;
+char* (*strncpy)(char* destination, const char* source, size_t num) = NULL;
+int (*strcmp)(const char* str1, const char* str2) = NULL;
+char* (*strstr)(const char* str1, const char* str2) = NULL;
+int (*sprintf)(char* dst, const char* fmt, ...) = NULL;
+int (*snprintf)(char* str, size_t size, const char* format, ...) = NULL;
+int (*vsprintf)(char* dst, const char* fmt, va_list ap) = NULL;
+int (*vprintf)(const char* fmt, va_list arg) = NULL;
+int (*sscanf)(const char* str, const char* format, ...) = NULL;
+char* (*strdup)(const char* s, void* type) = NULL;
+char* (*realloc)(void* addr, unsigned long size, void* mtp, int flags) = NULL;
+void (*printf)(const char* fmt, ...) = NULL;
+void (*hexdump)(const void* ptr, int length, const char* hdr, int flags) = NULL;
+bool (*dynlib_is_host_path)(char* s) = NULL;
+char* (*dynlib_basename)(char* s) = NULL;
+char* (*dynlib_basename_host)(char* s) = NULL;
 
 /* Event Handling */
-#if SOFTWARE_VERSION <= 505
-eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, void* arg, int priority);
-#elif SOFTWARE_VERSION >= 672
-eventhandler_tag(*eventhandler_register)(eventhandler_list* list, const char* name, void* func, const char* unk, void* arg, int priority);
-#endif
-void (*eventhandler_deregister)(eventhandler_list* a, eventhandler_entry* b);
-eventhandler_list* (*eventhandler_find_list)(const char* name);
+eventhandler_tag(*eventhandler_register)(struct eventhandler_list* list, const char* name, void* func, const char* unk, void* arg, int priority) = NULL;
+void (*eventhandler_deregister)(struct eventhandler_list* a, struct eventhandler_entry* b) = NULL;
+struct eventhandler_list* (*eventhandler_find_list)(const char* name) = NULL;
 
 /* Proc */
-proclist* allproc = 0;
-sx* allproc_lock = 0;
-proc* (*pfind)(int pid);
-int (*proc_rwmem)(proc* p, uio* uio) = 0;
-int (*create_thread)(thread* td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp) = 0;
-void* (*do_dlsym)(dynlib* dl, dynlib_obj* obj, char* name, char* libName, unsigned int flags) = 0;
-dynlib_obj* (*find_obj_by_handle)(dynlib* dl, int handle) = 0;
+struct proclist* allproc = NULL;
+struct sx* allproc_lock = NULL;
+struct proc* (*pfind)(int pid) = NULL;
+int (*proc_rwmem)(struct proc* p, struct uio* uio) = NULL;
+int (*create_thread)(struct thread* td, uint64_t ctx, void* start_func, void* arg, char* stack_base, size_t stack_size, char* tls_base, long* child_tid, long* parent_tid, uint64_t flags, uint64_t rtp) = NULL;
+void* (*do_dlsym)(struct dynlib* dl, struct dynlib_obj* obj, char* name, char* libName, unsigned int flags) = NULL;
+struct dynlib_obj* (*find_obj_by_handle)(struct dynlib* dl, int handle) = NULL;
 
 /* Fake Selfs */
-int (*sceSblAuthMgrGetSelfInfo)(SelfContext* ctx, void* exInfo) = nullptr;
-void (*sceSblAuthMgrSmStart)(void**) = nullptr;
-int (*sceSblAuthMgrVerifyHeader)(SelfContext* ctx) = nullptr;
+int (*sceSblAuthMgrGetSelfInfo)(void* ctx, void* exInfo) = NULL;
+void (*sceSblAuthMgrSmStart)(void**) = NULL;
+int (*sceSblAuthMgrVerifyHeader)(void* ctx) = NULL;
 
 /* Fake Pkgs */
-fpu_kern_ctx* fpu_ctx;
-int (*fpu_kern_enter)(thread* td, fpu_kern_ctx* ctx, uint32_t flags);
-int (*fpu_kern_leave)(thread* td, fpu_kern_ctx* ctx);
-void (*Sha256Hmac)(uint8_t hash[0x20], const uint8_t* data, size_t data_size, const uint8_t* key, int key_size);
-int (*sceSblDriverSendMsg)(SblMsg* msg, size_t size);
-int (*sceSblPfsSetKeys)(uint32_t* p_Ekh, uint32_t* p_Skh, uint8_t* p_Eekpfs, Ekc* p_Eekc, unsigned int p_PubkeyVer, unsigned int p_KeyVer, PfsHeader* p_Header, size_t p_HeaderSize, unsigned int p_Type, unsigned int p_Finalized, unsigned int p_IsDisc);
-int (*RsaesPkcs1v15Dec2048CRT)(RsaBuffer* out, RsaBuffer* in, RsaKey* key);
-int (*AesCbcCfb128Encrypt)(uint8_t* out, const uint8_t* in, size_t data_size, const uint8_t* key, int key_size, uint8_t* iv);
-int (*AesCbcCfb128Decrypt)(uint8_t* out, const uint8_t* in, size_t data_size, const uint8_t* key, int key_size, uint8_t* iv);
-int (*sceSblKeymgrSetKeyForPfs)(SblKeyDesc* key, unsigned int* handle);
-int (*sceSblKeymgrClearKey)(uint32_t kh);
-int (*sceSblKeymgrSetKeyStorage)(uint64_t key_gpu_va, unsigned int key_size, uint32_t key_id, uint32_t key_handle);
+void* fpu_ctx = NULL;
+int (*fpu_kern_enter)(struct thread* td, void* ctx, uint32_t flags) = NULL;
+int (*fpu_kern_leave)(struct thread* td, void* ctx) = NULL;
+void (*Sha256Hmac)(uint8_t hash[0x20], const uint8_t* data, size_t data_size, const uint8_t* key, int key_size) = NULL;
+int (*sceSblDriverSendMsg)(void* msg, size_t size) = NULL;
+int (*sceSblPfsSetKeys)(uint32_t* p_Ekh, uint32_t* p_Skh, uint8_t* p_Eekpfs, void* p_Eekc, unsigned int p_PubkeyVer, unsigned int p_KeyVer, void* p_Header, size_t p_HeaderSize, unsigned int p_Type, unsigned int p_Finalized, unsigned int p_IsDisc) = NULL;
+int (*RsaesPkcs1v15Dec2048CRT)(void* out, void* in, void* key) = NULL;
+int (*AesCbcCfb128Encrypt)(uint8_t* out, const uint8_t* in, size_t data_size, const uint8_t* key, int key_size, uint8_t* iv) = NULL;
+int (*AesCbcCfb128Decrypt)(uint8_t* out, const uint8_t* in, size_t data_size, const uint8_t* key, int key_size, uint8_t* iv) = NULL;
+int (*sceSblKeymgrSetKeyForPfs)(void* key, unsigned int* handle) = NULL;
+int (*sceSblKeymgrClearKey)(uint32_t kh) = NULL;
+int (*sceSblKeymgrSetKeyStorage)(uint64_t key_gpu_va, unsigned int key_size, uint32_t key_id, uint32_t key_handle) = NULL;
 
 /* Misc Homebrew */
-mtx* sbl_drv_msg_mtx;
-uint64_t gpu_va_page_list;
-uint64_t sbl_keymgr_key_rbtree;
-sx* sbl_pfs_sx;
-uint64_t* sbl_keymgr_buf_gva;
-uint64_t* sbl_keymgr_buf_va;
-_SblKeySlotQueue* sbl_keymgr_key_slots;
-SelfHeader* mini_syscore_self_binary;
+struct mtx* sbl_drv_msg_mtx = NULL;
+uint64_t gpu_va_page_list = 0;
+uint64_t sbl_keymgr_key_rbtree = 0;
+struct sx* sbl_pfs_sx = NULL;
+uint64_t* sbl_keymgr_buf_gva = NULL;
+uint64_t* sbl_keymgr_buf_va = NULL;
+struct _SblKeySlotQueue* sbl_keymgr_key_slots = NULL;
+struct _SelfHeader* mini_syscore_self_binary = NULL;
 
 /* Virtual Memory */
-void (*vm_map_lock)(vm_map* map);
-void (*vm_map_unlock)(vm_map* map);
-int (*vm_map_findspace)(vm_map* map, uint64_t start, uint64_t length, uint64_t* addr);
-int (*vm_map_delete)(vm_map* map, uint64_t start, uint64_t end);
-int (*vm_map_insert)(vm_map* map, uint64_t object, uint64_t offset, uint64_t start, uint64_t end, int prot, int max, int cow);
-int (*vm_map_protect)(vm_map* map, uint64_t start, uint64_t end, int new_prot, bool set_max);
+void (*vm_map_lock)(struct vm_map* map) = NULL;
+void (*vm_map_unlock)(struct vm_map* map) = NULL;
+int (*vm_map_findspace)(struct vm_map* map, uint64_t start, uint64_t length, uint64_t* addr) = NULL;
+int (*vm_map_delete)(struct vm_map* map, uint64_t start, uint64_t end) = NULL;
+int (*vm_map_insert)(struct vm_map* map, uint64_t object, uint64_t offset, uint64_t start, uint64_t end, int prot, int max, int cow) = NULL;
+int (*vm_map_protect)(struct vm_map* map, uint64_t start, uint64_t end, int new_prot, bool set_max) = NULL;
 
 /* Mutex Locks */
-void (*mtx_lock_flags)(mtx* mutex, int flags);
-void (*mtx_unlock_flags)(mtx* mutex, int flags);
-void (*_mtx_lock_flags)(mtx* mutex, int flags, const char* file, int line);
-void (*_mtx_unlock_flags)(mtx* mutex, int flags, const char* file, int line);
-int (*sx_xlock)(struct sx* sx, int opts);
-int (*sx_xunlock)(struct sx* sx);
-int(*sx_slock)(struct sx* sx, int opts, const char* file, int line);
-int(*sx_sunlock)(struct sx* sx, int opts, const char* file, int line);
+void (*mtx_lock_flags)(struct mtx* mutex, int flags) = NULL;
+void (*mtx_unlock_flags)(struct mtx* mutex, int flags) = NULL;
+void (*_mtx_lock_flags)(struct mtx* mutex, int flags, const char* file, int line) = NULL;
+void (*_mtx_unlock_flags)(struct mtx* mutex, int flags, const char* file, int line) = NULL;
+int (*sx_xlock)(struct sx* sx, int opts) = NULL;
+int (*sx_xunlock)(struct sx* sx) = NULL;
+int(*sx_slock)(struct sx* sx, int opts, const char* file, int line) = NULL;
+int(*sx_sunlock)(struct sx* sx, int opts, const char* file, int line) = NULL;
 
 /* Driver */
-int(*make_dev_p)(int _flags, cdev** _cdev, cdevsw* _devsw, ucred* _cr, uid_t _uid, gid_t _gid, int _mode, const char* _fmt, ...) = nullptr;
-void(*destroy_dev)(cdev* _dev) = nullptr;
-void(*devfs_rule_applyde_recursive)(struct devfs_krule* dk, struct devfs_dirent* de) = nullptr;
+int(*make_dev_p)(int _flags, struct cdev** _cdev, struct cdevsw* _devsw, struct ucred* _cr, uid_t _uid, gid_t _gid, int _mode, const char* _fmt, ...) = NULL;
+void(*destroy_dev)(struct cdev* _dev) = NULL;
+void(*devfs_rule_applyde_recursive)(struct devfs_krule* dk, struct devfs_dirent* de) = NULL;
 
 /* Flash & NVS */
-int (*icc_nvs_read)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value) = nullptr;
-int (*icc_nvs_write)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value) = nullptr;
+int (*icc_nvs_read)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value) = NULL;
+int (*icc_nvs_write)(uint32_t block, uint32_t offset, uint32_t size, uint8_t* value) = NULL;
 
 /* Sysctl */
-sysctl_oid_list* sysctl__children = nullptr;
-void (*sysctl_ctx_init)(sysctl_ctx_list* ctx) = nullptr;
-void (*sysctl_ctx_free)(sysctl_ctx_list* ctx) = nullptr;
-sysctl_oid* (*sysctl_add_oid)(struct sysctl_ctx_list* clist,
-struct sysctl_oid_list* parent, int nbr, const char* name, int kind, void* arg1, intptr_t arg2, int (*handler) (SYSCTL_HANDLER_ARGS), const char* fmt, const char* descr) = nullptr;
-int (*sysctl_handle_int)(SYSCTL_HANDLER_ARGS) = nullptr;
-int (*sysctl_handle_string)(SYSCTL_HANDLER_ARGS) = nullptr;
+struct sysctl_oid_list* sysctl__children = NULL;
+void (*sysctl_ctx_init)(struct sysctl_ctx_list* ctx) = NULL;
+void (*sysctl_ctx_free)(struct sysctl_ctx_list* ctx) = NULL;
+struct sysctl_oid* (*sysctl_add_oid)(struct sysctl_ctx_list* clist, struct sysctl_oid_list* parent, int nbr, const char* name, int kind, void* arg1, intptr_t arg2, int (*handler)(), const char* fmt, const char* descr) = NULL;
+int (*sysctl_handle_int)() = NULL;
+int (*sysctl_handle_string)() = NULL;
 
-void ResolveFunctions()
+void InitResolver(KernelAddrs* offsets)
 {
-    /* Util */
-    NATIVE_RESOLVE(sysvec);
-    NATIVE_RESOLVE(prison0);
-    NATIVE_RESOLVE(rootvnode);
-    NATIVE_RESOLVE(copyin);
-    NATIVE_RESOLVE(copyout);
-    NATIVE_RESOLVE(copyin_nofault);
-    NATIVE_RESOLVE(copyout_nofault);
-	NATIVE_RESOLVE(copyinstr);
-    NATIVE_RESOLVE(kern_open);
-    NATIVE_RESOLVE(kern_mkdir);
-    kernel_map = *(vm_map_t*)(KernelBase + addr_kernel_map);
-    NATIVE_RESOLVE(kmem_alloc);
-    NATIVE_RESOLVE(kmem_free);
-    NATIVE_RESOLVE(vn_fullpath);
-    NATIVE_RESOLVE(fuse_loader);
-	NATIVE_RESOLVE(dmamini_initialize_ioctl);
+	/* Util */
+	RESOLVE(sysvec);
+	RESOLVE(prison0);
+	RESOLVE(rootvnode);
+	RESOLVE(copyout);
+	RESOLVE(copyin);
+	RESOLVE(copyout_nofault);
+	RESOLVE(copyin_nofault);
+	RESOLVE(copyinstr);
+	RESOLVE(kern_open);
+	RESOLVE(kern_mkdir);
+	kernel_map = *(vm_map_t*)(offsets->kernel_map);
+	RESOLVE(kmem_alloc);
+	RESOLVE(kmem_free);
+	RESOLVE(vn_fullpath);
+	RESOLVE(fuse_loader);
+	RESOLVE(dmamini_initialize_ioctl);
 
-    /* STD Lib */
-    NATIVE_RESOLVE(M_TEMP);
-    NATIVE_RESOLVE(M_MOUNT);
-    NATIVE_RESOLVE(malloc);
-    NATIVE_RESOLVE(free);
-    NATIVE_RESOLVE(memcpy);
-    NATIVE_RESOLVE(memset);
-    NATIVE_RESOLVE(memcmp);
-    NATIVE_RESOLVE(strlen);
-    NATIVE_RESOLVE(strcpy);
-    NATIVE_RESOLVE(strncpy);
-    NATIVE_RESOLVE(strcmp);
-    NATIVE_RESOLVE(strstr);
-    NATIVE_RESOLVE(sprintf);
-    NATIVE_RESOLVE(snprintf);
-    NATIVE_RESOLVE(vsprintf);
-    NATIVE_RESOLVE(vprintf);
-    NATIVE_RESOLVE(sscanf);
-    NATIVE_RESOLVE(strdup);
-    NATIVE_RESOLVE(realloc);
-    NATIVE_RESOLVE(printf);
-	NATIVE_RESOLVE(hexdump);
-	NATIVE_RESOLVE(dynlib_is_host_path);
-	NATIVE_RESOLVE(dynlib_basename);
-	NATIVE_RESOLVE(dynlib_basename_host);
+	/* STD Lib */
+	RESOLVE(M_TEMP);
+	RESOLVE(M_MOUNT);
+	RESOLVE(malloc);
+	RESOLVE(free);
+	RESOLVE(memcpy);
+	RESOLVE(memset);
+	RESOLVE(memcmp);
+	RESOLVE(strlen);
+	RESOLVE(strcpy);
+	RESOLVE(strncpy);
+	RESOLVE(strcmp);
+	RESOLVE(strstr);
+	RESOLVE(sprintf);
+	RESOLVE(snprintf);
+	RESOLVE(vsprintf);
+	RESOLVE(vprintf);
+	RESOLVE(sscanf);
+	RESOLVE(strdup);
+	RESOLVE(realloc);
+	RESOLVE(printf);
+	RESOLVE(hexdump);
+	RESOLVE(dynlib_is_host_path);
+	RESOLVE(dynlib_basename);
+	RESOLVE(dynlib_basename_host);
 
-    /* Event Handling */
-    NATIVE_RESOLVE(eventhandler_register);
-    NATIVE_RESOLVE(eventhandler_deregister);
-    NATIVE_RESOLVE(eventhandler_find_list);
+	/* Event Handling */
+	RESOLVE(eventhandler_register);
+	RESOLVE(eventhandler_deregister);
+	RESOLVE(eventhandler_find_list);
 
-    /* Proc */
-    NATIVE_RESOLVE(allproc);
-	NATIVE_RESOLVE(allproc_lock);
-    NATIVE_RESOLVE(pfind);
-    NATIVE_RESOLVE(proc_rwmem);
-    NATIVE_RESOLVE(create_thread);
-    NATIVE_RESOLVE(do_dlsym);
-    NATIVE_RESOLVE(find_obj_by_handle);
+	/* Proc */
+	RESOLVE(allproc);
+	RESOLVE(allproc_lock);
+	RESOLVE(pfind);
+	RESOLVE(proc_rwmem);
+	RESOLVE(create_thread);
+	RESOLVE(do_dlsym);
+	RESOLVE(find_obj_by_handle);
 
-    /* Fake Selfs */
-    NATIVE_RESOLVE(sceSblAuthMgrGetSelfInfo);
-    NATIVE_RESOLVE(sceSblAuthMgrSmStart);
-    NATIVE_RESOLVE(sceSblAuthMgrVerifyHeader);
+	/* Fake Selfs */
+	RESOLVE(sceSblAuthMgrGetSelfInfo);
+	RESOLVE(sceSblAuthMgrSmStart);
+	RESOLVE(sceSblAuthMgrVerifyHeader);
 
-    /* Fake Pkgs */
-    NATIVE_RESOLVE(fpu_ctx);
-    NATIVE_RESOLVE(fpu_kern_enter);
-    NATIVE_RESOLVE(fpu_kern_leave);
-    NATIVE_RESOLVE(Sha256Hmac);
-    NATIVE_RESOLVE(sceSblDriverSendMsg);
-    NATIVE_RESOLVE(sceSblPfsSetKeys);
-    NATIVE_RESOLVE(RsaesPkcs1v15Dec2048CRT);
-    NATIVE_RESOLVE(AesCbcCfb128Encrypt);
-    NATIVE_RESOLVE(AesCbcCfb128Decrypt);
-    NATIVE_RESOLVE(sceSblKeymgrSetKeyForPfs);
-    NATIVE_RESOLVE(sceSblKeymgrClearKey);
-    NATIVE_RESOLVE(sceSblKeymgrSetKeyStorage);
+	/* Fake Pkgs */
+	RESOLVE(fpu_ctx);
+	RESOLVE(fpu_kern_enter);
+	RESOLVE(fpu_kern_leave);
+	RESOLVE(Sha256Hmac);
+	RESOLVE(sceSblDriverSendMsg);
+	RESOLVE(sceSblPfsSetKeys);
+	RESOLVE(RsaesPkcs1v15Dec2048CRT);
+	RESOLVE(AesCbcCfb128Encrypt);
+	RESOLVE(AesCbcCfb128Decrypt);
+	RESOLVE(sceSblKeymgrSetKeyForPfs);
+	RESOLVE(sceSblKeymgrClearKey);
+	RESOLVE(sceSblKeymgrSetKeyStorage);
 
-    /* Misc Homebrew */
-    NATIVE_RESOLVE(sbl_drv_msg_mtx);
-    NATIVE_RESOLVE(gpu_va_page_list);
-    NATIVE_RESOLVE(sbl_keymgr_key_rbtree);
-    NATIVE_RESOLVE(sbl_pfs_sx);
-    NATIVE_RESOLVE(sbl_keymgr_buf_gva);
-    NATIVE_RESOLVE(sbl_keymgr_buf_va);
-    NATIVE_RESOLVE(sbl_keymgr_key_slots);
-    NATIVE_RESOLVE(mini_syscore_self_binary);
+	/* Misc Homebrew */
+	RESOLVE(sbl_drv_msg_mtx);
+	RESOLVE(gpu_va_page_list);
+	RESOLVE(sbl_keymgr_key_rbtree);
+	RESOLVE(sbl_pfs_sx);
+	RESOLVE(sbl_keymgr_buf_gva);
+	RESOLVE(sbl_keymgr_buf_va);
+	RESOLVE(sbl_keymgr_key_slots);
+	RESOLVE(mini_syscore_self_binary);
 
-    /* Virtual Memory */
-    NATIVE_RESOLVE(vm_map_lock);
-    NATIVE_RESOLVE(vm_map_unlock);
-    NATIVE_RESOLVE(vm_map_findspace);
-    NATIVE_RESOLVE(vm_map_delete);
-    NATIVE_RESOLVE(vm_map_insert);
-    NATIVE_RESOLVE(vm_map_protect);
+	/* Virtual Memory */
+	RESOLVE(vm_map_lock);
+	RESOLVE(vm_map_unlock);
+	RESOLVE(vm_map_findspace);
+	RESOLVE(vm_map_delete);
+	RESOLVE(vm_map_insert);
+	RESOLVE(vm_map_protect);
 
-    /* Mutex Locks */
-    NATIVE_RESOLVE(mtx_lock_flags);
-    NATIVE_RESOLVE(mtx_unlock_flags);
-    _mtx_lock_flags = decltype(_mtx_lock_flags)(mtx_lock_flags);
-    _mtx_unlock_flags = decltype(_mtx_unlock_flags)(mtx_unlock_flags);
-    NATIVE_RESOLVE(sx_xlock);
-    NATIVE_RESOLVE(sx_xunlock);
-	NATIVE_RESOLVE(sx_slock);
-	NATIVE_RESOLVE(sx_sunlock);
+	/* Mutex Locks */
+	RESOLVE(mtx_lock_flags);
+	RESOLVE(mtx_unlock_flags);
+	_mtx_lock_flags = decltype(_mtx_lock_flags)(mtx_lock_flags);
+	_mtx_unlock_flags = decltype(_mtx_unlock_flags)(mtx_unlock_flags);
+	RESOLVE(sx_xlock);
+	RESOLVE(sx_xunlock);
+	RESOLVE(sx_slock);
+	RESOLVE(sx_sunlock);
 
-    /* Driver */
-    NATIVE_RESOLVE(make_dev_p);
-    NATIVE_RESOLVE(destroy_dev);
-	NATIVE_RESOLVE(devfs_rule_applyde_recursive);
+	/* Driver */
+	RESOLVE(make_dev_p);
+	RESOLVE(destroy_dev);
+	RESOLVE(devfs_rule_applyde_recursive);
 
-    /* Flash & NVS */
-    NATIVE_RESOLVE(icc_nvs_read);
-    NATIVE_RESOLVE(icc_nvs_write);
+	/* Flash & NVS */
+	RESOLVE(icc_nvs_read);
+	RESOLVE(icc_nvs_write);
 
-    /* Sysctl */
-    NATIVE_RESOLVE(sysctl__children);
-    NATIVE_RESOLVE(sysctl_ctx_init);
-    NATIVE_RESOLVE(sysctl_ctx_free);
-    NATIVE_RESOLVE(sysctl_add_oid);
-    NATIVE_RESOLVE(sysctl_handle_int);
-    NATIVE_RESOLVE(sysctl_handle_string);
+	/* Sysctl */
+	RESOLVE(sysctl__children);
+	RESOLVE(sysctl_ctx_init);
+	RESOLVE(sysctl_ctx_free);
+	RESOLVE(sysctl_add_oid);
+	RESOLVE(sysctl_handle_int);
+	RESOLVE(sysctl_handle_string);
 }

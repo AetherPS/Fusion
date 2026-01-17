@@ -1,195 +1,200 @@
 #pragma once
 
-#if SOFTWARE_VERSION == 1300
+#include <stdint.h>
 
-/* Util */
-#define addr_Xfast_syscall		                0x000001C0
-#define addr_sysvec                             0x01A7CFE8
-#define addr_prison0                            0x0111FA18
-#define addr_rootvnode                          0x02136E90
-#define addr_copyout							0x002BD5E0
-#define addr_copyin								0x002BD6D0
-#define addr_copyout_nofault					0x0036C6C0
-#define addr_copyin_nofault						0x0036C680
-#define addr_copyinstr							0x002BDB80
-#define addr_kern_open                          0x003435D0
-#define addr_kern_mkdir                         0x00348710
-#define addr_kernel_map                         0x022D1D50
-#define addr_kmem_alloc                         0x00465A40
-#define addr_kmem_free                          0x00465C10
-#define addr_vn_fullpath                        0x00308CD0
-#define addr_fuse_loader						0x004953C0
-#define addr_DirectMemoryHook					0x00283D40
-#define addr_devact_onioctl_hook				0x00638980
-#define addr_dipsw_onioctl_hook					0x00655A30
-#define addr_sceKernelCheckDipsw_Hook			0x00655120
-#define addr_dmamini_initialize_ioctl			0x005C9710
-#define addr_trapHook                           0x0
-#define addr_trap_fatalHook                     0x0
-#define addr_QAFlags							0x021CC5D0
-#define addr_getnewvnode						0x0036E2E0
+static inline void InitKernel1300(uint64_t kernelBase, KernelAddrs* addrs)
+{
+    /* Util */
+    addrs->Xfast_syscall = (void*)(kernelBase + 0x000001C0);
+    addrs->sysvec = (void*)(kernelBase + 0x01A7CFE8);
+    addrs->prison0 = (void*)(kernelBase + 0x0111FA18);
+    addrs->rootvnode = (void*)(kernelBase + 0x02136E90);
+    addrs->copyout = (void*)(kernelBase + 0x002BD5E0);
+    addrs->copyin = (void*)(kernelBase + 0x002BD6D0);
+    addrs->copyout_nofault = (void*)(kernelBase + 0x0036C6C0);
+    addrs->copyin_nofault = (void*)(kernelBase + 0x0036C680);
+    addrs->copyinstr = (void*)(kernelBase + 0x002BDB80);
+    addrs->kern_open = (void*)(kernelBase + 0x003435D0);
+    addrs->kern_mkdir = (void*)(kernelBase + 0x00348710);
+    addrs->kernel_map = (void*)(kernelBase + 0x022D1D50);
+    addrs->kmem_alloc = (void*)(kernelBase + 0x00465A40);
+    addrs->kmem_free = (void*)(kernelBase + 0x00465C10);
+    addrs->vn_fullpath = (void*)(kernelBase + 0x00308CD0);
+    addrs->fuse_loader = (void*)(kernelBase + 0x004953C0);
+    addrs->DirectMemoryHook = (void*)(kernelBase + 0x00283D40);
+    addrs->devact_onioctl_hook = (void*)(kernelBase + 0x00638980);
+    addrs->dipsw_onioctl_hook = (void*)(kernelBase + 0x00655A30);
+    addrs->sceKernelCheckDipsw_Hook = (void*)(kernelBase + 0x00655120);
+    addrs->dmamini_initialize_ioctl = (void*)(kernelBase + 0x005C9710);
+    addrs->trapHook = (void*)(kernelBase + 0x0);
+    addrs->trap_fatalHook = (void*)(kernelBase + 0x0);
+    addrs->QAFlags = kernelBase + 0x021CC5D0;
+    addrs->getnewvnode = (void*)(kernelBase + 0x0036E2E0);
 
-/* STD Lib */
-#define addr_M_TEMP                             0x01520D00
-#define addr_M_MOUNT                            0x01A40250
-#define addr_malloc								0x00009520
-#define addr_free					    		0x000096E0
-#define addr_memcpy								0x002BD4C0
-#define addr_memset								0x001FA1A0
-#define addr_memcmp								0x00394300
-#define addr_strlen                             0x0036AB90
-#define addr_strcpy								0x004176E0
-#define addr_strncpy                            0x003A82B0
-#define addr_strcmp                             0x000B2940
-#define addr_strncmp                            0x003C6370
-#define addr_strstr                             0x0021CCB0
-#define addr_sprintf                            0x002E0680
-#define addr_snprintf                           0x002E0740
-#define addr_vsprintf                           0x002E0710
-#define addr_vprintf                            0x002E04B0
-#define addr_sscanf                             0x0043E170
-#define addr_strdup                             0x00407850
-#define addr_realloc                            0x000097E0
-#define addr_printf                             0x002E0440
-#define addr_hexdump							0x002E1D70
-#define addr_dynlib_is_host_path				0x001B8690
-#define addr_dynlib_basename					0x001B8720
-#define addr_dynlib_basename_host				0x001B86F0
+    /* STD Lib */
+    addrs->M_TEMP = (void*)(kernelBase + 0x01520D00);
+    addrs->M_MOUNT = (void*)(kernelBase + 0x01A40250);
+    addrs->malloc = (void*)(kernelBase + 0x00009520);
+    addrs->free = (void*)(kernelBase + 0x000096E0);
+    addrs->memcpy = (void*)(kernelBase + 0x002BD4C0);
+    addrs->memset = (void*)(kernelBase + 0x001FA1A0);
+    addrs->memcmp = (void*)(kernelBase + 0x00394300);
+    addrs->strlen = (void*)(kernelBase + 0x0036AB90);
+    addrs->strcpy = (void*)(kernelBase + 0x004176E0);
+    addrs->strncpy = (void*)(kernelBase + 0x003A82B0);
+    addrs->strcmp = (void*)(kernelBase + 0x000B2940);
+    addrs->strncmp = (void*)(kernelBase + 0x003C6370);
+    addrs->strstr = (void*)(kernelBase + 0x0021CCB0);
+    addrs->sprintf = (void*)(kernelBase + 0x002E0680);
+    addrs->snprintf = (void*)(kernelBase + 0x002E0740);
+    addrs->vsprintf = (void*)(kernelBase + 0x002E0710);
+    addrs->vprintf = (void*)(kernelBase + 0x002E04B0);
+    addrs->sscanf = (void*)(kernelBase + 0x0043E170);
+    addrs->strdup = (void*)(kernelBase + 0x00407850);
+    addrs->realloc = (void*)(kernelBase + 0x000097E0);
+    addrs->printf = (void*)(kernelBase + 0x002E0440);
+    addrs->hexdump = (void*)(kernelBase + 0x002E1D70);
+    addrs->dynlib_is_host_path = (void*)(kernelBase + 0x001B8690);
+    addrs->dynlib_basename = (void*)(kernelBase + 0x001B8720);
+    addrs->dynlib_basename_host = (void*)(kernelBase + 0x001B86F0);
 
-/* Event Handling */
-#define addr_eventhandler_register              0x00224170
-#define addr_eventhandler_deregister            0x00224500
-#define addr_eventhandler_find_list             0x002246F0
+    /* Event Handling */
+    addrs->eventhandler_register = (void*)(kernelBase + 0x00224170);
+    addrs->eventhandler_deregister = (void*)(kernelBase + 0x00224500);
+    addrs->eventhandler_find_list = (void*)(kernelBase + 0x002246F0);
 
-/* Proc */
-#define addr_allproc						    0x01B28538
-#define addr_allproc_lock						0x01B284D8
-#define addr_pfind								0x0000EA40
-#define addr_proc_rwmem							0x00366000
-#define addr_create_thread                      0x0004C6C0
-#define addr_do_dlsym							0x003BAF60
-#define addr_find_obj_by_handle					0x003BC0E0
+    /* Proc */
+    addrs->allproc = (void*)(kernelBase + 0x01B28538);
+    addrs->allproc_lock = (void*)(kernelBase + 0x01B284D8);
+    addrs->pfind = (void*)(kernelBase + 0x0000EA40);
+    addrs->proc_rwmem = (void*)(kernelBase + 0x00366000);
+    addrs->create_thread = (void*)(kernelBase + 0x0004C6C0);
+    addrs->do_dlsym = (void*)(kernelBase + 0x003BAF60);
+    addrs->find_obj_by_handle = (void*)(kernelBase + 0x003BC0E0);
 
-/* Virtual Memory */
-#define addr_vm_map_lock						0x002F6FC0
-#define addr_vm_map_unlock 						0x002F7030
-#define addr_vm_map_findspace					0x002FA1D0
-#define addr_vm_map_delete						0x002F9C10
-#define addr_vm_map_insert						0x002F8310
-#define addr_vm_map_protect						0x002FBF70
+    /* Virtual Memory */
+    addrs->vm_map_lock = (void*)(kernelBase + 0x002F6FC0);
+    addrs->vm_map_unlock = (void*)(kernelBase + 0x002F7030);
+    addrs->vm_map_findspace = (void*)(kernelBase + 0x002FA1D0);
+    addrs->vm_map_delete = (void*)(kernelBase + 0x002F9C10);
+    addrs->vm_map_insert = (void*)(kernelBase + 0x002F8310);
+    addrs->vm_map_protect = (void*)(kernelBase + 0x002FBF70);
 
-/* Mutex Locks */
-#define addr_mtx_lock_flags                     0x00378320
-#define addr_mtx_unlock_flags                   0x003785D0
-#define addr_sx_xlock							0x000A3840
-#define addr_sx_xunlock							0x000A3A00
-#define addr_sx_slock							0x000A3660
-#define addr_sx_sunlock							0x000A3950
+    /* Mutex Locks */
+    addrs->mtx_lock_flags = (void*)(kernelBase + 0x00378320);
+    addrs->mtx_unlock_flags = (void*)(kernelBase + 0x003785D0);
+    addrs->sx_xlock = (void*)(kernelBase + 0x000A3840);
+    addrs->sx_xunlock = (void*)(kernelBase + 0x000A3A00);
+    addrs->sx_slock = (void*)(kernelBase + 0x000A3660);
+    addrs->sx_sunlock = (void*)(kernelBase + 0x000A3950);
 
-/* Driver */
-#define addr_make_dev_p                         0x0038A970
-#define addr_destroy_dev                        0x0038AE90
-#define addr_devfs_rule_applyde_recursive       0x002DEB60
+    /* Driver */
+    addrs->make_dev_p = (void*)(kernelBase + 0x0038A970);
+    addrs->destroy_dev = (void*)(kernelBase + 0x0038AE90);
+    addrs->devfs_rule_applyde_recursive = (void*)(kernelBase + 0x002DEB60);
 
-/* Flash & NVS */
-#define addr_icc_nvs_read						0x000A5BD0
-#define addr_icc_nvs_write						0x000A5A10
+    /* Flash & NVS */
+    addrs->icc_nvs_read = (void*)(kernelBase + 0x000A5BD0);
+    addrs->icc_nvs_write = (void*)(kernelBase + 0x000A5A10);
 
-/* Sysctl */
-#define addr_sysctl__children					0x022CC600
-#define addr_sysctl_ctx_init					0x003F95B0
-#define addr_sysctl_ctx_free					0x003F95D0
-#define addr_sysctl_add_oid						0x003F9C10
-#define addr_sysctl_handle_int					0x003FA090
-#define addr_sysctl_handle_string				0x003FA330
+    /* Sysctl */
+    addrs->sysctl__children = (void*)(kernelBase + 0x022CC600);
+    addrs->sysctl_ctx_init = (void*)(kernelBase + 0x003F95B0);
+    addrs->sysctl_ctx_free = (void*)(kernelBase + 0x003F95D0);
+    addrs->sysctl_add_oid = (void*)(kernelBase + 0x003F9C10);
+    addrs->sysctl_handle_int = (void*)(kernelBase + 0x003FA090);
+    addrs->sysctl_handle_string = (void*)(kernelBase + 0x003FA330);
 
-/* FSelfs */
-#define addr_sceSblAuthMgrGetSelfInfo						0x0063D0A0
-#define addr_sceSblAuthMgrSmStart							0x0063DC30
-#define addr_sceSblAuthMgrVerifyHeader						0x0063C8C0
-#define addr_sbl_drv_msg_mtx								0x02647358
-#define addr_gpu_va_page_list								0x02647350
-#define addr_mini_syscore_self_binary						0x0153D6C8  
-#define addr_sceSblAuthMgrVerifyHeaderHook1					0x00642966
-#define addr_sceSblAuthMgrVerifyHeaderHook2					0x00643649
-#define addr_SceSblAuthMgrIsLoadable2Hook					0x006421CE
-#define addr_SceSblAuthMgrSmLoadSelfSegment_Mailbox			0x00640094
-#define addr_SceSblAuthMgrSmLoadSelfBlock_Mailbox			0x00640CB8
-#define addr_sceSblAuthMgrIsLoadable__sceSblACMgrGetPathId	0x0064207C
+    /* FSelfs */
+    addrs->sceSblAuthMgrGetSelfInfo = (void*)(kernelBase + 0x0063D0A0);
+    addrs->sceSblAuthMgrSmStart = (void*)(kernelBase + 0x0063DC30);
+    addrs->sceSblAuthMgrVerifyHeader = (void*)(kernelBase + 0x0063C8C0);
+    addrs->sbl_drv_msg_mtx = (void*)(kernelBase + 0x02647358);
+    addrs->gpu_va_page_list = (void*)(kernelBase + 0x02647350);
+    addrs->mini_syscore_self_binary = (void*)(kernelBase + 0x0153D6C8);
+    addrs->sceSblAuthMgrVerifyHeaderHook1 = (void*)(kernelBase + 0x00642966);
+    addrs->sceSblAuthMgrVerifyHeaderHook2 = (void*)(kernelBase + 0x00643649);
+    addrs->SceSblAuthMgrIsLoadable2Hook = (void*)(kernelBase + 0x006421CE);
+    addrs->SceSblAuthMgrSmLoadSelfSegment_Mailbox = (void*)(kernelBase + 0x00640094);
+    addrs->SceSblAuthMgrSmLoadSelfBlock_Mailbox = (void*)(kernelBase + 0x00640CB8);
+    addrs->sceSblAuthMgrIsLoadable__sceSblACMgrGetPathId = (void*)(kernelBase + 0x0064207C);
 
-/* Fake Pkgs */
-#define addr_sbl_keymgr_buf_gva								0x0266C808
-#define addr_sbl_keymgr_buf_va								0x0266C000
-#define addr_sbl_keymgr_key_slots							0x02668040
-#define addr_sbl_keymgr_key_rbtree							0x02668050
-#define addr_sbl_pfs_sx										0x0265C080
-#define addr_fpu_ctx										0x026542C0
-#define addr_fpu_kern_enter									0x001E0040
-#define addr_fpu_kern_leave									0x001E0100
-#define addr_Sha256Hmac										0x001F8DA0
-#define addr_sceSblDriverSendMsg							0x0061C030
-#define addr_sceSblPfsSetKeys								0x00626770
-#define addr_RsaesPkcs1v15Dec2048CRT						0x0021BC60
-#define addr_AesCbcCfb128Encrypt							0x00340E90
-#define addr_AesCbcCfb128Decrypt							0x003410C0
-#define addr_sceSblKeymgrSetKeyForPfs						0x0062B0C0
-#define addr_sceSblKeymgrClearKey							0x0062B400
-#define addr_sceSblKeymgrSetKeyStorage						0x006247D0
+    /* Fake Pkgs */
+    addrs->sbl_keymgr_buf_gva = (void*)(kernelBase + 0x0266C808);
+    addrs->sbl_keymgr_buf_va = (void*)(kernelBase + 0x0266C000);
+    addrs->sbl_keymgr_key_slots = (void*)(kernelBase + 0x02668040);
+    addrs->sbl_keymgr_key_rbtree = (void*)(kernelBase + 0x02668050);
+    addrs->sbl_pfs_sx = (void*)(kernelBase + 0x0265C080);
+    addrs->fpu_ctx = (void*)(kernelBase + 0x026542C0);
+    addrs->fpu_kern_enter = (void*)(kernelBase + 0x001E0040);
+    addrs->fpu_kern_leave = (void*)(kernelBase + 0x001E0100);
+    addrs->Sha256Hmac = (void*)(kernelBase + 0x001F8DA0);
+    addrs->sceSblDriverSendMsg = (void*)(kernelBase + 0x0061C030);
+    addrs->sceSblPfsSetKeys = (void*)(kernelBase + 0x00626770);
+    addrs->RsaesPkcs1v15Dec2048CRT = (void*)(kernelBase + 0x0021BC60);
+    addrs->AesCbcCfb128Encrypt = (void*)(kernelBase + 0x00340E90);
+    addrs->AesCbcCfb128Decrypt = (void*)(kernelBase + 0x003410C0);
+    addrs->sceSblKeymgrSetKeyForPfs = (void*)(kernelBase + 0x0062B0C0);
+    addrs->sceSblKeymgrClearKey = (void*)(kernelBase + 0x0062B400);
+    addrs->sceSblKeymgrSetKeyStorage = (void*)(kernelBase + 0x006247D0);
+    addrs->SceSblDriverSendMsgHook = (void*)(kernelBase + 0x00624875);
+    addrs->SceSblPfsSetKeysHook = (void*)(kernelBase + 0x006A2EF9);
+    addrs->NpdrmDecryptIsolatedRifHook = (void*)(kernelBase + 0x0064C5D0);
+    addrs->NpdrmDecryptRifNewHook = (void*)(kernelBase + 0x0064D39E);
+    addrs->SceSblKeymgrInvalidateKeySxXlockHook = (void*)(kernelBase + 0x0062C27D);
 
-#define addr_SceSblDriverSendMsgHook						0x00624875
-#define addr_SceSblPfsSetKeysHook							0x006A2EF9
-#define addr_NpdrmDecryptIsolatedRifHook					0x0064C5D0
-#define addr_NpdrmDecryptRifNewHook							0x0064D39E
-#define addr_SceSblKeymgrInvalidateKeySxXlockHook			0x0062C27D
+    /* Library Replacement */
+    addrs->load_prx = (void*)(kernelBase + 0x003B9CE0);
 
-/* Library Replacement */
-#define addr_load_prx					0x003B9CE0
+    /* TTY Redirector */
+    addrs->cloneuio = (void*)(kernelBase + 0x0036CCE0);
+    addrs->console_write = (void*)(kernelBase + 0x0046F9F0);
+    addrs->deci_tty_write = (void*)(kernelBase + 0x0048C540);
+    addrs->M_IOV = (void*)(kernelBase + 0x01A4A230);
+    addrs->console_cdev = (void*)(kernelBase + 0x022D1F30);
+    addrs->DeciTTYWriteHook = (void*)(kernelBase + 0x01A7EDD8);
 
-/* TTY Redirector */
-#define addr_cloneuio					0x0036CCE0
-#define addr_console_write				0x0046F9F0
-#define addr_deci_tty_write				0x0048C540
-#define addr_M_IOV						0x01A4A230
-#define addr_console_cdev				0x022D1F30
-#define addr_DeciTTYWriteHook			0x01A7EDD8
+    /* Kernel Patches */
+    addrs->patch_memcpy = (void*)(kernelBase + 0x002BD4ED);
+    addrs->patch_kmem_alloc1 = (void*)(kernelBase + 0x00465B0C);
+    addrs->patch_kmem_alloc2 = (void*)(kernelBase + 0x00465AF4);
+    addrs->patch_ASLR = (void*)(kernelBase + 0x00465B14);
+    addrs->patch_copyin1 = (void*)(kernelBase + 0x002BD727);
+    addrs->patch_copyin2 = (void*)(kernelBase + 0x002BD733);
+    addrs->patch_copyout1 = (void*)(kernelBase + 0x002BD632);
+    addrs->patch_copyout2 = (void*)(kernelBase + 0x002BD63E);
+    addrs->patch_copyinstr1 = (void*)(kernelBase + 0x002BDBD3);
+    addrs->patch_copyinstr2 = (void*)(kernelBase + 0x002BDBDF);
+    addrs->patch_copyinstr3 = (void*)(kernelBase + 0x002BDC10);
+    addrs->patch_swword_lwpid1 = (void*)(kernelBase + 0x002BDA62);
+    addrs->patch_swword_lwpid2 = (void*)(kernelBase + 0x002BDA75);
+    addrs->patch_ptrace1 = (void*)(kernelBase + 0x003669FD);
+    addrs->patch_ptrace2 = (void*)(kernelBase + 0x00366ED1);
+    addrs->patch_dynlibPath1 = (void*)(kernelBase + 0x001B842F);
+    addrs->patch_dynlibPath2 = (void*)(kernelBase + 0x001B8437);
+    addrs->patch_disablepfsSig = (void*)(kernelBase + 0x0069DB00);
+    addrs->patch_debugRif1 = (void*)(kernelBase + 0x0064EC20);
+    addrs->patch_debugRif2 = (void*)(kernelBase + 0x0064EC50);
+    addrs->patch_debugSettings1 = (void*)(kernelBase + 0x004E87A8);
+    addrs->patch_debugSettings2 = (void*)(kernelBase + 0x004E986E);
+    addrs->patch_mount = (void*)(kernelBase + 0x001512A7);
+    addrs->patch_setuid = (void*)(kernelBase + 0x0039153F);
+    addrs->patch_sysmap = (void*)(kernelBase + 0x001FA77A);
+    addrs->patch_dynlib_dlsym1 = (void*)(kernelBase + 0x001B7758);
+    addrs->patch_dynlib_dlsym2 = (void*)(kernelBase + 0x003BD8C0);
+    addrs->patch_display_dump = (void*)(kernelBase + 0x001BF205);
+    addrs->patch_debuglogs = (void*)(kernelBase + 0x002E0527);
+    addrs->patch_fuseLoader = (void*)(kernelBase + 0x004953EE);
+    addrs->patch_fuseroot1 = (void*)(kernelBase + 0x0010D066);
+    addrs->patch_fuseroot2 = (void*)(kernelBase + 0x0010D07E);
+    addrs->patch_mprotect = (void*)(kernelBase + 0x002FC14C);
+    addrs->patch_dmamini0 = (void*)(kernelBase + 0x005C972B);
+    addrs->patch_dmamini1 = (void*)(kernelBase + 0x005C972F);
+    addrs->patch_mdbg_basic = kernelBase + 0x0075CD90;
 
-/* Kernel Patches */
-#define patch_memcpy			0x002BD4ED
-#define patch_kmem_alloc1		0x00465B0C
-#define patch_kmem_alloc2		0x00465AF4
-#define patch_ASLR				0x00465B14
-#define patch_copyin1			0x002BD727
-#define patch_copyin2			0x002BD733
-#define patch_copyout1			0x002BD632
-#define patch_copyout2			0x002BD63E
-#define patch_copyinstr1		0x002BDBD3
-#define patch_copyinstr2		0x002BDBDF
-#define patch_copyinstr3		0x002BDC10
-#define patch_swword_lwpid1		0x002BDA62
-#define patch_swword_lwpid2		0x002BDA75
-#define patch_ptrace1			0x003669FD
-#define patch_ptrace2			0x00366ED1
-#define patch_dynlibPath1		0x001B842F
-#define patch_dynlibPath2		0x001B8437
-#define patch_disablepfsSig		0x0069DB00
-#define patch_debugRif1			0x0064EC20
-#define patch_debugRif2			0x0064EC50
-#define patch_debugSettings1	0x004E87A8
-#define patch_debugSettings2	0x004E986E
-#define patch_mount				0x001512A7
-#define patch_setuid			0x0039153F
-#define patch_sysmap			0x001FA77A
-#define patch_dynlib_dlsym1		0x001B7758
-#define patch_dynlib_dlsym2		0x003BD8C0
-#define patch_display_dump		0x001BF205
-#define patch_debuglogs			0x002E0527
-#define patch_fuseLoader		0x004953EE
-#define patch_fuseroot1			0x0010D066
-#define patch_fuseroot2			0x0010D07E
-#define patch_mprotect			0x002FC14C
-#define patch_dmamini0			0x005C972B
-#define patch_dmamini1			0x005C972F
-#define patch_mdbg_basic	    0x0075CD90
-#define offsets_mdbgAssistMode  { 0x54, 0x238, 0x1416, 0x2120, 0x2146, 0x216C, 0x2192, 0x21B8, 0x21DE, 0x2204, 0x222A, 0x2250, 0x2276, 0x229C, 0x22C2, 0x22E8, 0x230E, 0x2334, 0x236A, 0x2390, 0x23B6, 0x23DC };
-
-#endif
+    /* mdbg Assist Mode offsets */
+    uint64_t mdbg_offsets[] = { 0x54, 0x238, 0x1416, 0x2120, 0x2146, 0x216C, 0x2192, 0x21B8, 0x21DE, 0x2204, 0x222A, 0x2250, 0x2276, 0x229C, 0x22C2, 0x22E8, 0x230E, 0x2334, 0x236A, 0x2390, 0x23B6, 0x23DC };
+    for (int i = 0; i < 22; i++) {
+        addrs->mdbgAssistMode[i] = addrs->patch_mdbg_basic + mdbg_offsets[i];
+    }
+}

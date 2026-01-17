@@ -62,9 +62,6 @@
     <ClCompile Include="source\Utils\ProcessUtils.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\Resolver.cpp">
-      <Filter>source\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="source\Utils\Detours\Detour.cpp">
       <Filter>source\Utils\Detours</Filter>
     </ClCompile>
@@ -107,6 +104,9 @@
     <ClCompile Include="source\Misc\FusionSysctl.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="source\Utils\Resolver.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FeatureFlags.h">
@@ -125,9 +125,6 @@
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\ProcessUtils.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\Resolver.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\Detours\Detour.h">
@@ -151,13 +148,7 @@
     <ClInclude Include="include\Homebrew\FakePkgs.h">
       <Filter>include\Homebrew</Filter>
     </ClInclude>
-    <ClInclude Include="include\Homebrew\FakePkgTypes.h">
-      <Filter>include\Homebrew</Filter>
-    </ClInclude>
     <ClInclude Include="include\Homebrew\FakeSelfs.h">
-      <Filter>include\Homebrew</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Homebrew\FakeSelfTypes.h">
       <Filter>include\Homebrew</Filter>
     </ClInclude>
     <ClInclude Include="include\Misc\DevActSpoofer.h">
@@ -183,6 +174,9 @@
     </ClInclude>
     <ClInclude Include="include\Misc\FusionSysctl.h">
       <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\Resolver.h">
+      <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

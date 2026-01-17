@@ -38,11 +38,11 @@ Detour* FakeSelf::SceSblAuthMgrSmLoadSelfBlock_MailboxDetour;
 
 void FakeSelf::Init()
 {
-    Detour::DetourCall(&SceSblAuthMgrVerifyHeaderDetour1, KernelBase + addr_sceSblAuthMgrVerifyHeaderHook1, (void*)SceSblAuthMgrVerifyHeaderHook);
-    Detour::DetourCall(&SceSblAuthMgrVerifyHeaderDetour1, KernelBase + addr_sceSblAuthMgrVerifyHeaderHook2, (void*)SceSblAuthMgrVerifyHeaderHook);
-    Detour::DetourCall(&SceSblAuthMgrIsLoadable2Detour, KernelBase + addr_SceSblAuthMgrIsLoadable2Hook, (void*)SceSblAuthMgrIsLoadable2Hook);
-    Detour::DetourCall(&SceSblAuthMgrSmLoadSelfSegment_MailboxDetour, KernelBase + addr_SceSblAuthMgrSmLoadSelfSegment_Mailbox, (void*)SceSblAuthMgrSmLoadSelfSegment_MailboxHook);
-    Detour::DetourCall(&SceSblAuthMgrSmLoadSelfBlock_MailboxDetour, KernelBase + addr_SceSblAuthMgrSmLoadSelfBlock_Mailbox, (void*)SceSblAuthMgrSmLoadSelfBlock_MailboxHook);
+    Detour::DetourCall(&SceSblAuthMgrVerifyHeaderDetour1, (void*)g_KernelAddrs.sceSblAuthMgrVerifyHeaderHook1, (void*)SceSblAuthMgrVerifyHeaderHook);
+    Detour::DetourCall(&SceSblAuthMgrVerifyHeaderDetour1, (void*)g_KernelAddrs.sceSblAuthMgrVerifyHeaderHook2, (void*)SceSblAuthMgrVerifyHeaderHook);
+    Detour::DetourCall(&SceSblAuthMgrIsLoadable2Detour, (void*)g_KernelAddrs.SceSblAuthMgrIsLoadable2Hook, (void*)SceSblAuthMgrIsLoadable2Hook);
+    Detour::DetourCall(&SceSblAuthMgrSmLoadSelfSegment_MailboxDetour, (void*)g_KernelAddrs.SceSblAuthMgrSmLoadSelfSegment_Mailbox, (void*)SceSblAuthMgrSmLoadSelfSegment_MailboxHook);
+    Detour::DetourCall(&SceSblAuthMgrSmLoadSelfBlock_MailboxDetour, (void*)g_KernelAddrs.SceSblAuthMgrSmLoadSelfBlock_Mailbox, (void*)SceSblAuthMgrSmLoadSelfBlock_MailboxHook);
 }
 
 void FakeSelf::Term()

@@ -18,7 +18,7 @@
  */
 
 // Static member definitions
-char FusionSysctl::fusion_version[64] = "3.0.13";
+char FusionSysctl::fusion_version[64] = "1.4.116";
 char FusionSysctl::fusion_build_date[64] = __DATE__;
 char FusionSysctl::fusion_build_time[64] = __TIME__;
 int FusionSysctl::fusion_direct_memory_pages = 300;

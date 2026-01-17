@@ -4,11 +4,15 @@ ODIR    	:=    build
 SDIR    	:=    source
 RI			:=	  $(shell find include -type d -not -path ./include -printf '-I%p ')
 IDIRS    	:=    -I../../Shared -Iinclude -I../../External/FusionShared $(RI)
-CFLAGS    	:=    $(IDIRS) -O2 -s -w -std=gnu++11 -ffunction-sections -fdata-sections -fno-builtin -fno-exceptions -fno-asynchronous-unwind-tables -nostdlib -w -masm=intel -march=btver2 -m64 -mabi=sysv -mcmodel=small -mstackrealign -DSOFTWARE_VERSION=$(SOFTWARE_VERSION) -D_KERNEL
+CFLAGS    	:=    $(IDIRS) -O2 -s -w -std=gnu++11 -ffunction-sections -fdata-sections -fno-builtin -fno-exceptions -fno-asynchronous-unwind-tables -nostdlib -w -masm=intel -march=btver2 -m64 -mabi=sysv -mcmodel=small -mstackrealign -D_KERNEL
 LFLAGS    	:=    -Xlinker -T Linker -Wl,--build-id=none -mstackrealign -Wl,--gc-sections -nostdlib
 CFILES    	:=    $(shell find $(SDIR) -name \*.cpp)
 OBJS	    :=	  $(patsubst $(SDIR)/%.cpp, $(ODIR)/%.o, $(CFILES))
-TARGET = $(shell basename "$(CURDIR)").elf
+TARGET		=	  $(shell basename "$(CURDIR)").elf
+
+ifeq ($(DEBUG), 1)
+    CFLAGS += -DDEBUG
+endif
 
 $(TARGET): increment_version $(ODIR) $(OBJS)
 	$(CC) crt0.s $(OBJS) -o $(TARGET) $(CFLAGS) $(LFLAGS)

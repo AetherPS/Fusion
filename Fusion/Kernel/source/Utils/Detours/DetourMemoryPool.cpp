@@ -21,7 +21,7 @@ void DetourMemoryPool::Init(size_t poolSize)
 		return;
 	}
 #ifdef DEBUG
-	kprintf("DetourMemoryPool initialized with %zu bytes at address: 0x%llX.\n", PoolSize, PoolStart);
+	printf("DetourMemoryPool initialized with %zu bytes at address: 0x%llX.\n", PoolSize, PoolStart);
 #endif
 
 	PoolCurrent = PoolStart;

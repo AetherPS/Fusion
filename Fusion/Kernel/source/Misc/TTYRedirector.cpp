@@ -8,8 +8,8 @@ void* TTYRedirector::DeciTTYWriteOriginal = 0;
 void TTYRedirector::Init()
 {
     cpu_disable_wp();
-    DeciTTYWriteOriginal = *(void**)(KernelBase + addr_DeciTTYWriteHook);
-    *(void**)(KernelBase + addr_DeciTTYWriteHook) = reinterpret_cast<void*>(OnDeciTTYWrite);
+    DeciTTYWriteOriginal = *(void**)((void*)g_KernelAddrs.DeciTTYWriteHook);
+    *(void**)((void*)g_KernelAddrs.DeciTTYWriteHook) = reinterpret_cast<void*>(OnDeciTTYWrite);
     cpu_enable_wp();
 }
 
@@ -20,11 +20,11 @@ void TTYRedirector::Term()
 
 int TTYRedirector::OnDeciTTYWrite(struct cdev* dev, struct uio* uio, int ioflag)
 {
-    auto cloneuio = (struct uio* (*)(struct uio* uiop))(KernelBase + addr_cloneuio);
-    auto console_write = (int(*)(struct cdev* dev, struct uio* uio, int ioflag))(KernelBase + addr_console_write);
-    auto deci_tty_write = (int(*)(struct cdev* dev, struct uio* uio, int ioflag))(KernelBase + addr_deci_tty_write);
-    auto M_IOV = (struct malloc_type*)(KernelBase + addr_M_IOV);
-    auto console_cdev = (struct cdev**)(KernelBase + addr_console_cdev);
+    auto cloneuio = (struct uio* (*)(struct uio* uiop))((void*)g_KernelAddrs.cloneuio);
+    auto console_write = (int(*)(struct cdev* dev, struct uio* uio, int ioflag))((void*)g_KernelAddrs.console_write);
+    auto deci_tty_write = (int(*)(struct cdev* dev, struct uio* uio, int ioflag))((void*)g_KernelAddrs.deci_tty_write);
+    auto M_IOV = (struct malloc_type*)((void*)g_KernelAddrs.M_IOV);
+    auto console_cdev = (struct cdev**)((void*)g_KernelAddrs.console_cdev);
 
     if (FusionSysctl::fusion_feature_tty_redirect)
     {

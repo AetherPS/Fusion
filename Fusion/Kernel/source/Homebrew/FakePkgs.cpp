@@ -80,11 +80,11 @@ Detour* FakePkgs::SceSblKeymgrInvalidateKeySxXlockDetour;
 
 void FakePkgs::Init()
 {
-	Detour::DetourCall(&SceSblDriverSendMsgDetour, KernelBase + addr_SceSblDriverSendMsgHook, (void*)SceSblDriverSendMsgHook);
-	Detour::DetourCall(&SceSblPfsSetKeysDetour, KernelBase + addr_SceSblPfsSetKeysHook, (void*)SceSblPfsSetKeysHook);
-	Detour::DetourCall(&NpdrmDecryptIsolatedRifDetour, KernelBase + addr_NpdrmDecryptIsolatedRifHook, (void*)NpdrmDecryptIsolatedRifHook);
-	Detour::DetourCall(&NpdrmDecryptRifNewDetour, KernelBase + addr_NpdrmDecryptRifNewHook, (void*)NpdrmDecryptRifNewHook);
-	Detour::DetourCall(&SceSblKeymgrInvalidateKeySxXlockDetour, KernelBase + addr_SceSblKeymgrInvalidateKeySxXlockHook, (void*)SceSblKeymgrInvalidateKeySxXlockHook);
+	Detour::DetourCall(&SceSblDriverSendMsgDetour, (void*)g_KernelAddrs.SceSblDriverSendMsgHook, (void*)SceSblDriverSendMsgHook);
+	Detour::DetourCall(&SceSblPfsSetKeysDetour, (void*)g_KernelAddrs.SceSblPfsSetKeysHook, (void*)SceSblPfsSetKeysHook);
+	Detour::DetourCall(&NpdrmDecryptIsolatedRifDetour, (void*)g_KernelAddrs.NpdrmDecryptIsolatedRifHook, (void*)NpdrmDecryptIsolatedRifHook);
+	Detour::DetourCall(&NpdrmDecryptRifNewDetour, (void*)g_KernelAddrs.NpdrmDecryptRifNewHook, (void*)NpdrmDecryptRifNewHook);
+	Detour::DetourCall(&SceSblKeymgrInvalidateKeySxXlockDetour, (void*)g_KernelAddrs.SceSblKeymgrInvalidateKeySxXlockHook, (void*)SceSblKeymgrInvalidateKeySxXlockHook);
 }
 
 void FakePkgs::Term()

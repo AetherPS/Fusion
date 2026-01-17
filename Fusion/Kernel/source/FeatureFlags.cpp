@@ -4,7 +4,7 @@
 void PrintFeatureFlags()
 {
 #ifdef DEBUG
-	kprintf("\n!! DEBUG BUILD !!\n\n");
+	printf("\n!! DEBUG BUILD !!\n\n");
 #endif
 	printf("\nFeatures: \n");
 #ifdef FF_HomeBrew

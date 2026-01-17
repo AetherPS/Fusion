@@ -27,9 +27,9 @@ int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t d
         uint64_t currentSize = *(uint64_t*)data;
 
 #ifdef DEBUG
-        kprintf("[Direct Memory Init] %lu MB\n", currentSize / (1024 * 1024));
-        kprintf(" - Max: %lu MB\n", (currentSize + allocationSpace) / (1024 * 1024));
-        kprintf(" - Reserved: %lu MB\n", allocationSpace / (1024 * 1024));
+        printf("[Direct Memory Init] %lu MB\n", currentSize / (1024 * 1024));
+        printf(" - Max: %lu MB\n", (currentSize + allocationSpace) / (1024 * 1024));
+        printf(" - Reserved: %lu MB\n", allocationSpace / (1024 * 1024));
 #endif
 
     }
@@ -43,7 +43,7 @@ int DirectMemory::OnDirectMemoryIoctl(cdev* device, unsigned long cmd, caddr_t d
 
 void DirectMemory::Init()
 {
-    Detour::Detour64(&OnDirectMemoryIoctlDetour, KernelBase + addr_DirectMemoryHook, (void*)OnDirectMemoryIoctl);
+    Detour::Detour64(&OnDirectMemoryIoctlDetour, (void*)g_KernelAddrs.DirectMemoryHook, (void*)OnDirectMemoryIoctl);
 }
 
 void DirectMemory::Term()

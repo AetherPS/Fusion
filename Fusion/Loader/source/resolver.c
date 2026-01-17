@@ -12,10 +12,6 @@ vm_offset_t(*kmem_alloc)(vm_map_t map, vm_size_t size);
 void(*kmem_free)(void* map, void* addr, size_t size);
 vm_map_t kernel_map;
 
-uint64_t kernel_getbase() {
-	return Readmsr(0xC0000082) - addr_Xfast_syscall;
-}
-
 void* kernel_alloc(uint32_t size) {
 	return kernel_malloc(size, M_TEMP, 2);
 }
@@ -24,20 +20,17 @@ void kernel_dealloc(void* addr) {
 	kernel_free(addr, M_TEMP);
 }
 
-#define RESOLVE(name, base, offset) \
-	name = (void *)(base + offset) \
-
-void ResolveKernelFunctions(uint64_t kernelBase) 
+void ResolveKernelFunctions()
 {
-	RESOLVE(M_TEMP, kernelBase, addr_M_TEMP);
-	RESOLVE(kernel_malloc, kernelBase, addr_malloc);
-	RESOLVE(kernel_free, kernelBase, addr_free);
-	RESOLVE(kernel_memcpy, kernelBase, addr_memcpy);
-	RESOLVE(kernel_memset, kernelBase, addr_memset);
-	RESOLVE(kernel_memcmp, kernelBase, addr_memcmp);
-	RESOLVE(kernel_printf, kernelBase, addr_printf);
+	M_TEMP = (void*)(g_KernelAddrs.M_TEMP);
+	kernel_malloc = (void* (*)(unsigned long, void*, int))(g_KernelAddrs.malloc);
+	kernel_free = (void (*)(void*, void*))(g_KernelAddrs.free);
+	kernel_memcpy = (void (*)(void*, const void*, size_t))(g_KernelAddrs.memcpy);
+	kernel_memset = (void* (*)(void*, int, size_t))(g_KernelAddrs.memset);
+	kernel_memcmp = (int (*)(const void*, const void*, size_t))(g_KernelAddrs.memcmp);
+	kernel_printf = (void (*)(const char*, ...))(g_KernelAddrs.printf);
 
-	RESOLVE(kmem_alloc, kernelBase, addr_kmem_alloc);
-	RESOLVE(kmem_free, kernelBase, addr_kmem_free);
-	kernel_map = *(vm_map_t*)(kernelBase + addr_kernel_map);
+	kmem_alloc = (vm_offset_t(*)(vm_map_t, vm_size_t))(g_KernelAddrs.kmem_alloc);
+	kmem_free = (void(*)(void*, void*, size_t))(g_KernelAddrs.kmem_free);
+	kernel_map = *(vm_map_t*)(g_KernelAddrs.kernel_map);
 }
