@@ -458,15 +458,17 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Settings\FusionSettings\data\default.png" />
     <EmbeddedResource Include="Settings\FusionSettings\data\fusion_menu.xml" />
     <EmbeddedResource Include="Settings\FusionSettings\data\icon_pkg.png" />
     <EmbeddedResource Include="Settings\FusionSettings\data\icon_system_settings.png" />
     <EmbeddedResource Include="Settings\FusionSettings\data\icon_toolbox.png" />
-    <EmbeddedResource Include="Settings\SettingsRoot\data\logo.png" />
+    <EmbeddedResource Include="Settings\SettingsRoot\data\duck.png" />
     <EmbeddedResource Include="Settings\SettingsRoot\data\settings_root.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Settings\SettingsRoot\data\logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

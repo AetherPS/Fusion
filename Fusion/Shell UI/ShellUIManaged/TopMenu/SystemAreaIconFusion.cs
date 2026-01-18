@@ -39,9 +39,9 @@ namespace Fusion.TopMenu
             }
 
             // Load your icon - you can replace this URL
-            m_iconImage.LoadAsync("https://cataas.com/cat/says/GOOBER?type=square", null, new ImageOptions
+            m_iconImage.LoadAsync("manifest://SettingsRoot/data/logo.png", null, new ImageOptions
             {
-                AssetManager = new AssetManager("FusionIcon", 120000),
+                AssetManager = new AssetManager("FusionIcon", 4960256),
                 Format = ImageFormat.Dxt5,
                 ConvertOption = ImageConvertOption.DXTCompressByGPU,
             });

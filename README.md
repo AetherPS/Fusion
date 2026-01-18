@@ -1,4 +1,8 @@
-# 🌀 Fusion
+<div align="center">
+  <img src="Assets/FusionFull-no-bg.png" alt="Fusion Logo" width="50%">
+</div>
+
+#
 
 Fusion is a minimal kernel utility designed for PlayStation 4 research and development. It maintains a small kernel footprint while exposing essential kernel functionality to userland through a daemon and driver interface. By keeping the kernel layer minimal and offloading logic to userland processes, Fusion enables safer experimentation and development on jailbroken PS4 systems.
 
