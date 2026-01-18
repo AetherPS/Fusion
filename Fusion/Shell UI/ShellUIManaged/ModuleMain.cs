@@ -1,4 +1,5 @@
-﻿using Fusion.Internal;
+﻿using Fusion.Features;
+using Fusion.Internal;
 using Fusion.TopMenu;
 using Sce.PlayStation.Core.Runtime;
 using Sce.PlayStation.PUI;
@@ -33,6 +34,8 @@ namespace Fusion
                 SystemAreaPanelHooks.AddFusionMenu(m_systemAreaPanel);
 
                 Console.WriteLine("=== Fusion UI Loaded ===");
+
+                WelcomeMessage.DoWelcome();
             }
             catch (Exception ex)
             {
