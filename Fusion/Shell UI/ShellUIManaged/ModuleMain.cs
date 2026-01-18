@@ -1,4 +1,5 @@
 ﻿using Fusion.Features;
+using Fusion.Features.Devkit;
 using Fusion.Internal;
 using Fusion.TopMenu;
 using Sce.PlayStation.Core.Runtime;
@@ -25,7 +26,8 @@ namespace Fusion
 
                 ManifestFileUriScheme.Initialize();
                 MethodOverrideManager.Initialize();
-                DebugTitleIdLabel.ShowLabels = true;
+                DevkitTitleIdLabel.ShowLabels = true;
+                DevkitPanel.ShowPanel = true;
                 
                 // Register custom plugin
                 SettingsApplicationHooks.RegisterPlugin<FusionPlugin>(FusionPlugin.PluginName);

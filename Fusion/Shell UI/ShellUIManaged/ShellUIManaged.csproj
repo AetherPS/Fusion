@@ -429,11 +429,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\Devkit\DevkitPanel.cs" />
     <Compile Include="Features\WelcomeMessage.cs" />
     <Compile Include="Internal\Notify.cs" />
     <Compile Include="Internal\SysCtl.cs" />
     <Compile Include="Settings\SettingsApplicationHooks.cs" />
-    <Compile Include="Features\Devkit\DebugTitleIdLabel.cs" />
+    <Compile Include="Features\Devkit\DevkitTitleIdLabel.cs" />
     <Compile Include="Internal\ManifestFileAssetLoader.cs" />
     <Compile Include="Internal\ManifestFileUriScheme.cs" />
     <Compile Include="Internal\MethodOverrideAttribute.cs" />

@@ -8,9 +8,9 @@ using Sce.Vsh.ShellUI.Library;
 using Sce.Vsh.ShellUI.TopMenu;
 using System;
 
-namespace Fusion
+namespace Fusion.Features.Devkit
 {
-    public static class DebugTitleIdLabel
+    public static class DevkitTitleIdLabel
     {
         private static bool _showLabels = false;
 
