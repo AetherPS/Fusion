@@ -207,6 +207,7 @@ typedef struct _KernelAddrs
 #include "Offsets-1202.h"
 #include "Offsets-1250.h"
 #include "Offsets-1300.h"
+#include "Offsets-1302.h"
 
 static int DetectFirmwareVersion(uint64_t kernelbase)
 {
@@ -232,6 +233,8 @@ static int DetectFirmwareVersion(uint64_t kernelbase)
         return 1250;
     case 225997:
         return 1300;
+    case 226094:
+        return 1302;
     default:
         return -1;
     }
@@ -255,6 +258,9 @@ static inline const char* InitializeFirmwareOffsetsWithVersion(KernelAddrs* offs
     case 1300:
         InitKernel1300(kernelBase, offsets);
         return "13.00";
+    case 1302:
+        InitKernel1302(kernelBase, offsets);
+        return "13.02";
     default:
         return 0;
     }
