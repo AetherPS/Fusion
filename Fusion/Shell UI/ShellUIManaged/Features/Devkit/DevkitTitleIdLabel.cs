@@ -12,6 +12,8 @@ namespace Fusion.Features.Devkit
 {
     public static class DevkitTitleIdLabel
     {
+        private unsafe delegate void ContentDecoratorBase_ctorDelegate(IntPtr instance, IntPtr param);
+        private static ContentDecoratorBase_ctorDelegate _ContentDecoratorBase_ctor_stub;
         private static bool _showLabels = false;
 
         public static bool ShowLabels
@@ -31,12 +33,13 @@ namespace Fusion.Features.Devkit
         }
 
         [MethodOverride(typeof(ContentDecoratorBase), ".ctor")]
-        public static void Constructor(ContentDecoratorBase instance, ContentDecoratorParam param)
+        public static unsafe void ContentDecoratorBase_ctor(ContentDecoratorBase instance, ContentDecoratorParam param)
         {
-            MethodOverrideManager.InvokeOriginal<object>(instance, new object[] { param });
-
+            _ContentDecoratorBase_ctor_stub(*(IntPtr*)&instance, *(IntPtr*)&param);
             if (_showLabels)
+            {
                 CreateLabel(instance);
+            }
         }
 
         private static void CreateLabel(ContentDecoratorBase instance)

@@ -79,7 +79,7 @@ namespace Fusion.Features
 
         public static void DoWelcome()
         {
-            Notify.Request("manifest://SettingsRoot/data/notify.png", $"Fusion {SysCtl.GetString("Fusion.Version")} Loaded", GetRandomTagline());
+            Notify.Request("manifest://SettingsRoot/data/notify.png", $"Fusion {SysCtl.GetString("Fusion.Version")} Loaded", GetRandomTagline(), "pssettings:play?mode=settings&function=fusion_menu");
         }
     }
 }

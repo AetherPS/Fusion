@@ -14,6 +14,12 @@ namespace Fusion.Features.Devkit
         private static DateTime _lastOriginalUpdate = DateTime.MinValue;
         private static readonly TimeSpan OriginalUpdateInterval = TimeSpan.FromSeconds(2);
 
+        private unsafe delegate void AreaManager_ctorDelegate(IntPtr instance);
+        private unsafe delegate void UpdateDevKitPanelDelegate(IntPtr instance);
+
+        private static AreaManager_ctorDelegate _AreaManager_ctor_stub;
+        private static UpdateDevKitPanelDelegate _UpdateDevKitPanel_stub;
+
         public static bool ShowPanel
         {
             get => _showPanel;
@@ -35,10 +41,9 @@ namespace Fusion.Features.Devkit
         }
 
         [MethodOverride(typeof(AreaManager), ".ctor")]
-        public static void AreaManager_Constructor(object instance)
+        public static unsafe void AreaManager_Constructor(AreaManager instance)
         {
-            MethodOverrideManager.InvokeOriginal(instance, null);
-
+            _AreaManager_ctor_stub(*(IntPtr*)&instance);
             if (ShowPanel)
             {
                 Create(instance);
@@ -46,47 +51,42 @@ namespace Fusion.Features.Devkit
         }
 
         [MethodOverride(typeof(AreaManager), "updateDevKitPanel")]
-        public static void UpdateDevKitPanel(object instance)
+        public static unsafe void UpdateDevKitPanel(AreaManager instance)
         {
             try
             {
                 UpdateTimerInterval();
-
                 if (RainbowBackground)
                 {
                     // Update rainbow color
                     _hue += .5f; // Adjust speed of color change
                     if (_hue >= 360f)
                         _hue = 0f;
-
                     var color = HSVToRGB(_hue, 1.0f, 1.0f, 0.8f);
                     var devKitPanel = Reflect.Get<Panel>(instance, "m_devKitPanel");
-
                     if (devKitPanel != null)
                     {
                         devKitPanel.BackgroundColor = color;
                     }
-
                     // Only call original every 2 seconds
                     var now = DateTime.Now;
                     if (now - _lastOriginalUpdate >= OriginalUpdateInterval)
                     {
-                        MethodOverrideManager.InvokeOriginal(instance, null);
+                        _UpdateDevKitPanel_stub(*(IntPtr*)&instance);
                         _lastOriginalUpdate = now;
                     }
                 }
                 else
                 {
                     // Normal behavior - call original
-                    MethodOverrideManager.InvokeOriginal(instance, null);
+                    _UpdateDevKitPanel_stub(*(IntPtr*)&instance);
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"[DevkitPanel] UpdateDevKitPanel_Hook failed: {ex.Message}");
-
                 // Fallback to original on error
-                MethodOverrideManager.InvokeOriginal(instance, null);
+                _UpdateDevKitPanel_stub(*(IntPtr*)&instance);
             }
         }
 
@@ -225,7 +225,6 @@ namespace Fusion.Features.Devkit
 
                 if (updatePanelTimer != null)
                 {
-                    // Set to 0.1 seconds (100ms) when rainbow is enabled for smooth transitions
                     Reflect.SetProp(updatePanelTimer, "Interval", RainbowBackground ? 0.01f : 2.0f);
                 }
             }

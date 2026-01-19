@@ -11,6 +11,12 @@ namespace Fusion
 {
     public static class SettingsApplicationHooks
     {
+        private unsafe delegate IntPtr GetPluginDelegate(IntPtr instance, IntPtr pluginName);
+        private unsafe delegate void StartSettingsPageDelegate(IntPtr instance);
+
+        private static GetPluginDelegate _GetPlugin_stub;
+        private static StartSettingsPageDelegate _StartSettingsPage_stub;
+
         private static readonly Dictionary<string, Func<AssetManager, SettingsPlugin>> _customPlugins
             = new Dictionary<string, Func<AssetManager, SettingsPlugin>>();
 
@@ -30,10 +36,12 @@ namespace Fusion
         }
 
         [MethodOverride(typeof(SettingsApplication))]
-        public static SettingsPlugin GetPlugin(SettingsApplication instance, string pluginName)
+        public static unsafe SettingsPlugin GetPlugin(SettingsApplication instance, string pluginName)
         {
             if (_assetManager == null)
+            {
                 _assetManager = Reflect.Get<AssetManager>(instance, "appAssetManager");
+            }
 
             if (_customPlugins.TryGetValue(pluginName, out var factory))
             {
@@ -41,7 +49,8 @@ namespace Fusion
                 return factory(_assetManager);
             }
 
-            return MethodOverrideManager.InvokeOriginal<SettingsPlugin>(instance, new object[] { pluginName });
+            var result = _GetPlugin_stub(*(IntPtr*)&instance, *(IntPtr*)&pluginName);
+            return *(SettingsPlugin*)&result;
         }
 
         [MethodOverride(typeof(SettingsApplication))]
@@ -56,13 +65,12 @@ namespace Fusion
         }
 
         [MethodOverride(typeof(SettingsApplication))]
-        public static void StartSettingsPage(SettingsApplication instance)
+        public static unsafe void StartSettingsPage(SettingsApplication instance)
         {
             var function = instance["function"];
             if (function == "fusion_menu")
             {
                 var uiManager = Reflect.Get<UIManager>(instance, "uiManager");
-
                 uiManager.Push(
                     "FusionSettings/data/fusion_menu.xml",
                     "id_fusion_menu",
@@ -71,7 +79,7 @@ namespace Fusion
                 return;
             }
 
-            MethodOverrideManager.InvokeOriginal(instance, null);
+            _StartSettingsPage_stub(*(IntPtr*)&instance);
         }
     }
 }

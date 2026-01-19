@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Fusion.Internal
@@ -10,13 +8,17 @@ namespace Fusion.Internal
     public static class MethodOverrideManager
     {
         [DllImport("ShellUI.sprx", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern void AddDetour(string name, IntPtr originalMonoMethod, IntPtr detourMonoMethod);
+        private static extern void AddMethodDetour(
+            string assemblyName,
+            string nameSpace,
+            string klass,
+            string methodName,
+            int parameterCount,
+            IntPtr detourMonoMethod,
+            string hookKey);
 
         [DllImport("ShellUI.sprx", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern IntPtr CallOriginal(string name, IntPtr instance, IntPtr args);
-
-        private static readonly HashSet<string> _installedHooks = new HashSet<string>();
-        private static readonly Dictionary<string, string> _hookKeyLookup = new Dictionary<string, string>();
+        private static extern IntPtr GetStubAddress(string hookKey);
 
         public static void Initialize()
         {
@@ -25,208 +27,215 @@ namespace Fusion.Internal
 
         public static void Initialize(Assembly assembly)
         {
-            foreach (var type in assembly.GetTypes())
+            var hookMethods = assembly.GetTypes()
+                .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+                .Select(m => new { Method = m, Attribute = m.GetCustomAttribute<MethodOverrideAttribute>() })
+                .Where(x => x.Attribute != null);
+
+            foreach (var hook in hookMethods)
             {
-                foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
-                {
-                    var attr = method.GetCustomAttribute<MethodOverrideAttribute>();
-                    if (attr != null)
-                        TryInstallHook(method, attr);
-                }
+                TryInstallHook(hook.Method, hook.Attribute);
             }
         }
 
         private static bool TryInstallHook(MethodInfo hookMethod, MethodOverrideAttribute attr)
         {
-            if (attr.TargetType == null)
+            try
             {
-                Console.WriteLine($"[MethodOverride] Target type is null for {hookMethod.Name}");
-                return false;
-            }
-
-            var targetName = attr.TargetMethodName ?? hookMethod.Name;
-            var hookParams = hookMethod.GetParameters();
-
-            var isInstanceHook = hookParams.Length > 0 &&
-                (hookParams[0].ParameterType == attr.TargetType ||
-                 hookParams[0].ParameterType.IsAssignableFrom(attr.TargetType) ||
-                 attr.TargetType.IsAssignableFrom(hookParams[0].ParameterType) ||
-                 hookParams[0].ParameterType == typeof(object) ||
-                 hookParams[0].ParameterType == typeof(IntPtr));
-
-            var searchParams = isInstanceHook
-                ? hookParams.Skip(1).Select(p => p.ParameterType).ToArray()
-                : hookParams.Select(p => p.ParameterType).ToArray();
-
-            var searchFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            MethodBase targetMethod = null;
-
-            // Check if this is a constructor
-            if (targetName == ".ctor" || targetName == ".cctor")
-            {
-                if (targetName == ".cctor")
+                if (attr.TargetType == null)
                 {
-                    // Static constructor
-                    targetMethod = attr.TargetType.TypeInitializer;
+                    Console.WriteLine($"[MethodOverride] Target type is null for {hookMethod.Name}");
+                    return false;
                 }
-                else
-                {
-                    // Instance constructor - find by parameters
-                    var constructors = attr.TargetType.GetConstructors(searchFlags);
-                    targetMethod = constructors.FirstOrDefault(c =>
-                    {
-                        var ctorParams = c.GetParameters();
-                        if (ctorParams.Length != searchParams.Length)
-                            return false;
 
-                        for (int i = 0; i < ctorParams.Length; i++)
-                        {
-                            if (ctorParams[i].ParameterType != searchParams[i])
-                                return false;
-                        }
-                        return true;
-                    });
-                }
+                var targetName = attr.TargetMethodName ?? hookMethod.Name;
+                var hookParams = hookMethod.GetParameters();
+
+                // Determine if this is an instance hook (first param is the instance)
+                var isInstanceHook = hookParams.Length > 0 &&
+                    (hookParams[0].ParameterType == attr.TargetType ||
+                     hookParams[0].ParameterType.IsAssignableFrom(attr.TargetType) ||
+                     attr.TargetType.IsAssignableFrom(hookParams[0].ParameterType) ||
+                     hookParams[0].ParameterType == typeof(object) ||
+                     hookParams[0].ParameterType == typeof(IntPtr));
+
+                // Get method parameters (excluding instance param if present)
+                var methodParams = (isInstanceHook
+                    ? hookParams.Skip(1)
+                    : hookParams)
+                    .Select(p => p.ParameterType)
+                    .ToArray();
+
+                // Find the target method
+                MethodBase targetMethod = (targetName == ".ctor" || targetName == ".cctor")
+                    ? FindConstructor(attr.TargetType, targetName, methodParams)
+                    : FindMethod(attr.TargetType, targetName, methodParams, isInstanceHook);
 
                 if (targetMethod == null)
                 {
-                    Console.WriteLine($"[MethodOverride] Constructor not found: {attr.TargetType.FullName}.{targetName}");
-                    return false;
-                }
-            }
-            else
-            {
-                // Regular method
-                var method = attr.TargetType.GetMethod(targetName, searchFlags, null, searchParams, null);
-
-                if (method == null)
-                {
-                    var expectedCount = isInstanceHook ? hookParams.Length - 1 : hookParams.Length;
-                    method = attr.TargetType
-                        .GetMethods(searchFlags)
-                        .FirstOrDefault(m => m.Name == targetName && m.GetParameters().Length == expectedCount);
-                }
-
-                if (method == null)
-                {
-                    Console.WriteLine($"[MethodOverride] Method not found: {attr.TargetType.FullName}.{targetName}");
+                    Console.WriteLine($"[MethodOverride] Target not found: {attr.TargetType.FullName}.{targetName}");
                     return false;
                 }
 
-                targetMethod = method;
-            }
+                int paramCount = methodParams.Length;
+                string assemblyName = attr.TargetType.Assembly.GetName().Name;
 
-            RuntimeHelpers.RunClassConstructor(attr.TargetType.TypeHandle);
-            RuntimeHelpers.RunClassConstructor(hookMethod.DeclaringType.TypeHandle);
-            RuntimeHelpers.PrepareMethod(targetMethod.MethodHandle);
-            RuntimeHelpers.PrepareMethod(hookMethod.MethodHandle);
+                // Handle nested classes properly with Mono's / separator
+                string nameSpace;
+                string className;
+                GetTypeNameParts(attr.TargetType, out nameSpace, out className);
 
-            var hookKey = $"{attr.TargetType.FullName}::{targetName}";
+                // Create hook key for stub lookup
+                var hookKey = $"{targetMethod.DeclaringType.FullName}::{targetMethod.Name}";
 
-            // Install the detour
-            AddDetour(hookKey, targetMethod.MethodHandle.Value, hookMethod.MethodHandle.Value);
-            _installedHooks.Add(hookKey);
+                // Install the detour
+                AddMethodDetour(
+                    assemblyName,
+                    nameSpace,
+                    className,
+                    targetName,
+                    paramCount,
+                    hookMethod.MethodHandle.Value,
+                    hookKey);
 
-            // Store reverse lookup
-            var callerKey = $"{hookMethod.DeclaringType.FullName}.{hookMethod.Name}";
-            _hookKeyLookup[callerKey] = hookKey;
-
-            Console.WriteLine($"[MethodOverride] Installed: {hookKey}");
-            return true;
-        }
-
-        public static object InvokeOriginal(object instance, object[] args, [CallerMemberName] string memberName = "")
-        {
-            var hookKey = ResolveHookKey(memberName);
-            if (hookKey == null)
-            {
-                Console.WriteLine($"[MethodOverride] InvokeOriginal: Could not resolve hook key for {memberName}");
-                return null;
-            }
-
-            GCHandle instanceHandle = default(GCHandle);
-            GCHandle argsHandle = default(GCHandle);
-
-            try
-            {
-                IntPtr instancePtr = IntPtr.Zero;
-                if (instance != null)
+                // Get the stub address
+                IntPtr stubAddress = GetStubAddress(hookKey);
+                if (stubAddress == IntPtr.Zero)
                 {
-                    instanceHandle = GCHandle.Alloc(instance);
-                    instancePtr = GCHandle.ToIntPtr(instanceHandle);
+                    Console.WriteLine($"[MethodOverride] Warning: No stub returned for: {hookKey}");
+                }
+                else
+                {
+                    Console.WriteLine($"[MethodOverride]   -> Stub: 0x{stubAddress.ToInt64():X}");
+
+                    // Try to populate the stub field in the hook class
+                    string stubFieldName = attr.StubFieldName ?? $"_{hookMethod.Name}_stub";
+
+                    var stubField = hookMethod.DeclaringType.GetField(
+                        stubFieldName,
+                        BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+
+                    if (stubField != null)
+                    {
+                        // Check if it's a delegate type
+                        if (stubField.FieldType.IsSubclassOf(typeof(Delegate)))
+                        {
+                            try
+                            {
+                                // Create delegate from stub address
+                                var delegateInstance = Marshal.GetDelegateForFunctionPointer(stubAddress, stubField.FieldType);
+                                stubField.SetValue(null, delegateInstance);
+                                Console.WriteLine($"[MethodOverride]   -> Populated delegate field: {stubFieldName}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"[MethodOverride]   -> Failed to create delegate: {ex.Message}");
+                            }
+                        }
+                        else if (stubField.FieldType == typeof(IntPtr))
+                        {
+                            // Just store the raw stub address
+                            stubField.SetValue(null, stubAddress);
+                            Console.WriteLine($"[MethodOverride]   -> Populated IntPtr field: {stubFieldName}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"[MethodOverride]   -> Field '{stubFieldName}' is not a Delegate or IntPtr type");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"[MethodOverride]   -> No field '{stubFieldName}' found (optional)");
+                    }
                 }
 
-                IntPtr argsPtr = IntPtr.Zero;
-                if (args != null && args.Length > 0)
-                {
-                    argsHandle = GCHandle.Alloc(args);
-                    argsPtr = GCHandle.ToIntPtr(argsHandle);
-                }
+                Console.WriteLine($"[MethodOverride] Hooked: {attr.TargetType.FullName}.{targetName}");
+                Console.WriteLine($"[MethodOverride]   -> Implementation: {targetMethod.DeclaringType.FullName}.{targetMethod.Name}");
+                Console.WriteLine($"[MethodOverride]   -> Namespace: {nameSpace}");
+                Console.WriteLine($"[MethodOverride]   -> ClassName: {className}");
 
-                IntPtr resultPtr = CallOriginal(hookKey, instancePtr, argsPtr);
-
-                // Validate the pointer before trying to convert it
-                if (resultPtr == IntPtr.Zero)
-                {
-                    return null;
-                }
-
-                // Additional validation - GCHandle values should be reasonable
-                long ptrValue = resultPtr.ToInt64();
-                if (ptrValue < 0 || ptrValue > 0x7FFFFFFF)
-                {
-                    Console.WriteLine($"[MethodOverride] Invalid GCHandle value: 0x{ptrValue:X}");
-                    return null;
-                }
-
-                try
-                {
-                    GCHandle resultHandle = GCHandle.FromIntPtr(resultPtr);
-                    object result = resultHandle.Target;
-                    resultHandle.Free();
-                    return result;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[MethodOverride] Failed to convert result GCHandle: {ex.Message}");
-                    Console.WriteLine($"[MethodOverride] Result pointer was: 0x{resultPtr.ToInt64():X}");
-                    return null;
-                }
+                return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[MethodOverride] InvokeOriginal failed for {hookKey}: {ex.Message}");
-                Console.WriteLine($"[MethodOverride] Stack trace: {ex.StackTrace}");
+                Console.WriteLine($"[MethodOverride] Exception in TryInstallHook: {ex}");
             }
-            finally
+
+            return false;
+        }
+
+        /// <summary>
+        /// Splits a type into namespace and class name, handling nested classes with Mono's / separator.
+        /// For nested classes, the class name becomes "OuterClass/InnerClass" or "Outer/Middle/Inner"
+        /// </summary>
+        private static void GetTypeNameParts(Type type, out string nameSpace, out string className)
+        {
+            nameSpace = type.Namespace ?? string.Empty;
+
+            if (type.IsNested)
             {
-                if (instanceHandle.IsAllocated)
-                    instanceHandle.Free();
-                if (argsHandle.IsAllocated)
-                    argsHandle.Free();
+                // Build the nested class path with Mono's / separator: OuterClass/InnerClass
+                var parts = new System.Collections.Generic.List<string>();
+                var currentType = type;
+
+                while (currentType != null)
+                {
+                    parts.Insert(0, currentType.Name);
+                    currentType = currentType.DeclaringType;
+                }
+
+                className = string.Join("/", parts);
+            }
+            else
+            {
+                className = type.Name;
+            }
+        }
+
+        private static MethodBase FindConstructor(Type targetType, string ctorName, Type[] paramTypes)
+        {
+            if (ctorName == ".cctor")
+                return targetType.TypeInitializer;
+
+            return targetType.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .FirstOrDefault(c => ParametersMatch(c.GetParameters(), paramTypes));
+        }
+
+        private static MethodInfo FindMethod(Type targetType, string methodName, Type[] paramTypes, bool isInstance)
+        {
+            var flags = BindingFlags.Public | BindingFlags.NonPublic;
+            flags |= isInstance ? BindingFlags.Instance : BindingFlags.Static;
+
+            var declaredMethods = targetType.GetMethods(flags | BindingFlags.DeclaredOnly);
+
+            var declaredMatch = declaredMethods
+                .FirstOrDefault(m => m.Name == methodName && ParametersMatch(m.GetParameters(), paramTypes));
+
+            if (declaredMatch != null)
+                return declaredMatch;
+
+            var inheritedMatch = targetType.GetMethods(flags)
+                .FirstOrDefault(m => m.Name == methodName && ParametersMatch(m.GetParameters(), paramTypes));
+
+            if (inheritedMatch != null)
+                return inheritedMatch;
+
+            Console.WriteLine($"[MethodOverride] *** METHOD NOT FOUND ***");
+            Console.WriteLine($"[MethodOverride] Searched for: {methodName} with {paramTypes.Length} parameters");
+            Console.WriteLine($"[MethodOverride] Instance method: {isInstance}");
+            Console.WriteLine($"[MethodOverride] Available methods in {targetType.FullName}:");
+            foreach (var method in targetType.GetMethods(flags).Where(m => m.Name == methodName))
+            {
+                Console.WriteLine($"[MethodOverride]   - {method.Name}({string.Join(", ", method.GetParameters().Select(p => p.ParameterType.Name))}) - IsStatic: {method.IsStatic}");
             }
 
             return null;
         }
 
-        public static TResult InvokeOriginal<TResult>(object instance, object[] args, [CallerMemberName] string memberName = "")
+        private static bool ParametersMatch(ParameterInfo[] actual, Type[] expected)
         {
-            var result = InvokeOriginal(instance, args, memberName);
-            if (result == null)
-                return default(TResult);
-            return (TResult)result;
-        }
-
-        private static string ResolveHookKey(string memberName)
-        {
-            foreach (var kvp in _hookKeyLookup)
-            {
-                if (kvp.Key.EndsWith("." + memberName))
-                    return kvp.Value;
-            }
-
-            Console.WriteLine($"[MethodOverride] ResolveHookKey: No hook found for {memberName}");
-            return null;
+            return actual.Length == expected.Length &&
+                   actual.Zip(expected, (a, e) => a.ParameterType == e).All(match => match);
         }
     }
 }

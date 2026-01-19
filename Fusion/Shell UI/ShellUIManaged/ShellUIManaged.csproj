@@ -429,6 +429,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\Devkit\DevkitContent.cs" />
     <Compile Include="Features\Devkit\DevkitPanel.cs" />
     <Compile Include="Features\WelcomeMessage.cs" />
     <Compile Include="Internal\Notify.cs" />

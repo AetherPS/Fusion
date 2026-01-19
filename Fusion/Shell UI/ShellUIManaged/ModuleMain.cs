@@ -28,7 +28,9 @@ namespace Fusion
                 MethodOverrideManager.Initialize();
                 DevkitTitleIdLabel.ShowLabels = true;
                 DevkitPanel.ShowPanel = true;
-                
+                DevkitContent.DebugSettingsShortcut = true;
+                DevkitContent.AppHome = true;
+
                 // Register custom plugin
                 SettingsApplicationHooks.RegisterPlugin<FusionPlugin>(FusionPlugin.PluginName);
 

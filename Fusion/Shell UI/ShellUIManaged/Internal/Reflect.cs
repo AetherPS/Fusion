@@ -72,8 +72,22 @@ namespace Fusion.Internal
         /// </summary>
         public static T Get<T>(object instance, string field)
         {
-            var f = instance.GetType().GetField(field, All);
-            return (T)f?.GetValue(instance);
+            if (instance == null)
+                return default(T);
+
+            Type type = instance.GetType();
+            FieldInfo f = null;
+
+            // Search up the type hierarchy
+            while (type != null && f == null)
+            {
+                f = type.GetField(field, All);
+                if (f != null)
+                    break;
+                type = type.BaseType;
+            }
+
+            return f != null ? (T)f.GetValue(instance) : default(T);
         }
 
         /// <summary>
@@ -90,7 +104,21 @@ namespace Fusion.Internal
         /// </summary>
         public static void Set(object instance, string field, object value)
         {
-            var f = instance.GetType().GetField(field, All);
+            if (instance == null)
+                return;
+
+            Type type = instance.GetType();
+            FieldInfo f = null;
+
+            // Search up the type hierarchy
+            while (type != null && f == null)
+            {
+                f = type.GetField(field, All);
+                if (f != null)
+                    break;
+                type = type.BaseType;
+            }
+
             f?.SetValue(instance, value);
         }
 
@@ -108,8 +136,22 @@ namespace Fusion.Internal
         /// </summary>
         public static T GetProp<T>(object instance, string property)
         {
-            var p = instance.GetType().GetProperty(property, All);
-            return (T)p?.GetValue(instance);
+            if (instance == null)
+                return default(T);
+
+            Type type = instance.GetType();
+            PropertyInfo p = null;
+
+            // Search up the type hierarchy
+            while (type != null && p == null)
+            {
+                p = type.GetProperty(property, All);
+                if (p != null)
+                    break;
+                type = type.BaseType;
+            }
+
+            return p != null ? (T)p.GetValue(instance) : default(T);
         }
 
         /// <summary>
@@ -117,7 +159,21 @@ namespace Fusion.Internal
         /// </summary>
         public static void SetProp(object instance, string property, object value)
         {
-            var p = instance.GetType().GetProperty(property, All);
+            if (instance == null)
+                return;
+
+            Type type = instance.GetType();
+            PropertyInfo p = null;
+
+            // Search up the type hierarchy
+            while (type != null && p == null)
+            {
+                p = type.GetProperty(property, All);
+                if (p != null)
+                    break;
+                type = type.BaseType;
+            }
+
             p?.SetValue(instance, value);
         }
 

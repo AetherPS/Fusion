@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Exports.h"
 
-std::map<std::string, MonoMethod*> OriginalMethods;
-
 void* get_compiled_method(MonoMethod* method)
 {
     if (!method) return nullptr;
@@ -15,122 +13,75 @@ void* get_compiled_method(MonoMethod* method)
     return mono_compile_method(method);
 }
 
+uint64_t GetAddressOfMethod(const char* assemblyName, const char* nameSpace, const char* className, const char* methodName, int ParamaterCount)
+{
+    auto assembly = mono_domain_assembly_open(mono_get_root_domain(), assemblyName);
+    if (assembly == nullptr)
+    {
+        Logger::Error("GetAddressOfMethod: Failed to open \"%s\" assembly.", assemblyName);
+        return 0;
+    }
+
+    auto assemblyImage = mono_assembly_get_image(assembly);
+    if (assemblyImage == nullptr)
+    {
+        Logger::Error("GetAddressOfMethod: Failed to open \"%s\" Image.", assemblyName);
+        return 0;
+    }
+
+    MonoClass* klass = mono_class_from_name(assemblyImage, nameSpace, className);
+
+    if (klass == nullptr)
+    {
+        Logger::Error("GetAddressOfMethod: Failed to open \"%s\" class from \"%s\" Namespace.", className, nameSpace);
+        return 0;
+    }
+
+    if (!klass)
+    {
+        Logger::Error("GetAddressOfMethod: failed to open class \"%s\" in namespace \"%s\"", className, nameSpace);
+        return 0;
+    }
+
+    MonoMethod* Method = mono_class_get_method_from_name(klass, methodName, ParamaterCount);
+    if (!Method)
+    {
+        Logger::Error("GetAddressOfMethod: failed to find method \"%s\" in class \"%s\"", methodName, className);
+        return 0;
+    }
+
+    return (uint64_t)get_compiled_method(Method);
+}
+
 extern "C"
 {
-    __declspec(dllexport) void AddDetour(const char* name, void* original_mono_method, void* detour_mono_method)
+    __declspec(dllexport) void AddMethodDetour(const char* assemblyName, const char* nameSpace, const char* klass, const char* methodName, int parameterCount, MonoMethod* detour_mono_method, const char* hookKey)
     {
-        MonoMethod* original = (MonoMethod*)original_mono_method;
-        MonoMethod* detour = (MonoMethod*)detour_mono_method;
-
-        OriginalMethods[name] = original;
-
-        void* compiled_original = get_compiled_method(original);
-        void* compiled_detour = get_compiled_method(detour);
-
-        if (!compiled_original || !compiled_detour)
+        uint64_t originalAddress = GetAddressOfMethod(assemblyName, nameSpace, klass, methodName, parameterCount);
+        if (!originalAddress)
         {
-            Logger::Error("[Detour] Failed to compile methods: %s", name);
+            Logger::Error("[Detour] Failed to get address of original method: %s", methodName);
             return;
         }
 
-        Manager->AddDetour<Detour64>(name, (uint64_t)compiled_original, compiled_detour);
-        Logger::Success("[Detour] Installed: %s", name);
-    }
-
-    static void* CallStubWithArgs(void* stub, void** args, int argCount)
-    {
-        switch (argCount)
+        void* compiled_detour = get_compiled_method(detour_mono_method);
+        if (!compiled_detour)
         {
-        case 0: return ((void* (*)())stub)();
-        case 1: return ((void* (*)(void*))stub)(args[0]);
-        case 2: return ((void* (*)(void*, void*))stub)(args[0], args[1]);
-        case 3: return ((void* (*)(void*, void*, void*))stub)(args[0], args[1], args[2]);
-        case 4: return ((void* (*)(void*, void*, void*, void*))stub)(args[0], args[1], args[2], args[3]);
-        case 5: return ((void* (*)(void*, void*, void*, void*, void*))stub)(args[0], args[1], args[2], args[3], args[4]);
-        case 6: return ((void* (*)(void*, void*, void*, void*, void*, void*))stub)(args[0], args[1], args[2], args[3], args[4], args[5]);
-        case 7: return ((void* (*)(void*, void*, void*, void*, void*, void*, void*))stub)(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-        case 8: return ((void* (*)(void*, void*, void*, void*, void*, void*, void*, void*))stub)(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-        case 9: return ((void* (*)(void*, void*, void*, void*, void*, void*, void*, void*, void*))stub)(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
-        case 10: return ((void* (*)(void*, void*, void*, void*, void*, void*, void*, void*, void*, void*))stub)(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
-        default: return nullptr;
+            Logger::Error("[Detour] Failed to compile detour method: %s", methodName);
+            return;
         }
+
+        Manager->AddDetour<Detour64>(hookKey, originalAddress, compiled_detour);
+        Logger::Success("[Detour] Installed: %s (key: %s)", methodName, hookKey);
     }
 
-    __declspec(dllexport) void* CallOriginal(const char* name, void* instanceHandle, void* argsHandle)
+    __declspec(dllexport) void* GetStubAddress(const char* hookKey)
     {
-        void* stub = Manager->GetStub(name);
+        void* stub = Manager->GetStub(hookKey);
         if (!stub)
         {
-            Logger::Error("[CallOriginal] No stub found for: %s", name);
-            return nullptr;
+            Logger::Error("[GetStubAddress] Stub not found: %s", hookKey);
         }
-
-        auto it = OriginalMethods.find(name);
-        if (it == OriginalMethods.end())
-        {
-            Logger::Error("[CallOriginal] Method not found: %s", name);
-            return nullptr;
-        }
-
-        MonoMethod* method = it->second;
-
-        // Check if method returns void
-        MonoMethodSignature* sig = mono_method_signature(method);
-        MonoType* returnType = mono_signature_get_return_type(sig);
-        bool isVoid = (mono_type_get_type(returnType) == MONO_TYPE_VOID);
-
-        // Convert GCHandles
-        MonoObject* instance = nullptr;
-        if (instanceHandle != nullptr)
-        {
-            uint32_t handle = (uint32_t)(uintptr_t)instanceHandle;
-            instance = mono_gchandle_get_target(handle);
-        }
-
-        int argCount = 0;
-        MonoArray* argsArray = nullptr;
-
-        if (argsHandle != nullptr)
-        {
-            uint32_t handle = (uint32_t)(uintptr_t)argsHandle;
-            argsArray = (MonoArray*)mono_gchandle_get_target(handle);
-            if (argsArray != nullptr)
-            {
-                argCount = mono_array_length(argsArray);
-            }
-        }
-
-        bool isInstance = !(mono_method_get_flags(method, nullptr) & 0x0010);
-
-        int totalArgs = isInstance ? (argCount + 1) : argCount;
-        void** args = (void**)alloca(totalArgs * sizeof(void*));
-
-        int idx = 0;
-        if (isInstance)
-            args[idx++] = instance;
-
-        if (argsArray != nullptr)
-        {
-            for (int i = 0; i < argCount; i++)
-                args[idx++] = mono_array_get(argsArray, MonoObject*, i);
-        }
-
-        if (totalArgs > 10)
-        {
-            Logger::Error("[CallOriginal] Too many arguments: %d", totalArgs);
-            return nullptr;
-        }
-
-        // Call helper function
-        void* result = CallStubWithArgs(stub, args, totalArgs);
-
-        // Only create GCHandle if method doesn't return void and result is not null
-        if (!isVoid && result != nullptr)
-        {
-            uint32_t resultHandle = mono_gchandle_new((MonoObject*)result, false);
-            return (void*)(uintptr_t)resultHandle;
-        }
-
-        return nullptr;
+        return stub;
     }
 }
