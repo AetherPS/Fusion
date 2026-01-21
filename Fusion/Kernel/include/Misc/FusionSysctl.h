@@ -5,7 +5,7 @@ class FusionSysctl
 public:
 	static void Init();
 	static void Term();
-
+	
 	// Version string for Fusion
 	static char fusion_version[64];
 
@@ -25,6 +25,8 @@ public:
 	static int fusion_feature_tty_redirect;
 
 private:
+	static void EnableSysctlRecursive(struct sysctl_oid_list* parentList);
+
 	// Sysctl context
 	static sysctl_ctx_list sysctl_ctx;
 

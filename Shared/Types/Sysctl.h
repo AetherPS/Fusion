@@ -50,6 +50,8 @@ struct sysctl_oid {
     int                          oid_refcnt;    /* 0x40: Reference count */
     uint32_t                        oid_running;   /* 0x44: Handler running count */
     const char* oid_descr;     /* 0x48: Description string */
+	int oid_allowed;
+	int oid_unknown;
 };
 
 struct sysctl_ctx_entry {

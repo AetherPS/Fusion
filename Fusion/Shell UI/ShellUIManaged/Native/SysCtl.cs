@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Fusion.Internal
+namespace Fusion.Native
 {
     public static class SysCtl
     {
-        [DllImport("libkernel_sys.sprx", SetLastError = true)]
-        private static extern int sysctlbyname(string name, IntPtr oldp, ref IntPtr oldlenp, IntPtr newp, long newlen);
-
         /// <summary>
         /// Get a sysctl value as a string
         /// </summary>
@@ -16,7 +13,7 @@ namespace Fusion.Internal
             IntPtr length = IntPtr.Zero;
 
             // First call to get the size
-            if (sysctlbyname(name, IntPtr.Zero, ref length, IntPtr.Zero, 0) != 0)
+            if (LibKernel.sysctlbyname(name, IntPtr.Zero, ref length, IntPtr.Zero, 0) != 0)
             {
                 throw new InvalidOperationException($"Failed to get size for sysctl '{name}'. Error: {Marshal.GetLastWin32Error()}");
             }
@@ -26,7 +23,7 @@ namespace Fusion.Internal
             try
             {
                 // Second call to get the actual data
-                if (sysctlbyname(name, buffer, ref length, IntPtr.Zero, 0) != 0)
+                if (LibKernel.sysctlbyname(name, buffer, ref length, IntPtr.Zero, 0) != 0)
                 {
                     throw new InvalidOperationException($"Failed to get value for sysctl '{name}'. Error: {Marshal.GetLastWin32Error()}");
                 }
@@ -50,7 +47,7 @@ namespace Fusion.Internal
 
             try
             {
-                if (sysctlbyname(name, buffer, ref length, IntPtr.Zero, 0) != 0)
+                if (LibKernel.sysctlbyname(name, buffer, ref length, IntPtr.Zero, 0) != 0)
                 {
                     throw new InvalidOperationException($"Failed to get value for sysctl '{name}'. Error: {Marshal.GetLastWin32Error()}");
                 }
@@ -76,7 +73,7 @@ namespace Fusion.Internal
 
             try
             {
-                if (sysctlbyname(name, buffer, ref length, IntPtr.Zero, 0) != 0)
+                if (LibKernel.sysctlbyname(name, buffer, ref length, IntPtr.Zero, 0) != 0)
                 {
                     throw new InvalidOperationException($"Failed to get value for sysctl '{name}'. Error: {Marshal.GetLastWin32Error()}");
                 }
@@ -94,28 +91,20 @@ namespace Fusion.Internal
         /// <summary>
         /// Get raw bytes from sysctl
         /// </summary>
-        public static byte[] GetBytes(string name)
+        public static byte[] GetBytes(string name, long size)
         {
-            IntPtr length = IntPtr.Zero;
-
-            // First call to get the size
-            if (sysctlbyname(name, IntPtr.Zero, ref length, IntPtr.Zero, 0) != 0)
-            {
-                throw new InvalidOperationException($"Failed to get size for sysctl '{name}'. Error: {Marshal.GetLastWin32Error()}");
-            }
-
-            int size = length.ToInt32();
+            IntPtr length = new IntPtr(size);
             byte[] buffer = new byte[size];
-            IntPtr ptr = Marshal.AllocHGlobal(size);
+            IntPtr ptr = Marshal.AllocHGlobal((int)size);
 
             try
             {
-                if (sysctlbyname(name, ptr, ref length, IntPtr.Zero, 0) != 0)
+                if (LibKernel.sysctlbyname(name, ptr, ref length, IntPtr.Zero, 0) != 0)
                 {
                     throw new InvalidOperationException($"Failed to get value for sysctl '{name}'. Error: {Marshal.GetLastWin32Error()}");
                 }
 
-                Marshal.Copy(ptr, buffer, 0, size);
+                Marshal.Copy(ptr, buffer, 0, (int)size);
             }
             finally
             {
@@ -136,7 +125,7 @@ namespace Fusion.Internal
                 Marshal.WriteInt32(buffer, value);
                 IntPtr oldlen = IntPtr.Zero;
 
-                if (sysctlbyname(name, IntPtr.Zero, ref oldlen, buffer, sizeof(int)) != 0)
+                if (LibKernel.sysctlbyname(name, IntPtr.Zero, ref oldlen, buffer, sizeof(int)) != 0)
                 {
                     throw new InvalidOperationException($"Failed to set value for sysctl '{name}'. Error: {Marshal.GetLastWin32Error()}");
                 }

@@ -18,7 +18,7 @@
  */
 
 // Static member definitions
-char FusionSysctl::fusion_version[64] = "1.4.163";
+char FusionSysctl::fusion_version[64] = "1.4.167";
 char FusionSysctl::fusion_build_date[64] = __DATE__;
 char FusionSysctl::fusion_build_time[64] = __TIME__;
 int FusionSysctl::fusion_direct_memory_pages = 300;
@@ -102,6 +102,8 @@ void FusionSysctl::Init()
 		OID_AUTO, "DirectMemoryReservationSize", CTLFLAG_RW,
 		&fusion_direct_memory_pages, 0, "Direct memory reservation size (pages)");
 
+	EnableSysctlRecursive(sysctl__children);
+
 	printf("Fusion Version: %s\nBuild Date: %s\nBuild Time: %s\n", fusion_version, fusion_build_date, fusion_build_time);
 }
 
@@ -109,4 +111,31 @@ void FusionSysctl::Term()
 {
 	sysctl_ctx_free(&sysctl_ctx);
 
+}
+
+void FusionSysctl::EnableSysctlRecursive(struct sysctl_oid_list* parentList)
+{
+	struct sysctl_oid* oidp;
+
+	SLIST_FOREACH(oidp, parentList, oid_link)
+	{
+		// Make it readable and accessible by anybody
+		oidp->oid_kind |= CTLFLAG_RD | CTLFLAG_ANYBODY;
+
+		// Remove any restrictive flags
+		oidp->oid_kind &= ~(CTLFLAG_SECURE | CTLFLAG_PRISON | CTLFLAG_SKIP);
+
+		// Bypass sony check.
+		oidp->oid_allowed = 1;
+
+		// If this is a node (has children), recurse into it
+		if ((oidp->oid_kind & CTLTYPE) == CTLTYPE_NODE && oidp->oid_handler == NULL)
+		{
+			struct sysctl_oid_list* childList = (struct sysctl_oid_list*)oidp->oid_arg1;
+			if (childList != NULL)
+			{
+				EnableSysctlRecursive(childList);
+			}
+		}
+	}
 }

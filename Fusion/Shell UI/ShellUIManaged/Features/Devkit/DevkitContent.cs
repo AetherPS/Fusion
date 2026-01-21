@@ -214,52 +214,6 @@ namespace Fusion.Features.Devkit
         }
 
         [MethodOverride(typeof(AppBrowseItemMethodExteneder))]
-        public static AppBrowseItem GetItemByTitleId(int userId, string titleId)
-        {
-            if (titleId == "NPXS29999")
-            {
-                return new AppBrowseItem
-                {
-                    TitleId = "NPXS29999",
-                    TitleName = "★APP_HOME(host)",
-                    MetaDataPath = string.Empty
-                };
-            }
-            if (titleId == "NPXS29998")
-            {
-                return new AppBrowseItem
-                {
-                    TitleId = "NPXS29998",
-                    TitleName = "★APP_HOME(data)",
-                    MetaDataPath = string.Empty
-                };
-            }
-            if (titleId == "NPXS20993")
-            {
-                return new AppBrowseItem
-                {
-                    TitleId = "NPXS20993",
-                    TitleName = "★Debug Settings",
-                    MetaDataPath = string.Empty
-                };
-            }
-
-            using (AppBrowseItemAccessor appBrowseItemAccessor = new AppBrowseItemAccessor())
-            {
-                appBrowseItemAccessor.SetUserId(userId);
-                try
-                {
-                    return appBrowseItemAccessor.GetItemByTitleId(titleId);
-                }
-                catch (Exception)
-                {
-                }
-            }
-
-            return null;
-        }
-
-        [MethodOverride(typeof(AppBrowseItemMethodExteneder))]
         public static unsafe string GetIconPath(this AppBrowseItem item, bool withTheme = false)
         {
             string titleId = item.GetTitleId();
@@ -280,120 +234,120 @@ namespace Fusion.Features.Devkit
             return *(string*)&resultPtr;
         }
 
-        [MethodOverride(typeof(ContentsList))]
-        private static unsafe void LoadFocusInfo(ContentsList instance)
-        {
-            _LoadFocusInfo_stub(*(IntPtr*)&instance);
+        //[MethodOverride(typeof(ContentsList))]
+        //private static unsafe void LoadFocusInfo(ContentsList instance)
+        //{
+        //    _LoadFocusInfo_stub(*(IntPtr*)&instance);
             
-            if (instance.FolderAppBrowseItem == null)
-            {
-                instance.SetDefaultFocusIndex(MemoryItemList.Count + 1);
-            }
-        }
+        //    if (instance.FolderAppBrowseItem == null)
+        //    {
+        //        instance.SetDefaultFocusIndex(MemoryItemList.Count + 1);
+        //    }
+        //}
 
-        [MethodOverride(typeof(ContentsList))]
-        public static bool SetFocusToHome(ContentsList instance)
-        {
-            int val = MemoryItemList.Count + 2;
-            if (0 < instance.GridListPanel.ItemCount)
-            {
-                int num = Math.Min(val, instance.GridListPanel.ItemCount - 1);
-                if (instance.GridListPanel.FocusIndex != num)
-                {
-                    instance.SetFocusIndex(num, true, false);
-                    return true;
-                }
-            }
-            return false;
-        }
+        //[MethodOverride(typeof(ContentsList))]
+        //public static bool SetFocusToHome(ContentsList instance)
+        //{
+        //    int val = MemoryItemList.Count + 2;
+        //    if (0 < instance.GridListPanel.ItemCount)
+        //    {
+        //        int num = Math.Min(val, instance.GridListPanel.ItemCount - 1);
+        //        if (instance.GridListPanel.FocusIndex != num)
+        //        {
+        //            instance.SetFocusIndex(num, true, false);
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
-        [MethodOverride(typeof(ContentsList))]
-        private static void DoReorder(ContentsList instance, long delayLimit = 0L)
-        {
-            if (instance.Disposed || ThemePreview.Enabled || instance.FolderAppBrowseItem != null)
-            {
-                return;
-            }
+        //[MethodOverride(typeof(ContentsList))]
+        //private static void DoReorder(ContentsList instance, long delayLimit = 0L)
+        //{
+        //    if (instance.Disposed || ThemePreview.Enabled || instance.FolderAppBrowseItem != null)
+        //    {
+        //        return;
+        //    }
 
-            if (Reflect.Get<bool>(instance, "m_reorderBlocked"))
-            {
-                Reflect.Set(instance, "m_reorderDirty", true);
-                return;
-            }
+        //    if (Reflect.Get<bool>(instance, "m_reorderBlocked"))
+        //    {
+        //        Reflect.Set(instance, "m_reorderDirty", true);
+        //        return;
+        //    }
 
-            string titleId = ContentAreaScene.GetLayerFocusTarget(LayerManager.GetFocusLayer());
-            if (titleId.Empty())
-            {
-                return;
-            }
+        //    string titleId = ContentAreaScene.GetLayerFocusTarget(LayerManager.GetFocusLayer());
+        //    if (titleId.Empty())
+        //    {
+        //        return;
+        //    }
 
-            RefObj<CachedItemAccessor> accessorReference = instance.GetAppBrowseItemAccessorReference();
-            if (accessorReference == null)
-            {
-                return;
-            }
+        //    RefObj<CachedItemAccessor> accessorReference = instance.GetAppBrowseItemAccessorReference();
+        //    if (accessorReference == null)
+        //    {
+        //        return;
+        //    }
 
-            AppBrowseItemAccessor accessor = accessorReference.Body.accessor as AppBrowseItemAccessor;
+        //    AppBrowseItemAccessor accessor = accessorReference.Body.accessor as AppBrowseItemAccessor;
 
-            int userId = Reflect.GetProp<int>(typeof(TopMenuPlugin), "UserId");
-            Reflect.Call(instance, "PostJob", new object[] 
-            {
-                1,
-                UT.Enqueue(ListViewManager.GetFastJobQueue(),
-                delegate (Job job)
-                {
-                    AppBrowseItem itemByTitleId = AppBrowseItemMethodExteneder.GetItemByTitleId(userId, titleId);
-                    if (itemByTitleId != null)
-                    {
-                        bool flag = false;
-                        string text = "";
-                        if (itemByTitleId.IsVisibleTvAndVideoItem() && !itemByTitleId.IsVisibleContentAreaItem())
-                        {
-                            flag = true;
-                            titleId = TvItemManager.GetTvItemStatus().GetAttachedTitleId(titleId);
-                            if (!AppBrowseItemMethodExteneder.GetItemByTitleId(userId, titleId).IsVisibleContentAreaItem())
-                            {
-                                return;
-                            }
-                        }
-                        else if (itemByTitleId.IsInFolder())
-                        {
-                            text = itemByTitleId.GetParentFolderId();
-                        }
+        //    int userId = Reflect.GetProp<int>(typeof(TopMenuPlugin), "UserId");
+        //    Reflect.Call(instance, "PostJob", new object[] 
+        //    {
+        //        1,
+        //        UT.Enqueue(ListViewManager.GetFastJobQueue(),
+        //        delegate (Job job)
+        //        {
+        //            AppBrowseItem itemByTitleId = AppBrowseItemMethodExteneder.GetItemByTitleId(userId, titleId);
+        //            if (itemByTitleId != null)
+        //            {
+        //                bool flag = false;
+        //                string text = "";
+        //                if (itemByTitleId.IsVisibleTvAndVideoItem() && !itemByTitleId.IsVisibleContentAreaItem())
+        //                {
+        //                    flag = true;
+        //                    titleId = TvItemManager.GetTvItemStatus().GetAttachedTitleId(titleId);
+        //                    if (!AppBrowseItemMethodExteneder.GetItemByTitleId(userId, titleId).IsVisibleContentAreaItem())
+        //                    {
+        //                        return;
+        //                    }
+        //                }
+        //                else if (itemByTitleId.IsInFolder())
+        //                {
+        //                    text = itemByTitleId.GetParentFolderId();
+        //                }
 
-                        int num = MemoryItemList.Count + 2 + 1;
-                        List<Item> items = accessor.GetItems(0, num);
-                        if (items.Count >= num)
-                        {
-                            AppBrowseItem item = items[num - 1] as AppBrowseItem;
-                            if (!(item.GetTitleId() == titleId) && (text.Empty() || !(item.GetTitleId() == text)))
-                            {
-                                while (UT.ElapsedMilliseconds < delayLimit && !job.IsCancelled)
-                                {
-                                    Thread.Sleep(1);
-                                }
+        //                int num = MemoryItemList.Count + 2 + 1;
+        //                List<Item> items = accessor.GetItems(0, num);
+        //                if (items.Count >= num)
+        //                {
+        //                    AppBrowseItem item = items[num - 1] as AppBrowseItem;
+        //                    if (!(item.GetTitleId() == titleId) && (text.Empty() || !(item.GetTitleId() == text)))
+        //                    {
+        //                        while (UT.ElapsedMilliseconds < delayLimit && !job.IsCancelled)
+        //                        {
+        //                            Thread.Sleep(1);
+        //                        }
 
-                                if (!job.IsCancelled)
-                                {
-                                    if (flag)
-                                    {
-                                        TvItemManager.Push(titleId);
-                                    }
-                                    else
-                                    {
-                                        AppBrowseAccessorWrapper.UpdateLastAccessTime(titleId);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                delegate (JobCompletedEventArgs obj)
-                {
-                    obj.NoThrow();
-                    accessorReference.Dispose();
-                })
-            });
-        }
+        //                        if (!job.IsCancelled)
+        //                        {
+        //                            if (flag)
+        //                            {
+        //                                TvItemManager.Push(titleId);
+        //                            }
+        //                            else
+        //                            {
+        //                                AppBrowseAccessorWrapper.UpdateLastAccessTime(titleId);
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        },
+        //        delegate (JobCompletedEventArgs obj)
+        //        {
+        //            obj.NoThrow();
+        //            accessorReference.Dispose();
+        //        })
+        //    });
+        //}
     }
 }

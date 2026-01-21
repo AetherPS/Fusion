@@ -1,4 +1,5 @@
 ﻿using Fusion.Internal;
+using Fusion.Native;
 using System;
 
 namespace Fusion.Features
