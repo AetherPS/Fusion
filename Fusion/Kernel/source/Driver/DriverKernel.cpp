@@ -23,7 +23,7 @@ int DriverKernel::OnIoctl(cdev* dev, unsigned long cmd, caddr_t data, int fflag,
 int DriverKernel::GetKernelBase(caddr_t data)
 {
     Input_KernelBase* input = (Input_KernelBase*)data;
-    input->KernelBase = (uint64_t)KernelBase;
+    input->KernelBase = (uint64_t)g_KernelBase;
 	return 0;
 }
 

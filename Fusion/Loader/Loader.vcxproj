@@ -44,14 +44,14 @@
     <NMakePreprocessorDefinitions>DEBUG=0</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) prepare_resources
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) prepare_resources
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\PS4-Kernel-SDK\include;$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -86,14 +86,10 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClCompile Include="source\compressedblob.c" />
     <ClCompile Include="source\crc32.c" />
     <ClCompile Include="source\dynlib.c" />
-    <ClCompile Include="source\elf.c" />
     <ClCompile Include="source\file.c" />
     <ClCompile Include="source\fusiondriver.c" />
-    <ClCompile Include="source\kernel.c" />
     <ClCompile Include="source\log.c" />
     <ClCompile Include="source\main.c" />
-    <ClCompile Include="source\patches.c" />
-    <ClCompile Include="source\resolver.c" />
     <ClCompile Include="source\daemon.c" />
     <ClCompile Include="source\tinfgzip.c" />
     <ClCompile Include="source\tinflate.c" />
@@ -105,23 +101,11 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClInclude Include="include\common.h" />
     <ClInclude Include="include\compressedblob.h" />
     <ClInclude Include="include\dynlib.h" />
-    <ClInclude Include="include\elf.h" />
     <ClInclude Include="include\file.h" />
-    <ClInclude Include="include\kernel.h" />
     <ClInclude Include="include\log.h" />
-    <ClInclude Include="include\patches.h" />
-    <ClInclude Include="include\resolver.h" />
     <ClInclude Include="include\daemon.h" />
     <ClInclude Include="include\tinf.h" />
     <ClInclude Include="source\fusiondriver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Daemon\Daemon.vcxproj">
-      <Project>{e93827b7-2511-47a1-9190-032a66e72a82}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\Kernel\Kernel.vcxproj">
-      <Project>{7f7e2757-4cba-4203-8eeb-5b317a8c2d4d}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

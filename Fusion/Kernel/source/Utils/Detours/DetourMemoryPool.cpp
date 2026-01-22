@@ -13,7 +13,7 @@ void DetourMemoryPool::Init(size_t poolSize)
 {
 	PoolSize = poolSize;
 
-	PoolStart = KmemAllocAt(kernel_map, (vm_ooffset_t)KernelBase, PoolSize);
+	PoolStart = KmemAllocAt(kernel_map, (vm_ooffset_t)g_KernelBase, PoolSize);
 	if (PoolStart == nullptr) 
 	{
 		printf("ERROR: Failed to allocate %zu bytes for DetourMemoryPool.\n", PoolSize);

@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "Fusion.h"
 
+#include "Patches.h"
 #include "FakePkgs.h"
 #include "FakeSelfs.h"
 #include "DirectMemory.h"
@@ -13,6 +14,7 @@ void InitFusion()
 {
 	printf("Fusion Kernel Started!\n");
 
+	InstallPatches();				// Install all needed kernel patches.
 	FusionSysctl::Init();			// Initialize sysctl interface.
 	PrintFeatureFlags();			// Print the active feature flags.
 	MkDir("/data/Fusion", 0777);	// Ensure the fusion dir is made.

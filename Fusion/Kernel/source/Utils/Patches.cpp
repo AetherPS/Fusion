@@ -1,18 +1,11 @@
-#include "common.h"
-#include "patches.h"
+#include "Common.h"
+#include "Patches.h"
 
 void InstallPatches()
 {
 	uint8_t* kmem;
 
 	cpu_disable_wp();
-
-	// Patch memcpy: bypass stack bounds check (jcc -> jmp)
-	*(uint8_t*)(g_KernelAddrs.patch_memcpy) = 0xEB;
-
-	// Patch kmem_alloc to allow VM_PROT_ALL for kernel excutable memory allocations.
-	*(uint8_t*)(g_KernelAddrs.patch_kmem_alloc1) = VM_PROT_ALL;
-	*(uint8_t*)(g_KernelAddrs.patch_kmem_alloc2) = VM_PROT_ALL;
 
 	// Disable ASLR
 	kmem = (uint8_t*)g_KernelAddrs.patch_ASLR;

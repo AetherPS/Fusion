@@ -1,6 +1,29 @@
 ﻿#include "common.h"
 #include "daemon.h"
 
+extern uint8_t _binary_resources_Kernel_elf_compressed_start[];
+extern uint8_t _binary_resources_Kernel_elf_compressed_end[];
+
+int LoadKernel()
+{
+	// Decompress the Kernel.elf
+	size_t decompressedSize;
+	uint8_t* decompressedKernel = DecompressBlob(_binary_resources_Kernel_elf_compressed_start, &decompressedSize);
+
+	if (!decompressedKernel)
+	{
+		klog("Failed to decompress Kernel.elf\n");
+		return 1;
+	}
+
+	kloader_load(decompressedKernel, decompressedSize);
+
+	// Free the decompressed buffer
+	free(decompressedKernel);
+
+	return 0;
+}
+
 int _main(void)
 {
 	if (ResolveDynlib() != 0)
@@ -9,6 +32,8 @@ int _main(void)
 		return 1;
 	}
 
+	ascii();
+
 	// Check if Fusion Driver is already loaded.
 	if (FileExist("/dev/Fusion"))
 	{
@@ -16,8 +41,13 @@ int _main(void)
 		return 1;
 	}
 
-	ascii();
-	LoadKernel();
+	// Decompress and load the kernel module.
+	if (LoadKernel() != 0)
+	{
+		klog("Failed to load the kernel module.\n");
+		return 1;
+	}
+	
 	InstallDaemon();
 
 	return 0;

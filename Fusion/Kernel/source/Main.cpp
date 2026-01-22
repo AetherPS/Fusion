@@ -1,15 +1,22 @@
-#include "Common.h"
+﻿#include "Common.h"
 #include "Fusion.h"
 
-KernelAddrs g_KernelAddrs;
-uint64_t KernelBase;
-
-extern "C" int _main(uint64_t kernelBase, KernelAddrs* addrs)
+extern "C"
 {
-	KernelBase = kernelBase;
-	InitResolver(addrs);
-	memcpy(&g_KernelAddrs, addrs, sizeof(KernelAddrs));
+    int module_init(void)
+    {
+        printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+        printf("Kernel Base: %p\n", (void*)g_KernelBase);
+        printf("Firmware: %s\n", g_DetectedFirmware);
+        printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 
-	InitFusion();
-	return 0;
+        InitFusion();
+
+        return 0;
+    }
+
+    void module_fini(void)
+    {
+        
+    }
 }

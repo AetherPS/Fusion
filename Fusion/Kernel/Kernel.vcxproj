@@ -41,17 +41,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NMakePreprocessorDefinitions>DEBUG=0</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) all</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) all</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared;$(NMakeIncludeSearchPath)</NMakeIncludeSearchPath>
     <OutDir>$(SolutionDir)Build\</OutDir>
-    <IncludePath>$(ProjectDir)include;$(ProjectDir)include\Utils;$(ProjectDir)include\Utils\Detours;$(ProjectDir)include\Driver;$(ProjectDir)include\Homebrew;$(ProjectDir)include\Misc</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(ProjectDir)include\Utils;$(ProjectDir)include\Utils\Detours;$(ProjectDir)include\Driver;$(ProjectDir)include\Homebrew;$(ProjectDir)include\Misc;$(SolutionDir)External\PS4-Kernel-SDK\include</IncludePath>
     <IntDir>$(ProjectDir)</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -73,8 +71,6 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="crt0.s" />
-    <None Include="Linker" />
     <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
@@ -97,8 +93,8 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <ClCompile Include="source\Utils\Detours\hde64.cpp" />
     <ClCompile Include="source\Utils\Heap.cpp" />
     <ClCompile Include="source\Utils\Misc.cpp" />
+    <ClCompile Include="source\Utils\Patches.cpp" />
     <ClCompile Include="source\Utils\ProcessUtils.cpp" />
-    <ClCompile Include="source\Utils\Resolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Common.h" />
@@ -115,15 +111,14 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <ClInclude Include="include\Misc\FusionSysctl.h" />
     <ClInclude Include="include\Misc\LibraryReplacer.h" />
     <ClInclude Include="include\Misc\TTYRedirector.h" />
-    <ClInclude Include="include\Utils\Asm.h" />
     <ClInclude Include="include\Utils\Detours\Detour.h" />
     <ClInclude Include="include\Utils\Detours\DetourMemoryPool.h" />
     <ClInclude Include="include\Utils\Detours\hde64.h" />
     <ClInclude Include="include\Utils\Detours\table64.h" />
     <ClInclude Include="include\Utils\Heap.h" />
     <ClInclude Include="include\Utils\Misc.h" />
+    <ClInclude Include="include\Utils\Patches.h" />
     <ClInclude Include="include\Utils\ProcessUtils.h" />
-    <ClInclude Include="include\Utils\Resolver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

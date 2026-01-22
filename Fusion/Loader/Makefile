@@ -1,51 +1,85 @@
-CC		:=	gcc
-OBJCOPY	:=	objcopy
-ODIR	:=	build
-SDIR	:=	source
-RDIR	:=  resources
-IDIRS	:=  -I../../Shared -Iinclude -I../../External/FusionShared
-CFLAGS	:=	$(IDIRS) -O2 -std=gnu11 -ffunction-sections -fdata-sections -fno-builtin -nostartfiles -nostdlib -Wall -masm=intel -march=btver2 -mtune=btver2 -m64 -mabi=sysv -mcmodel=small -fpie -D_LOADER
-LFLAGS	:=	-Xlinker -T Linker -Wl,--build-id=none -Wl,--gc-sections
-CFILES	:=	$(wildcard $(SDIR)/*.c)
-RFILES  :=  $(shell find $(RDIR) -name \* -type f 2>/dev/null)
-OBJS	:=	$(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(CFILES)) $(patsubst $(RDIR)/%, $(ODIR)/%.o, $(RFILES))
+SDK = ../../External/PS4-Kernel-SDK
 
+# Set output directory for final artifacts
+OUTPUT_DIR = ../../Build
+export OUTPUT_DIR
+
+# Use loader.mk for common definitions
+include $(SDK)/loader/loader.mk
+
+CFLAGS += -I../../External/FusionShared -D_LOADER
+
+# Override linker script
+LFLAGS := -Xlinker -T Linker -Wl,--build-id=none -Wl,--gc-sections
+
+# Source files
+CFILES := $(wildcard $(SDIR)/*.c)
+
+# Find all resource files
+RFILES := $(shell find $(RDIR) -type f 2>/dev/null)
+
+# Object files (C sources + embedded resources)
+OBJS := $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(CFILES)) $(patsubst $(RDIR)/%, $(ODIR)/resources_%.o, $(RFILES))
+
+# Check for compressed daemon
 ifneq ($(wildcard $(RDIR)/eboot.bin.compressed), )
-	CFLAGS += -DHAS_DAEMON
+    CFLAGS += -DHAS_DAEMON
 endif
 
 ifeq ($(DEBUG), 1)
     CFLAGS += -DDEBUG
 endif
 
+# Targets
 TARGET = Fusion.bin
 ELF_TARGET = Fusion.elf
+TARGET_PATH := $(OUTPUT_DIR)/$(TARGET)
+ELF_TARGET_PATH := $(OUTPUT_DIR)/$(ELF_TARGET)
 
-$(ELF_TARGET): $(ODIR) $(OBJS)
-	$(CC) crt0.s $(ODIR)/*.o -o $(ELF_TARGET) $(CFLAGS) $(LFLAGS)
+all: $(TARGET_PATH)
 
+$(TARGET_PATH): $(ELF_TARGET_PATH)
+	@echo "Converting to binary..."
+	@$(OBJCOPY) -O binary $(ELF_TARGET_PATH) $(TARGET_PATH)
+	@echo "Payload built: $(TARGET_PATH) (size: $$(stat -c%s $(TARGET_PATH) 2>/dev/null || stat -f%z $(TARGET_PATH)) bytes)"
+
+$(ELF_TARGET_PATH): prepare_resources $(ODIR) $(OBJS)
+	@mkdir -p $(OUTPUT_DIR)
+	@echo "Linking payload ELF..."
+	@$(CC) crt0.s $(OBJS) -o $(ELF_TARGET_PATH) $(CFLAGS) $(LFLAGS) $(LIBS)
+
+# Compile C sources
 $(ODIR)/%.o: $(SDIR)/%.c
-	$(CC) -c -o $@ $< $(CFLAGS)
-
-$(ODIR)/%.o: $(RDIR)/%
 	@mkdir -p $(dir $@)
-	@ld -r -b binary -o "$@" "$<"
-	@objcopy --rename-section .data=.rodata,alloc,load,readonly,data,contents --set-section-alignment .rodata=4096 "$@"
-	@objcopy --add-section .note.GNU-stack=/dev/null --set-section-flags .note.GNU-stack=noload,readonly "$@"
+	@echo "Compiling: $<"
+	@$(CC) -c -o $@ $< $(CFLAGS)
+
+# Embed resource files as binary data
+$(ODIR)/resources_%.o: $(RDIR)/%
+	@mkdir -p $(dir $@)
+	@echo "Embedding resource: $<"
+	@$(LD) -r -b binary -o "$@" "$<"
+	@$(OBJCOPY) --rename-section .data=.rodata,alloc,load,readonly,data,contents --set-section-alignment .rodata=4096 "$@"
+	@$(OBJCOPY) --add-section .note.GNU-stack=/dev/null --set-section-flags .note.GNU-stack=noload,readonly "$@"
 
 $(ODIR):
-	@mkdir $@
+	@mkdir -p $@
 
-.PHONY: clean copy
+rebuild: clean all
 
 clean:
-	@echo "Cleaning project files..."
-	rm -f Fusion.bin Fusion.elf $(ODIR)/*.o
+	@echo "Cleaning project..."
+	@rm -f $(TARGET_PATH) $(ELF_TARGET_PATH)
+	@rm -rf $(ODIR)
 
-copy: $(ELF_TARGET)
-	@echo "Converting to binary..."
-	@objcopy -O binary $(ELF_TARGET) $(TARGET)
-	@echo "Copying to build directory..."
-	@mkdir -p ../../Build/
-	@cp -u $(TARGET) ../../Build/
-	@echo "Done!"
+# Prepare resources: build kernel module and compress it
+prepare_resources:
+	@mkdir -p $(RDIR)
+	@echo "Building kernel module..."
+	@$(MAKE) -C ../kernel clean
+	@$(MAKE) -C ../kernel all
+	@echo "Compressing Kernel.elf with zlib..."
+	@python3 ../../Scripts/create_zlib_blob.py "$(OUTPUT_DIR)/Kernel.elf" "$(RDIR)/Kernel.elf.compressed"
+	# TODO Add other Kernel Modules here & plugins.
+
+.PHONY: all clean rebuild prepare_resources

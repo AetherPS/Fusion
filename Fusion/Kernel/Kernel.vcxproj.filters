@@ -39,9 +39,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Linker" />
     <None Include="Makefile" />
-    <None Include="crt0.s" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Main.cpp">
@@ -104,7 +102,7 @@
     <ClCompile Include="source\Misc\FusionSysctl.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="source\Utils\Resolver.cpp">
+    <ClCompile Include="source\Utils\Patches.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
   </ItemGroup>
@@ -114,9 +112,6 @@
     </ClInclude>
     <ClInclude Include="include\Fusion.h">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\Asm.h">
-      <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\Heap.h">
       <Filter>include\Utils</Filter>
@@ -175,7 +170,7 @@
     <ClInclude Include="include\Misc\FusionSysctl.h">
       <Filter>include\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="include\Utils\Resolver.h">
+    <ClInclude Include="include\Utils\Patches.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>
