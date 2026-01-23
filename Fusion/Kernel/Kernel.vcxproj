@@ -86,6 +86,7 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <ClCompile Include="source\Misc\DevActSpoofer.cpp" />
     <ClCompile Include="source\Misc\DipSwitchSpoofer.cpp" />
     <ClCompile Include="source\Misc\DirectMemory.cpp" />
+    <ClCompile Include="source\Misc\ExtendedLogging.cpp" />
     <ClCompile Include="source\Misc\FusionSysctl.cpp" />
     <ClCompile Include="source\Misc\LibraryReplacer.cpp" />
     <ClCompile Include="source\Misc\TTYRedirector.cpp" />
@@ -110,6 +111,7 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <ClInclude Include="include\Misc\DevActSpoofer.h" />
     <ClInclude Include="include\Misc\DipSwitchSpoofer.h" />
     <ClInclude Include="include\Misc\DirectMemory.h" />
+    <ClInclude Include="include\Misc\ExtendedLogging.h" />
     <ClInclude Include="include\Misc\FusionSysctl.h" />
     <ClInclude Include="include\Misc\LibraryReplacer.h" />
     <ClInclude Include="include\Misc\TTYRedirector.h" />

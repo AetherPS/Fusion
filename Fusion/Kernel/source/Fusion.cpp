@@ -3,6 +3,7 @@
 
 #include "Patches.h"
 #include "Bootstrapper.h"
+#include "ExtendedLogging.h"
 #include "FakePkgs.h"
 #include "FakeSelfs.h"
 #include "DirectMemory.h"
@@ -23,6 +24,10 @@ void InitFusion()
 
 	printf("Initializing Detour Memory Pool...");
 	DetourMemoryPool::Init(PAGE_SIZE); // 4 MB Pool
+	printf("Done.\n");
+
+	printf("Initializing ExtendedLogging...");
+	ExtendedLogging::Init();
 	printf("Done.\n");
 
 	printf("Initializing Bootstrapper...");

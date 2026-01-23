@@ -66,3 +66,35 @@ char* basename(char* path)
 {
 	return dynlib_is_host_path(path) ? dynlib_basename_host(path) : dynlib_basename(path);
 }
+
+int GetModuleInfoFromAddr(proc* p, uint64_t address, OrbisLibraryInfo* out)
+{
+	auto libraries = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * 256);
+	if (!libraries)
+	{
+		printf("%s: Failed to allocate memory for libraries.\n", __FUNCTION__);
+		return -1;
+	}
+
+	int realCount = 0;
+	int res = GetLibraries(p, libraries, 256, &realCount);
+
+	if (res != 0)
+	{
+		printf("%s: Failed to get module list for %d for reason %llX.\n", __FUNCTION__, p->p_pid, res);
+		return res;
+	}
+
+	for (int i = 0; i < realCount; i++)
+	{
+		if (address > libraries[i].MapBase && address < libraries[i].DataBase + libraries[i].DataSize)
+		{
+			memcpy(out, &libraries[i], sizeof(OrbisLibraryInfo));
+			_free(libraries);
+			return 0;
+		}
+	}
+
+	_free(libraries);
+	return -1;
+}
