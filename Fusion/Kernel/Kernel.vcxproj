@@ -82,6 +82,7 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <ClCompile Include="source\Homebrew\FakePkgs.cpp" />
     <ClCompile Include="source\Homebrew\FakeSelfs.cpp" />
     <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\Misc\Bootstrapper.cpp" />
     <ClCompile Include="source\Misc\DevActSpoofer.cpp" />
     <ClCompile Include="source\Misc\DipSwitchSpoofer.cpp" />
     <ClCompile Include="source\Misc\DirectMemory.cpp" />
@@ -105,6 +106,7 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <ClInclude Include="include\Fusion.h" />
     <ClInclude Include="include\Homebrew\FakePkgs.h" />
     <ClInclude Include="include\Homebrew\FakeSelfs.h" />
+    <ClInclude Include="include\Misc\Bootstrapper.h" />
     <ClInclude Include="include\Misc\DevActSpoofer.h" />
     <ClInclude Include="include\Misc\DipSwitchSpoofer.h" />
     <ClInclude Include="include\Misc\DirectMemory.h" />

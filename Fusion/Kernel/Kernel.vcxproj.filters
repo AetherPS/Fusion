@@ -105,6 +105,9 @@
     <ClCompile Include="source\Utils\Patches.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="source\Misc\Bootstrapper.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FeatureFlags.h">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="include\Utils\Patches.h">
       <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\Bootstrapper.h">
+      <Filter>include\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

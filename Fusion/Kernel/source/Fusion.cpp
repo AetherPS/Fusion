@@ -2,6 +2,7 @@
 #include "Fusion.h"
 
 #include "Patches.h"
+#include "Bootstrapper.h"
 #include "FakePkgs.h"
 #include "FakeSelfs.h"
 #include "DirectMemory.h"
@@ -18,12 +19,15 @@ void InitFusion()
 	FusionSysctl::Init();			// Initialize sysctl interface.
 	PrintFeatureFlags();			// Print the active feature flags.
 	MkDir("/data/Fusion", 0777);	// Ensure the fusion dir is made.
+	dmamini_initialize_ioctl();
 
 	printf("Initializing Detour Memory Pool...");
 	DetourMemoryPool::Init(PAGE_SIZE); // 4 MB Pool
 	printf("Done.\n");
 
-	dmamini_initialize_ioctl();
+	printf("Initializing Bootstrapper...");
+	Bootstrapper::Init();
+	printf("Done.\n");
 
 #ifdef FF_HomeBrew
 	printf("Initializing Fake Packages...");

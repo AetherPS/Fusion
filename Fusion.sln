@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Types", "Types", "{F842278D
 		Shared\Types\VM.h = Shared\Types\VM.h
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shellcode", "Fusion\Shellcode\Shellcode\Shellcode.vcxproj", "{5707E6B9-EF0E-6627-8017-D78788496C7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,14 @@ Global
 		{E93827B7-2511-47A1-9190-032A66E72A82}.Release|Any CPU.Build.0 = Release|ORBIS
 		{E93827B7-2511-47A1-9190-032A66E72A82}.Release|ORBIS.ActiveCfg = Release|ORBIS
 		{E93827B7-2511-47A1-9190-032A66E72A82}.Release|ORBIS.Build.0 = Release|ORBIS
+		{5707E6B9-EF0E-6627-8017-D78788496C7F}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{5707E6B9-EF0E-6627-8017-D78788496C7F}.Debug|Any CPU.Build.0 = Debug|x64
+		{5707E6B9-EF0E-6627-8017-D78788496C7F}.Debug|ORBIS.ActiveCfg = Debug|x64
+		{5707E6B9-EF0E-6627-8017-D78788496C7F}.Debug|ORBIS.Build.0 = Debug|x64
+		{5707E6B9-EF0E-6627-8017-D78788496C7F}.Release|Any CPU.ActiveCfg = Release|x64
+		{5707E6B9-EF0E-6627-8017-D78788496C7F}.Release|Any CPU.Build.0 = Release|x64
+		{5707E6B9-EF0E-6627-8017-D78788496C7F}.Release|ORBIS.ActiveCfg = Release|x64
+		{5707E6B9-EF0E-6627-8017-D78788496C7F}.Release|ORBIS.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
