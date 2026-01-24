@@ -2,27 +2,31 @@
 NASM = nasm
 NASM_FLAGS = -f bin
 
-# Source and output
-SRC = Bootstrapper.s
-BUILD_DIR = ../../../Build
-OUTPUT = $(BUILD_DIR)/Bootstrapper.bin
+# Directories
+BUILD_DIR = ../../../Build/ShellCode
+
+# Find all .s files in current directory
+SOURCES = $(wildcard *.s)
+BINS = $(SOURCES:.s=.bin)
 
 # Default target
-all: $(OUTPUT)
+all: build
 
-# Build rule
-$(OUTPUT): $(SRC)
+build:
 	@mkdir -p $(BUILD_DIR)
-	$(NASM) $(NASM_FLAGS) -o $(OUTPUT) $(SRC)
-	@echo "Built: $(OUTPUT)"
+	@for src in $(SOURCES); do \
+		base=$${src%.s}; \
+		$(NASM) $(NASM_FLAGS) -o $(BUILD_DIR)/$${base}.bin $${src}; \
+		echo "Built: $(BUILD_DIR)/$${base}.bin"; \
+	done
 
 # Clean target
 clean:
-	rm -f $(OUTPUT)
+	rm -f $(BUILD_DIR)/*.bin
 	@echo "Cleaned build artifacts"
 
 # Rebuild target
 rebuild: clean all
 
 # Phony targets
-.PHONY: all clean rebuild
+.PHONY: all build clean rebuild

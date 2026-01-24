@@ -2,6 +2,7 @@
 #include "Fusion.h"
 
 #include "Patches.h"
+#include "TrapFatalExtension.h"
 #include "Bootstrapper.h"
 #include "ExtendedLogging.h"
 #include "FakePkgs.h"
@@ -25,6 +26,12 @@ void InitFusion()
 	printf("Initializing Detour Memory Pool...");
 	DetourMemoryPool::Init(PAGE_SIZE); // 4 MB Pool
 	printf("Done.\n");
+
+#ifdef FF_TrapHooks
+	printf("Initializing TrapFatalExtension...");
+	TrapFatalExtension::Init();
+	printf("Done.\n");
+#endif
 
 	printf("Initializing ExtendedLogging...");
 	ExtendedLogging::Init();

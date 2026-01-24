@@ -37,7 +37,7 @@ int DriverKernel::KernelReadWrite(caddr_t data)
     if (res != 0)
         return res;
 
-    mtx_unlock_flags(&p->p_lock, 0);
+    mtx_unlock_flags(&p->p_mtx, 0);
 
     cpu_disable_wp();
 

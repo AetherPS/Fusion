@@ -111,6 +111,9 @@
     <ClCompile Include="source\Misc\ExtendedLogging.cpp">
       <Filter>source\Misc</Filter>
     </ClCompile>
+    <ClCompile Include="source\Misc\TrapFatalExtension.cpp">
+      <Filter>source\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FeatureFlags.h">
@@ -183,6 +186,9 @@
       <Filter>include\Misc</Filter>
     </ClInclude>
     <ClInclude Include="include\Misc\ExtendedLogging.h">
+      <Filter>include\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Misc\TrapFatalExtension.h">
       <Filter>include\Misc</Filter>
     </ClInclude>
   </ItemGroup>

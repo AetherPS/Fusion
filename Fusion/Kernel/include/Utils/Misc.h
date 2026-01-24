@@ -13,4 +13,3 @@ void WriteJump32(void* address, void* destination);
 void WriteJump64(void* address, void* destination);
 void WriteCall32(void* address, void* destination);
 char* basename(char* path);
-int GetModuleInfoFromAddr(proc* p, uint64_t address, OrbisLibraryInfo* out);

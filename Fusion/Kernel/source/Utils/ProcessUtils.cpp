@@ -51,41 +51,63 @@ int CreateThread(thread* td, void* entry, void* arg, char* stack, size_t stackSi
 	return create_thread(td, 0, entry, arg, stack, stackSize, 0, 0, 0, 0, 0);
 }
 
-uint64_t AllocateMemory(proc* p, size_t len, int prot, int flags)
+int AllocateMemory(proc* p, char* name, size_t len, int prot, uint64_t* mappedAddress)
 {
-	vm_offset_t mappedAddress = 0;
 	auto pageLength = round_page(len);
-
 	auto vmspace = p->p_vmspace;
 	if (!vmspace)
 	{
 		printf("%s: Process has no vmspace.\n", __FUNCTION__);
-		return 0;
+		return EINVAL;
 	}
 
+	mtx_lock_flags(&p->p_mtx, 0);
+	if (p->p_flag & P_WEXIT)
+	{
+		mtx_unlock_flags(&p->p_mtx, 0);
+		return ESRCH;
+	}
+	p->p_lock++;
+	if ((p->p_flag & P_INMEM) == 0)
+		faultin(p);
+	mtx_unlock_flags(&p->p_mtx, 0);
+
 	vm_map_t map = &vmspace->vm_map;
+	int result = 0;
 
 	vm_map_lock(map);
 	{
-		int res = vm_map_findspace(map, map->header.start, pageLength, &mappedAddress);
-		if (res != 0 || mappedAddress == 0)
-		{
-			vm_map_unlock(map);
-			printf("%s: vm_map_findspace an error has occurred allocating: %d.\n", __FUNCTION__, res);
-			return 0;
-		}
+		*mappedAddress = 0;
+		int res = vm_map_find(map, 0, 0, mappedAddress, pageLength, 1, prot, prot, 0, 0, 0);
 
-		res = vm_map_insert(map, 0, 0, mappedAddress, mappedAddress + pageLength, prot, prot, 0);
 		if (res != 0)
 		{
 			vm_map_unlock(map);
-			printf("%s: vm_map_insert an error has occurred allocating: %d, %llu.\n", __FUNCTION__, res, mappedAddress);
-			return 0;
+			printf("%s: vm_map_find failed: %d (prot: 0x%x, len: 0x%lx)\n", __FUNCTION__, res, prot, pageLength);
+			result = res;
+			goto cleanup;
+		}
+
+		if (name != nullptr)
+		{
+			vm_map_set_name(map, *mappedAddress, *mappedAddress + pageLength, name);
+		}
+		else
+		{
+			char nameTemp[0x20];
+			snprintf(nameTemp, sizeof(nameTemp), "Fusion:%016lx", *mappedAddress);
+			vm_map_set_name(map, *mappedAddress, *mappedAddress + pageLength, nameTemp);
 		}
 	}
 	vm_map_unlock(map);
 
-	return mappedAddress;
+cleanup:
+	mtx_lock_flags(&p->p_mtx, 0);
+	if ((p->p_flag & P_WEXIT) && (--p->p_lock == 0))
+		wakeup(&p->p_mtx);
+	mtx_unlock_flags(&p->p_mtx, 0);
+
+	return result;
 }
 
 int FreeMemory(proc* p, uint64_t addr, size_t len)
@@ -249,4 +271,36 @@ int GetLibraries(proc* p, OrbisLibraryInfo* libInfos, int maxLibs, int* libCount
 
 	*libCount = (int)numModules;
 	return 0;
+}
+
+int GetModuleInfoFromAddr(proc* p, uint64_t address, OrbisLibraryInfo* out)
+{
+	auto libraries = (OrbisLibraryInfo*)_malloc(sizeof(OrbisLibraryInfo) * 256);
+	if (!libraries)
+	{
+		printf("%s: Failed to allocate memory for libraries.\n", __FUNCTION__);
+		return -1;
+	}
+
+	int realCount = 0;
+	int res = GetLibraries(p, libraries, 256, &realCount);
+
+	if (res != 0)
+	{
+		printf("%s: Failed to get module list for %d for reason %llX.\n", __FUNCTION__, p->p_pid, res);
+		return res;
+	}
+
+	for (int i = 0; i < realCount; i++)
+	{
+		if (address > libraries[i].MapBase && address < libraries[i].DataBase + libraries[i].DataSize)
+		{
+			memcpy(out, &libraries[i], sizeof(OrbisLibraryInfo));
+			_free(libraries);
+			return 0;
+		}
+	}
+
+	_free(libraries);
+	return -1;
 }

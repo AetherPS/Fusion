@@ -92,6 +92,9 @@ wsl -d Ubuntu-24.04 make</NMakeReBuildCommandLine>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Bootstrapper.s" />
+    <None Include="ModuleLoad.s" />
+    <None Include="ModuleUnload.s" />
+    <None Include="ThreadShellCode.s" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Makefile" />

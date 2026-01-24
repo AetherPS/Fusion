@@ -35,7 +35,7 @@ public:
         if (*td == nullptr)
         {
             printf("%s: Failed to find Thread for Process with the pid %i\n", __FUNCTION__, input->ProcessId);
-            mtx_unlock_flags(&(*p)->p_lock, 0);
+            mtx_unlock_flags(&(*p)->p_mtx, 0);
             return ESRCH;
         }
 
