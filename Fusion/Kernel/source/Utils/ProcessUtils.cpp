@@ -119,11 +119,27 @@ int FreeMemory(proc* p, uint64_t addr, size_t len)
 		return EINVAL;
 	}
 
-	vm_map_t map = &vmspace->vm_map;
+	// Lock the process to prevent it from exiting
+	mtx_lock_flags(&p->p_mtx, 0);
+	if (p->p_flag & P_WEXIT)
+	{
+		mtx_unlock_flags(&p->p_mtx, 0);
+		return ESRCH;
+	}
+	p->p_lock++;
+	mtx_unlock_flags(&p->p_mtx, 0);
 
+	// Perform the actual deletion
+	vm_map_t map = &vmspace->vm_map;
 	vm_map_lock(map);
 	int res = vm_map_delete(map, addr, addr + round_page(len));
 	vm_map_unlock(map);
+
+	// Unlock the process
+	mtx_lock_flags(&p->p_mtx, 0);
+	if ((p->p_flag & P_WEXIT) && (--p->p_lock == 0))
+		wakeup(&p->p_mtx);
+	mtx_unlock_flags(&p->p_mtx, 0);
 
 	return res;
 }
