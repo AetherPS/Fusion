@@ -8,19 +8,30 @@ int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint3
 		printf("ReadWriteProcessMemory(): Invalid Process.\n");
 		return EINVAL;
 	}
-
 	if (addr == nullptr)
 	{
 		printf("ReadWriteProcessMemory(): Invalid address.\n");
 		return EINVAL;
 	}
-
 	if (data == nullptr || len <= 0)
 	{
 		printf("ReadWriteProcessMemory(): Invalid data.\n");
 		return EINVAL;
 	}
 
+	// Lock the process
+	mtx_lock_flags(&proc->p_mtx, 0);
+	if (proc->p_flag & P_WEXIT)
+	{
+		mtx_unlock_flags(&proc->p_mtx, 0);
+		return ESRCH;
+	}
+	proc->p_lock++;
+	if ((proc->p_flag & P_INMEM) == 0)
+		faultin(proc);
+	mtx_unlock_flags(&proc->p_mtx, 0);
+
+	// Setup IO vectors
 	iovec IoVec;
 	memset(&IoVec, 0, sizeof(IoVec));
 	IoVec.iov_base = data;
@@ -39,9 +50,14 @@ int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint3
 	auto res = proc_rwmem(proc, &Uio);
 	if (res != 0)
 	{
-		printf("ReadWriteProcessMemory(): proc_rwmem failed with the error %llX\n", res);
-		return res;
+		printf("ReadWriteProcessMemory(): proc_rwmem failed with error %d\n", res);
 	}
+
+	// Unlock the process
+	mtx_lock_flags(&proc->p_mtx, 0);
+	if ((proc->p_flag & P_WEXIT) && (--proc->p_lock == 0))
+		wakeup(&proc->p_mtx);
+	mtx_unlock_flags(&proc->p_mtx, 0);
 
 	return res;
 }
