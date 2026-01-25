@@ -79,7 +79,8 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <None Include="Linker" />
     <None Include="Makefile" />
     <None Include="resources\Kernel.elf.compressed" />
-    <None Include="resources\LoadModule.bin" />
+    <None Include="resources\LoaderShellCode.bin" />
+    <None Include="resources\ThreadShellCode.bin" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\adler32.c" />

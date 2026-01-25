@@ -30,7 +30,10 @@
     <None Include="resources\Kernel.elf.compressed">
       <Filter>resources</Filter>
     </None>
-    <None Include="resources\LoadModule.bin">
+    <None Include="resources\LoaderShellCode.bin">
+      <Filter>resources</Filter>
+    </None>
+    <None Include="resources\ThreadShellCode.bin">
       <Filter>resources</Filter>
     </None>
   </ItemGroup>
