@@ -21,11 +21,6 @@ RFILES := $(shell find $(RDIR) -type f 2>/dev/null)
 # Object files (C sources + embedded resources)
 OBJS := $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(CFILES)) $(patsubst $(RDIR)/%, $(ODIR)/resources_%.o, $(RFILES))
 
-# Check for compressed daemon
-ifneq ($(wildcard $(RDIR)/eboot.bin.compressed), )
-    CFLAGS += -DHAS_DAEMON
-endif
-
 ifeq ($(DEBUG), 1)
     CFLAGS += -DDEBUG
 endif
@@ -75,9 +70,6 @@ clean:
 # Prepare resources: build kernel module and compress it
 prepare_resources:
 	@mkdir -p $(RDIR)
-	@echo "Building kernel module..."
-	@$(MAKE) -C ../kernel clean
-	@$(MAKE) -C ../kernel all
 	@echo "Compressing Kernel.elf with zlib..."
 	@python3 ../../Scripts/create_zlib_blob.py "$(OUTPUT_DIR)/Kernel.elf" "$(RDIR)/Kernel.elf.compressed"
 	# TODO Add other Kernel Modules here & plugins.

@@ -78,9 +78,8 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <None Include="crt0.s" />
     <None Include="Linker" />
     <None Include="Makefile" />
-    <None Include="resources\eboot.bin.compressed" />
     <None Include="resources\Kernel.elf.compressed" />
-    <None Include="resources\param.sfo" />
+    <None Include="resources\LoadModule.bin" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\adler32.c" />
@@ -90,9 +89,10 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClCompile Include="source\dynlib.c" />
     <ClCompile Include="source\file.c" />
     <ClCompile Include="source\fusiondriver.c" />
+    <ClCompile Include="source\loadsprx.c" />
     <ClCompile Include="source\log.c" />
     <ClCompile Include="source\main.c" />
-    <ClCompile Include="source\daemon.c" />
+    <ClCompile Include="source\process.c" />
     <ClCompile Include="source\tinfgzip.c" />
     <ClCompile Include="source\tinflate.c" />
     <ClCompile Include="source\tinfzlib.c" />
@@ -104,10 +104,12 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClInclude Include="include\compressedblob.h" />
     <ClInclude Include="include\dynlib.h" />
     <ClInclude Include="include\file.h" />
+    <ClInclude Include="include\fusiondriver.h" />
+    <ClInclude Include="include\loadsprx.h" />
     <ClInclude Include="include\log.h" />
     <ClInclude Include="include\daemon.h" />
+    <ClInclude Include="include\process.h" />
     <ClInclude Include="include\tinf.h" />
-    <ClInclude Include="source\fusiondriver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -97,12 +97,13 @@ wsl -d Ubuntu-24.04 make</NMakeReBuildCommandLine>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="Bootstrapper.s" />
-    <None Include="LoadModule.s" />
-    <None Include="UIBootstrapper.s" />
+    <ClCompile Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Makefile" />
+    <None Include="Kernel\Bootstrapper.s" />
+    <None Include="Kernel\UIBootstrapper.s" />
+    <None Include="Loader\LoaderShellCode.s" />
+    <None Include="Loader\ThreadShellCode.s" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

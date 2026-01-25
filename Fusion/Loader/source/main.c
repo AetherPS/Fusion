@@ -47,8 +47,10 @@ int _main(void)
 		klog("Failed to load the kernel module.\n");
 		return 1;
 	}
-	
-	InstallDaemon();
+
+	LoadSprx("SceShellCore", "/data/Fusion/Plugins/ShellCore.sprx");
+	LoadSprx("SceSysCore", "/data/Fusion/Plugins/SysCore.sprx");
+	//LoadSprx("SceShellUI", "/user/data/Fusion/Plugins/ShellUI.sprx"); // TODO AOT verison.
 
 	return 0;
 }

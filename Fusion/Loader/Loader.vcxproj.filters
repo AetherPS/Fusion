@@ -27,21 +27,15 @@
     <None Include="crt0.s" />
     <None Include="Linker" />
     <None Include="Makefile" />
-    <None Include="resources\eboot.bin.compressed">
-      <Filter>resources</Filter>
-    </None>
     <None Include="resources\Kernel.elf.compressed">
       <Filter>resources</Filter>
     </None>
-    <None Include="resources\param.sfo">
+    <None Include="resources\LoadModule.bin">
       <Filter>resources</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.c">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\daemon.c">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\dynlib.c">
@@ -52,9 +46,6 @@
     </ClCompile>
     <ClCompile Include="source\compressedblob.c">
       <Filter>source\Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="source\fusiondriver.c">
-      <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\adler32.c">
       <Filter>source\tinf</Filter>
@@ -77,6 +68,15 @@
     <ClCompile Include="source\log.c">
       <Filter>source\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="source\loadsprx.c">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\process.c">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="source\fusiondriver.c">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common.h">
@@ -97,9 +97,6 @@
     <ClInclude Include="include\compressedblob.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="source\fusiondriver.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\tinf.h">
       <Filter>include\tinf</Filter>
     </ClInclude>
@@ -107,6 +104,15 @@
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\log.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\loadsprx.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\process.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fusiondriver.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>

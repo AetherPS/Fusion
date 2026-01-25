@@ -8,3 +8,6 @@
 #include "file.h"
 #include "compressedblob.h"
 #include "ascii.h"
+#include "fusiondriver.h"
+#include "loadsprx.h"
+#include "process.h"

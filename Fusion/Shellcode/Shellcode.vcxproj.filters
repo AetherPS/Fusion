@@ -5,21 +5,30 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Bootstrapper.s">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="UIBootstrapper.s">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="LoadModule.s">
-      <Filter>Source Files</Filter>
-    </None>
+    <Filter Include="Source Files\Loader">
+      <UniqueIdentifier>{fd09aff6-c622-43f7-be9c-91c7ab296469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Kernel">
+      <UniqueIdentifier>{68f508a3-dfb6-4153-9155-9127a7f70423}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Makefile">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Kernel\Bootstrapper.s">
+      <Filter>Source Files\Kernel</Filter>
+    </None>
+    <None Include="Kernel\UIBootstrapper.s">
+      <Filter>Source Files\Kernel</Filter>
+    </None>
+    <None Include="Loader\LoaderShellCode.s">
+      <Filter>Source Files\Loader</Filter>
+    </None>
+    <None Include="Loader\ThreadShellCode.s">
+      <Filter>Source Files\Loader</Filter>
+    </None>
   </ItemGroup>
 </Project>
