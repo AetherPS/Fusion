@@ -13,6 +13,9 @@
     <None Include="UIBootstrapper.s">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="LoadModule.s">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Makefile">

@@ -53,6 +53,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)</NMakeReBuildCommandLin
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(SolutionDir)External\PS4-Kernel-SDK\include;$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
+    <IntDir>$(ProjectDir)\build\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <AdditionalSourcesToCopyMapping />
@@ -69,6 +70,7 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
+    <IntDir>$(ProjectDir)\build\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
