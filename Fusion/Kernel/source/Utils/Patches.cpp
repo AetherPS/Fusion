@@ -7,6 +7,19 @@ void InstallPatches()
 
 	cpu_disable_wp();
 
+	// Allow PRX's to be loaded from anywhere.
+	kmem = (uint8_t*)g_KernelAddrs.patch_PrxPathCheck1;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+
+	kmem = (uint8_t*)g_KernelAddrs.patch_PrxPathCheck2;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+
+	kmem = (uint8_t*)g_KernelAddrs.patch_PrxPathCheck3;
+	kmem[0] = 0x90;
+	kmem[1] = 0x90;
+
 	// Disable ASLR
 	kmem = (uint8_t*)g_KernelAddrs.patch_ASLR;
 	kmem[0] = 0x90;
