@@ -147,12 +147,12 @@ int LoadSprx(char* processName, const char* path)
 	if (ReadWriteMemory(processId, shellCodeMemory + offsetof(struct SprxLoaderHeader, ModuleHandle), (void*)&moduleHandle, sizeof(moduleHandle), false) != 0)
 	{
 		klog("%s: Failed to read ModuleHandle.\n", __FUNCTION__);
-		//FreeMemory(processId, shellCodeMemory, shellcodeSize);
+		FreeMemory(processId, shellCodeMemory, shellcodeSize);
 		return -1;
 	}
 
 	// Free up the memory we dont need it anymore.
-	//FreeMemory(processId, shellCodeMemory, shellcodeSize);
+	FreeMemory(processId, shellCodeMemory, shellcodeSize);
 
 	return moduleHandle;
 }

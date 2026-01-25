@@ -7,3 +7,6 @@
 [submodule "External/PS4-Kernel-SDK"]
 	path = External/PS4-Kernel-SDK
 	url = https://github.com/OSM-Made/PS4-Kernel-SDK
+[submodule "External/Fusion-Plugins"]
+	path = External/Fusion-Plugins
+	url = https://github.com/AetherPS/Fusion-Plugins
