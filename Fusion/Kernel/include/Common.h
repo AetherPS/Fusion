@@ -3,7 +3,7 @@
 #include <Types/All.h>
 #include <resolver.h>
 #include <metadata.h>
-#include <offsets.h>
+#include <offsets/offsets.h>
 
 #include "FeatureFlags.h"
 #include "DriverDefinitions.h"

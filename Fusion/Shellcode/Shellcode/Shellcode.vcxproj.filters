@@ -10,15 +10,6 @@
     <None Include="Bootstrapper.s">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="ThreadShellCode.s">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="ModuleUnload.s">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="ModuleLoad.s">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Makefile">

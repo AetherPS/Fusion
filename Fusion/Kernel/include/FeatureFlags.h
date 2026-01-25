@@ -9,6 +9,6 @@
 #define FF_HomeBrew
 #define FF_Driver
 #define FF_Fuse
-// #define FF_TrapHooks
+#define FF_TrapHooks
 
 void PrintFeatureFlags();

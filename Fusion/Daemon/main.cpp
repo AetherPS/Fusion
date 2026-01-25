@@ -54,14 +54,14 @@ int main(int argc, char** arg)
 		StartDECI();
 	}
 
-	// Load any deamons from the config.
-	DaemonExtension daemons(config);
-
-	// Load the FTP Daemon.
-	if (config.Get<bool>("EnableFTP", false))
-	{
-		daemons.MountAndLaunchDaemon(FTP_DAEMON_TITLEID);
-	}
+	// // Load any deamons from the config.
+	// DaemonExtension daemons(config);
+	// 
+	// // Load the FTP Daemon.
+	// if (config.Get<bool>("EnableFTP", false))
+	// {
+	// 	daemons.MountAndLaunchDaemon(FTP_DAEMON_TITLEID);
+	// }
 
 	Notify("Fusion 3 Loaded\nDownload More RAM Edition");
 
