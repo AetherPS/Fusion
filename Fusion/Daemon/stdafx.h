@@ -51,7 +51,6 @@
 #include "IniParser.h"
 
 // Extensions
-#include "PluginExtension.h"
 #include "DaemonExtension.h"
 #include "FtpServer.h"
 #include "DeciLaunch.h"

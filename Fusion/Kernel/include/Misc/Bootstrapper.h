@@ -9,6 +9,15 @@ struct BootStrapperShellCodeHeader
 };
 #pragma pack(pop)
 
+#pragma pack(push, 1)
+struct UIBootStrapperShellCodeHeader
+{
+	uint64_t entry;
+	uint64_t sceKernelLoadStartModule;
+	uint64_t Original;
+};
+#pragma pack(pop)
+
 class Bootstrapper
 {
 public:

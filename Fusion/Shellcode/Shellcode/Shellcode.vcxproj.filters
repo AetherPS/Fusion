@@ -10,6 +10,9 @@
     <None Include="Bootstrapper.s">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="UIBootstrapper.s">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Makefile">

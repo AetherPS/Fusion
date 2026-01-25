@@ -56,9 +56,6 @@
     <ClInclude Include="DaemonExtension.h">
       <Filter>Header Files\Extensions</Filter>
     </ClInclude>
-    <ClInclude Include="PluginExtension.h">
-      <Filter>Header Files\Extensions</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -83,9 +80,6 @@
       <Filter>Source Files\Extensions</Filter>
     </ClCompile>
     <ClCompile Include="FtpServer.cpp">
-      <Filter>Source Files\Extensions</Filter>
-    </ClCompile>
-    <ClCompile Include="PluginExtension.cpp">
       <Filter>Source Files\Extensions</Filter>
     </ClCompile>
     <ClCompile Include="DaemonExtension.cpp">

@@ -39,11 +39,8 @@ int main(int argc, char** arg)
 	// Initialize the system patcher which currently just takes over the job of patching shellcore & shellui for fpkg & debug settings.
 	SystemPatcher::Init();
 
-	// Initialize the plugin extension system.
-	PluginExtension::Init();
-
 	// Install the FTP Daemon.
-	InstallDaemon();
+	//InstallDaemon();
 
 	// Load the config file.
 	Config config("/data/Fusion/Settings.cfg");
@@ -54,14 +51,14 @@ int main(int argc, char** arg)
 		StartDECI();
 	}
 
-	// // Load any deamons from the config.
-	// DaemonExtension daemons(config);
-	// 
-	// // Load the FTP Daemon.
-	// if (config.Get<bool>("EnableFTP", false))
-	// {
-	// 	daemons.MountAndLaunchDaemon(FTP_DAEMON_TITLEID);
-	// }
+	//// Load any deamons from the config.
+	//DaemonExtension daemons(config);
+	
+	//// Load the FTP Daemon.
+	//if (config.Get<bool>("EnableFTP", false))
+	//{
+	//	daemons.MountAndLaunchDaemon(FTP_DAEMON_TITLEID);
+	//}
 
 	Notify("Fusion 3 Loaded\nDownload More RAM Edition");
 

@@ -19,18 +19,6 @@ int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint3
 		return EINVAL;
 	}
 
-	// Lock the process
-	mtx_lock_flags(&proc->p_mtx, 0);
-	if (proc->p_flag & P_WEXIT)
-	{
-		mtx_unlock_flags(&proc->p_mtx, 0);
-		return ESRCH;
-	}
-	proc->p_lock++;
-	if ((proc->p_flag & P_INMEM) == 0)
-		faultin(proc);
-	mtx_unlock_flags(&proc->p_mtx, 0);
-
 	// Setup IO vectors
 	iovec IoVec;
 	memset(&IoVec, 0, sizeof(IoVec));
@@ -53,12 +41,6 @@ int ReadWriteProcessMemory(thread* td, proc* proc, void* addr, void* data, uint3
 		printf("ReadWriteProcessMemory(): proc_rwmem failed with error %d\n", res);
 	}
 
-	// Unlock the process
-	mtx_lock_flags(&proc->p_mtx, 0);
-	if ((proc->p_flag & P_WEXIT) && (--proc->p_lock == 0))
-		wakeup(&proc->p_mtx);
-	mtx_unlock_flags(&proc->p_mtx, 0);
-
 	return res;
 }
 
@@ -77,19 +59,7 @@ int AllocateMemory(proc* p, char* name, size_t len, int prot, uint64_t* mappedAd
 		return EINVAL;
 	}
 
-	mtx_lock_flags(&p->p_mtx, 0);
-	if (p->p_flag & P_WEXIT)
-	{
-		mtx_unlock_flags(&p->p_mtx, 0);
-		return ESRCH;
-	}
-	p->p_lock++;
-	if ((p->p_flag & P_INMEM) == 0)
-		faultin(p);
-	mtx_unlock_flags(&p->p_mtx, 0);
-
 	vm_map_t map = &vmspace->vm_map;
-	int result = 0;
 
 	vm_map_lock(map);
 	{
@@ -100,8 +70,7 @@ int AllocateMemory(proc* p, char* name, size_t len, int prot, uint64_t* mappedAd
 		{
 			vm_map_unlock(map);
 			printf("%s: vm_map_find failed: %d (prot: 0x%x, len: 0x%lx)\n", __FUNCTION__, res, prot, pageLength);
-			result = res;
-			goto cleanup;
+			return res;
 		}
 
 		if (name != nullptr)
@@ -117,13 +86,7 @@ int AllocateMemory(proc* p, char* name, size_t len, int prot, uint64_t* mappedAd
 	}
 	vm_map_unlock(map);
 
-cleanup:
-	mtx_lock_flags(&p->p_mtx, 0);
-	if ((p->p_flag & P_WEXIT) && (--p->p_lock == 0))
-		wakeup(&p->p_mtx);
-	mtx_unlock_flags(&p->p_mtx, 0);
-
-	return result;
+	return 0;
 }
 
 int FreeMemory(proc* p, uint64_t addr, size_t len)
@@ -135,27 +98,11 @@ int FreeMemory(proc* p, uint64_t addr, size_t len)
 		return EINVAL;
 	}
 
-	// Lock the process to prevent it from exiting
-	mtx_lock_flags(&p->p_mtx, 0);
-	if (p->p_flag & P_WEXIT)
-	{
-		mtx_unlock_flags(&p->p_mtx, 0);
-		return ESRCH;
-	}
-	p->p_lock++;
-	mtx_unlock_flags(&p->p_mtx, 0);
-
 	// Perform the actual deletion
 	vm_map_t map = &vmspace->vm_map;
 	vm_map_lock(map);
 	int res = vm_map_delete(map, addr, addr + round_page(len));
 	vm_map_unlock(map);
-
-	// Unlock the process
-	mtx_lock_flags(&p->p_mtx, 0);
-	if ((p->p_flag & P_WEXIT) && (--p->p_lock == 0))
-		wakeup(&p->p_mtx);
-	mtx_unlock_flags(&p->p_mtx, 0);
 
 	return res;
 }
