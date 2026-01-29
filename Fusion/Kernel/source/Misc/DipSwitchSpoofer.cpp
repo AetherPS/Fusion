@@ -13,11 +13,11 @@ int DipSwitchSpoofer::sceKernelCheckDipswHook(unsigned int dipswitch)
 	switch (dipswitch)
 	{
 	case 0:			// IsDevelopmentMode
+	case 1:			// Don't use DEVLAN
 	case 95:		// UNK - CP box
 	case 102:		// Disable DEV USB?
 		return 1;
 
-	case 1:			// Don't use DEVLAN
 	case 2:			// IsAssistMode
 		return 0;
 

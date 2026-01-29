@@ -6,7 +6,6 @@ export OUTPUT_DIR
 
 # Use loader.mk for common definitions
 include $(SDK)/loader/loader.mk
-
 CFLAGS += -I../../External/FusionShared -D_LOADER
 
 # Override linker script
@@ -14,6 +13,10 @@ LFLAGS := -Xlinker -T Linker -Wl,--build-id=none -Wl,--gc-sections
 
 # Source files
 CFILES := $(wildcard $(SDIR)/*.c)
+
+# Plugin directory
+PLUGIN_DIR = ../../External/Fusion-Plugins/Build
+PLUGIN_SPRX_FILES := $(wildcard $(PLUGIN_DIR)/*.sprx)
 
 # Find all resource files
 RFILES := $(shell find $(RDIR) -type f 2>/dev/null)
@@ -32,7 +35,6 @@ TARGET_PATH := $(OUTPUT_DIR)/$(TARGET)
 ELF_TARGET_PATH := $(OUTPUT_DIR)/$(ELF_TARGET)
 
 all: $(TARGET_PATH)
-
 $(TARGET_PATH): $(ELF_TARGET_PATH)
 	@echo "Converting to binary..."
 	@$(OBJCOPY) -O binary $(ELF_TARGET_PATH) $(TARGET_PATH)
@@ -72,6 +74,12 @@ prepare_resources:
 	@mkdir -p $(RDIR)
 	@echo "Compressing Kernel.elf with zlib..."
 	@python3 ../../Scripts/create_zlib_blob.py "$(OUTPUT_DIR)/Kernel.elf" "$(RDIR)/Kernel.elf.compressed"
-	# TODO Add other Kernel Modules here & plugins.
+	@echo "Compressing plugin SPRX files..."
+	@for sprx in $(PLUGIN_SPRX_FILES); do \
+		basename=$$(basename $$sprx); \
+		echo "  Compressing $$basename..."; \
+		python3 ../../Scripts/create_zlib_blob.py "$$sprx" "$(RDIR)/$$basename.compressed"; \
+	done
+	@echo "Resource preparation complete."
 
 .PHONY: all clean rebuild prepare_resources
