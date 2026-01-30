@@ -36,12 +36,12 @@ int InstallPlugins()
 		return res;
 	}
 
-	res = DecompressFile(_binary_resources_ShellUIManaged_dll_sprx_compressed_start, SHELLUIMANAGED_PATH);
+	/*res = DecompressFile(_binary_resources_ShellUIManaged_dll_sprx_compressed_start, SHELLUIMANAGED_PATH);
 	if (res != 0)
 	{
 		klog("[Fusion] Failed to decompress/write 'ShellUI.sprx' plugin. %llx", res);
 		return res;
-	}
+	}*/
 
 	res = DecompressFile(_binary_resources_Bootstrapper_sprx_compressed_start, BOOTSTRAPPER_PATH);
 	if (res != 0)

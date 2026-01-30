@@ -1,7 +1,8 @@
 #pragma once
-#include "common.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
 
-unsigned long syscall(unsigned long n, ...);
 void* curthread();
 uint64_t Readmsr(int Reg);
 void cpu_enable_wp();

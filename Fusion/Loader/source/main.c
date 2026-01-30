@@ -2,14 +2,8 @@
 #include "kernel.h"
 #include "plugins.h"
 
-int _main(void)
+int main(void)
 {
-	if (ResolveDynlib() != 0)
-	{
-		klog("[Fusion] Cant load dynlib look up failed.\n");
-		return 1;
-	}
-
 	ascii();
 
 	// Check if Fusion Driver is already loaded.

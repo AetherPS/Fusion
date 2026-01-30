@@ -24,8 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="crt0.s" />
-    <None Include="Linker" />
     <None Include="Makefile" />
     <None Include="resources\Kernel.elf.compressed">
       <Filter>resources</Filter>
@@ -36,13 +34,13 @@
     <None Include="resources\ThreadShellCode.bin">
       <Filter>resources</Filter>
     </None>
+    <None Include="source\asm.s">
+      <Filter>source\Utils</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.c">
       <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="source\dynlib.c">
-      <Filter>source\Utils</Filter>
     </ClCompile>
     <ClCompile Include="source\file.c">
       <Filter>source\Utils</Filter>
@@ -95,9 +93,6 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\asm.h">
-      <Filter>include\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="include\dynlib.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
     <ClInclude Include="include\file.h">

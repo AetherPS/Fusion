@@ -40,16 +40,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <AdditionalSourcesToCopyMapping />
-    <NMakeOutput>Fusion.bin</NMakeOutput>
+    <NMakeOutput>Fusion.elf</NMakeOutput>
     <NMakePreprocessorDefinitions>DEBUG=0</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
-    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) prepare_resources
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) prepare_resources
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions)"</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions) rebuild"</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions) clean"</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
     <IncludePath>$(SolutionDir)External\PS4-Kernel-SDK\include;$(IncludePath)</IncludePath>
     <PublicIncludeDirectories />
@@ -75,19 +71,17 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="crt0.s" />
-    <None Include="Linker" />
     <None Include="Makefile" />
     <None Include="resources\Kernel.elf.compressed" />
     <None Include="resources\LoaderShellCode.bin" />
     <None Include="resources\ThreadShellCode.bin" />
+    <None Include="source\asm.s" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\adler32.c" />
     <ClCompile Include="source\ascii.c" />
     <ClCompile Include="source\compressedblob.c" />
     <ClCompile Include="source\crc32.c" />
-    <ClCompile Include="source\dynlib.c" />
     <ClCompile Include="source\file.c" />
     <ClCompile Include="source\fusiondriver.c" />
     <ClCompile Include="source\kernel.c" />
@@ -105,7 +99,6 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClInclude Include="include\asm.h" />
     <ClInclude Include="include\common.h" />
     <ClInclude Include="include\compressedblob.h" />
-    <ClInclude Include="include\dynlib.h" />
     <ClInclude Include="include\file.h" />
     <ClInclude Include="include\fusiondriver.h" />
     <ClInclude Include="include\kernel.h" />

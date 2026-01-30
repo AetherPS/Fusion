@@ -1,6 +1,8 @@
 ﻿#include "common.h"
 #include "ascii.h"
 
+uint64_t sceKernelGetProcessTime();
+
 uint32_t simple_rand() 
 {
     int rand_seed = (uint32_t)sceKernelGetProcessTime();

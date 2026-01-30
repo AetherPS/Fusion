@@ -1,6 +1,8 @@
 #include "common.h"
 #include "kernel.h"
 
+#include <kloader.h>
+
 int LoadKernel()
 {
 	// Decompress the Kernel.elf
