@@ -20,6 +20,7 @@ void* LoadBootstrapper(thread* td, void* original)
 
 	auto shellCodeHeader = (BootStrapperShellCodeHeader*)_binary_Bootstrapper_start;
 	dynlib_dlsym(td->td_proc, 8193, "sceKernelLoadStartModule", nullptr, 0, (void**)&shellCodeHeader->sceKernelLoadStartModule);
+	dynlib_dlsym(td->td_proc, 8193, "sceKernelStopUnloadModule", nullptr, 0, (void**)&shellCodeHeader->sceKernelStopUnloadModule);
 	shellCodeHeader->sceSysmodulePreloadModuleForLibkernel = (uint64_t)original;
 
 	if (ReadWriteProcessMemory(td, td->td_proc, (void*)shellCodeMemory, _binary_Bootstrapper_start, (uint64_t)&_binary_Bootstrapper_end - (uint64_t)&_binary_Bootstrapper_start, true) != 0)
@@ -60,11 +61,6 @@ void* Bootstrapper::do_dlsymHook(struct dynlib* dl, struct dynlib_obj* obj, char
 {
 	auto td = CurrentThread();
 	void* result = do_dlsymDetour->Invoke<void*>(dl, obj, name, libName, flags);
-
-	/*if (strstr(td->td_proc->p_comm, "SceShellUI"))
-	{
-		printf("name: %s + %s (%s)\n", libName, name, basename(obj->path));
-	}*/
 
 	// If the symbol is sceSysmodulePreloadModuleForLibkernel we hijack that to run our boot strapper.
 	if (strstr(name, "sceSysmodulePreloadModuleForLibkernel"))

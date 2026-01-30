@@ -191,7 +191,7 @@ void InstallPatches()
 	*(uint8_t*)(g_KernelAddrs.QAFlags + 0x59) |= 0x3;
 
 	// Enable PSM int dev & int dev
-	*(uint8_t*)(g_KernelAddrs.QAFlags + 0x58) |= 0x14;
+	// *(uint8_t*)(g_KernelAddrs.QAFlags + 0x58) |= 0x14;
 
 	// Debug menu
 	*(uint8_t*)(g_KernelAddrs.QAFlags + 0x5A) |= 0x1;

@@ -5,6 +5,7 @@ struct BootStrapperShellCodeHeader
 {
 	uint64_t entry;
 	uint64_t sceKernelLoadStartModule;
+	uint64_t sceKernelStopUnloadModule;
 	uint64_t sceSysmodulePreloadModuleForLibkernel;
 };
 #pragma pack(pop)
