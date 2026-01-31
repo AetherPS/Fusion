@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "fusiondriver.h"
-#include "Types/errno.h"
+#include <sys/errno.h>
+#include <sys/ioccom.h>
 
 int MakeDriverRequest(unsigned long request, void* input)
 {
@@ -14,7 +15,7 @@ int MakeDriverRequest(unsigned long request, void* input)
 	int res = ioctl(fd, request, input);
 	if (res != 0)
 	{
-		klog("Driver request 0x%lX failed with %d\n", request, res);
+		klog("Driver request 0x%llx failed with %x\n", request, res);
 		sceKernelClose(fd);
 		return res;
 	}
@@ -25,7 +26,7 @@ int MakeDriverRequest(unsigned long request, void* input)
 
 int Jailbreak(int processId, struct JailBackup* backup, uint64_t authId, bool nullSandboxPath)
 {
-	struct Input_Jailbreak input;
+	Input_Jailbreak input;
 	input.ProcessId = processId;
 	input.Jail = backup;
 	input.AuthId = authId;
@@ -36,7 +37,7 @@ int Jailbreak(int processId, struct JailBackup* backup, uint64_t authId, bool nu
 
 int RestoreJail(int processId, struct JailBackup backup)
 {
-	struct Input_RestoreJail input;
+	Input_RestoreJail input;
 	input.ProcessId = processId;
 	input.Jail = backup;
 
@@ -45,7 +46,7 @@ int RestoreJail(int processId, struct JailBackup backup)
 
 int ReadWriteMemory(int processId, uint64_t addr, void* data, size_t len, bool write)
 {
-	struct Input_ReadWriteMemory input;
+	Input_ReadWriteMemory input;
 	input.ProcessId = processId;
 	input.ProcessAddress = addr;
 	input.DataAddress = data;
@@ -57,7 +58,7 @@ int ReadWriteMemory(int processId, uint64_t addr, void* data, size_t len, bool w
 
 int AllocateMemory(int processId, uint64_t* outAddress, size_t length, int protection)
 {
-	struct Input_AllocMemory input;
+	Input_AllocMemory input;
 	input.ProcessId = processId;
 	input.OutAddress = outAddress;
 	input.Length = length;
@@ -68,7 +69,7 @@ int AllocateMemory(int processId, uint64_t* outAddress, size_t length, int prote
 
 int FreeMemory(int processId, uint64_t processAddress, size_t length)
 {
-	struct Input_FreeMemory input;
+	Input_FreeMemory input;
 	input.ProcessId = processId;
 	input.ProcessAddress = processAddress;
 	input.Length = length;
@@ -78,7 +79,7 @@ int FreeMemory(int processId, uint64_t processAddress, size_t length)
 
 int StartThread(int processId, uint64_t threadEntry, uint64_t stackMemory, size_t stackSize)
 {
-	struct Input_StartThreadInfo input;
+	Input_StartThreadInfo input;
 	input.ProcessId = processId;
 	input.ThreadEntry = threadEntry;
 	input.StackMemory = stackMemory;
@@ -89,15 +90,15 @@ int StartThread(int processId, uint64_t threadEntry, uint64_t stackMemory, size_
 
 int Resolve(int processId, int libHandle, const char* library, const char* symbol, unsigned int flags, uint64_t* addr)
 {
-	struct Input_ResolveInfo input;
+	Input_ResolveInfo input;
 	input.ProcessId = processId;
 	input.Handle = libHandle;
 	input.Flags = flags;
 
-	if (library != 0)
+	if (library != nullptr)
 		strcpy(input.Library, library);
 
-	if (symbol != 0)
+	if (symbol != nullptr)
 		strcpy(input.Symbol, symbol);
 
 	int res = MakeDriverRequest(PROC_RESOLVE, &input);

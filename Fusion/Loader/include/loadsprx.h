@@ -38,4 +38,4 @@ extern uint8_t _binary_resources_ThreadShellCode_bin_start[];
 extern uint8_t _binary_resources_ThreadShellCode_bin_end[];
 
 int StartPThread(int processId, uint64_t entryPoint);
-int LoadSprx(char* processName, const char* path);
+int LoadSprx(const char* processName, const char* path);

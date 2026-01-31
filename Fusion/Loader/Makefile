@@ -7,17 +7,13 @@ else
     $(error PS4_PAYLOAD_SDK is undefined)
 endif
 
-# External dependencies
+MAKEFLAGS += -j$(shell nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)
+
+# Project paths
 FUSION_SHARED = ../../External/FusionShared
 PLUGIN_DIR = ../../External/Fusion-Plugins/Build
 OUTPUT_DIR = ../../Build
-
-# Kloader SDK paths (your existing structure)
-KLOADER_SDK = ../../External/PS4-Kernel-SDK
-KLOADER_DIR = $(KLOADER_SDK)/loader
-KLOADER_LIB = $(KLOADER_DIR)/lib/libkloader.a
-KLOADER_INCLUDE = $(KLOADER_DIR)/include
-KLOADER_SDK_INCLUDE = $(KLOADER_SDK)/include
+KERNEL_SDK = ../../External/PS4-Kernel-SDK
 
 # Directories
 SDIR = source
@@ -25,129 +21,96 @@ IDIR = include
 ODIR = build
 RDIR = resources
 
-# Include paths
-CFLAGS := -Wall -Werror -g \
+# Compiler flags for size optimization
+CFLAGS := -Os -Wall -Werror -g \
+          -ffunction-sections -fdata-sections \
           -I$(IDIR) \
           -I$(FUSION_SHARED) \
-          -I$(KLOADER_INCLUDE) \
-          -I$(KLOADER_SDK_INCLUDE) \
+          -I$(KERNEL_SDK)/loader/include \
           -D_LOADER
 
-# SCE Libraries to link
-LDFLAGS := -lkernel -lc
-
-# Assembly flags (no preprocessor defines or include paths needed)
-ASFLAGS := -g
-
-# Debug build
-ifeq ($(DEBUG), 1)
-    CFLAGS += -DDEBUG
-endif
+# Linker flags with dead code elimination
+LDFLAGS := -Wl,--gc-sections -Wl,--strip-all \
+           -lkernel -lc -lc++ \
+           $(KERNEL_SDK)/loader/lib/libkloader.a
 
 # Source files
-CFILES := $(wildcard $(SDIR)/*.c)
 CPPFILES := $(wildcard $(SDIR)/*.cpp)
 ASMFILES := $(wildcard $(SDIR)/*.s)
-
-# Find all resource files
 RFILES := $(shell find $(RDIR) -type f 2>/dev/null)
 
-# Plugin files
-PLUGIN_SPRX_FILES := $(wildcard $(PLUGIN_DIR)/*.sprx)
-
 # Object files
-OBJS := $(patsubst $(SDIR)/%.c, $(ODIR)/%.o, $(CFILES)) \
-        $(patsubst $(SDIR)/%.cpp, $(ODIR)/%.o, $(CPPFILES)) \
+OBJS := $(patsubst $(SDIR)/%.cpp, $(ODIR)/%.o, $(CPPFILES)) \
         $(patsubst $(SDIR)/%.s, $(ODIR)/%.o, $(ASMFILES)) \
         $(patsubst $(RDIR)/%, $(ODIR)/resources_%.o, $(RFILES))
 
-# Targets
+# Target
 ELF := Fusion.elf
-TARGET_PATH := $(OUTPUT_DIR)/$(ELF)
+TARGET := $(OUTPUT_DIR)/$(ELF)
+TARGET_SYM := $(TARGET).sym
+TARGET_UNSTRIPPED := $(OUTPUT_DIR)/Fusion_debug.elf
 
-.PHONY: all clean test prepare_resources kloader rebuild
+.PHONY: all clean test prepare_resources rebuild
 
-all: $(TARGET_PATH)
+all: $(TARGET)
 
-# Build kloader library if it doesn't exist
-kloader:
-	@if [ ! -f $(KLOADER_LIB) ]; then \
-		echo "Building kloader library..."; \
-		$(MAKE) -C $(KLOADER_DIR); \
-	fi
-
-# Prepare resources: compress kernel module and plugins
+# Prepare compressed resources
 prepare_resources:
 	@mkdir -p $(RDIR)
-	@echo "Compressing Kernel.elf with zlib..."
-	@python3 ../../Scripts/create_zlib_blob.py "$(OUTPUT_DIR)/Kernel.elf" "$(RDIR)/Kernel.elf.compressed"
-	@echo "Compressing plugin SPRX files..."
-	@for sprx in $(PLUGIN_SPRX_FILES); do \
-		basename=$$(basename $$sprx); \
-		echo "  Compressing $$basename..."; \
-		python3 ../../Scripts/create_zlib_blob.py "$$sprx" "$(RDIR)/$$basename.compressed"; \
+	@echo "Compressing resources..."
+	@python3 ../../Scripts/create_zlib_blob.py \
+		"$(OUTPUT_DIR)/Kernel.elf" "$(RDIR)/Kernel.elf.compressed"
+	@for sprx in $(PLUGIN_DIR)/*.sprx; do \
+		[ -f "$$sprx" ] || continue; \
+		python3 ../../Scripts/create_zlib_blob.py \
+			"$$sprx" "$(RDIR)/$$(basename $$sprx).compressed"; \
 	done
-	@echo "Compressing ShellUIManaged_dll.sprx..."
-	@if [ -f "$(PLUGIN_DIR)/ShellUIManaged_dll.sprx" ]; then \
-		python3 ../../Scripts/create_zlib_blob.py "$(PLUGIN_DIR)/ShellUIManaged_dll.sprx" "$(RDIR)/ShellUIManaged_dll.sprx.compressed"; \
-	else \
-		echo "Warning: ShellUIManaged_dll.sprx not found, skipping..."; \
-	fi
-	@echo "Resource preparation complete."
 
-# Create object directory
-$(ODIR):
-	@mkdir -p $@
-
-# Link final ELF
-$(TARGET_PATH): kloader prepare_resources $(ODIR) $(OBJS)
+# Build final ELF (unstripped)
+$(TARGET_UNSTRIPPED): prepare_resources $(OBJS)
 	@mkdir -p $(OUTPUT_DIR)
-	@echo "Linking $(ELF)..."
-	$(CXX) $(CFLAGS) -o $@ $(OBJS) $(KLOADER_LIB) $(LDFLAGS)
-	@echo "Payload built: $(TARGET_PATH) (size: $$(stat -c%s $(TARGET_PATH) 2>/dev/null || stat -f%z $(TARGET_PATH)) bytes)"
+	@echo "Linking $(ELF) (with debug info)..."
+	$(CXX) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS)
 
-# Compile C sources
-$(ODIR)/%.o: $(SDIR)/%.c
-	@mkdir -p $(dir $@)
-	@echo "Compiling: $<"
-	$(CC) -c -o $@ $< $(CFLAGS)
+# Extract symbols and strip to create final target
+$(TARGET): $(TARGET_UNSTRIPPED)
+	@echo "Extracting debug symbols to $(TARGET_SYM)..."
+	@$(OBJCOPY) --only-keep-debug $< $(TARGET_SYM)
+	@echo "Stripping $(ELF)..."
+	@cp $< $@
+	@$(STRIP) --strip-all $@
+	@$(OBJCOPY) --add-gnu-debuglink=$(TARGET_SYM) $@
+	@echo "Built: $@ ($$(stat -c%s $@ 2>/dev/null || stat -f%z $@) bytes)"
+	@echo "Debug symbols: $(TARGET_SYM) ($$(stat -c%s $(TARGET_SYM) 2>/dev/null || stat -f%z $(TARGET_SYM)) bytes)"
+
+# Create build directory
+$(ODIR):
+	@mkdir -p $(ODIR)
 
 # Compile C++ sources
-$(ODIR)/%.o: $(SDIR)/%.cpp
+$(ODIR)/%.o: $(SDIR)/%.cpp $(ODIR)
 	@mkdir -p $(dir $@)
-	@echo "Compiling: $<"
-	$(CXX) -c -o $@ $< $(CFLAGS)
+	@echo "Compiling $<"
+	@$(CXX) -c -o $@ $< $(CFLAGS)
 
-# Compile assembly sources (use ASFLAGS instead of CFLAGS)
-$(ODIR)/%.o: $(SDIR)/%.s
+# Compile assembly sources  
+$(ODIR)/%.o: $(SDIR)/%.s $(ODIR)
 	@mkdir -p $(dir $@)
-	@echo "Assembling: $<"
-	$(CC) -c -o $@ $< $(ASFLAGS)
+	@echo "Assembling $<"
+	@$(CC) -c -o $@ $< -g
 
-# Embed resource files as binary data
-# Use plain ld without PIE flags for relocatable linking
+# Embed binary resources - use system ld
 $(ODIR)/resources_%.o: $(RDIR)/%
 	@mkdir -p $(dir $@)
-	@echo "Embedding resource: $<"
-	@ld -r -b binary -o "$@" "$<"
-	@$(OBJCOPY) --rename-section .data=.rodata,alloc,load,readonly,data,contents \
-	           --set-section-alignment .rodata=4096 "$@"
-	@$(OBJCOPY) --add-section .note.GNU-stack=/dev/null \
-	           --set-section-flags .note.GNU-stack=noload,readonly "$@"
+	@echo "Embedding $<"
+	@ld -r -b binary -o $@ "$<"
+	@$(OBJCOPY) --rename-section .data=.rodata,alloc,load,readonly,data,contents --set-section-alignment .rodata=4096 $@
 
-# Deploy to PS4
-test: $(TARGET_PATH)
+test: $(TARGET)
 	$(PS4_DEPLOY) -h $(PS4_HOST) -p $(PS4_PORT) $^
 
-# Rebuild everything
 rebuild: clean all
 
-# Clean build artifacts
 clean:
 	@echo "Cleaning project..."
-	@rm -rf $(ODIR) $(TARGET_PATH)
-
-# Clean everything including kloader
-distclean: clean
-	@echo "Cleaning kloader library..."
-	@$(MAKE) -C $(KLOADER_DIR) clean
+	@rm -rf $(ODIR) $(TARGET) $(TARGET_SYM) $(TARGET_UNSTRIPPED)

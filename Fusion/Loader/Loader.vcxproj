@@ -44,31 +44,37 @@
     <NMakePreprocessorDefinitions>DEBUG=0</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
     <NMakeBuildCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions)"</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions) rebuild"</NMakeReBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make clean"
+wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions)"</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions) clean"</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
-    <IncludePath>$(SolutionDir)External\PS4-Kernel-SDK\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\PS4-PAYLOAD-SDK\include\freebsd-9.3</IncludePath>
     <PublicIncludeDirectories />
-    <IntDir>$(ProjectDir)\build\</IntDir>
+    <IntDir>$(ProjectDir)build\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <AdditionalSourcesToCopyMapping />
     <NMakeOutput>Fusion.bin</NMakeOutput>
     <NMakePreprocessorDefinitions>DEBUG=1</NMakePreprocessorDefinitions>
     <OutDir>$(SolutionDir)Build\</OutDir>
-    <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
-    <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
-    <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean</NMakeCleanCommandLine>
+    <NMakeBuildCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions)"</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make clean"
+wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions)"</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>wsl bash -c "export PS4_PAYLOAD_SDK=/opt/ps4-payload-sdk &amp;&amp; make $(NMakePreprocessorDefinitions) clean"</NMakeCleanCommandLine>
     <NMakeIncludeSearchPath>$(ProjectDir)include;$(SolutionDir)Shared;$(SolutionDir)External\FusionShared</NMakeIncludeSearchPath>
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)External\PS4-PAYLOAD-SDK\include\freebsd-9.3</IncludePath>
     <PublicIncludeDirectories />
-    <IntDir>$(ProjectDir)\build\</IntDir>
+    <IntDir>$(ProjectDir)build\</IntDir>
   </PropertyGroup>
-  <ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <BuildLog>
+      <Path>$(ProjectDir)Log\$(MSBuildProjectName).log</Path>
+    </BuildLog>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <BuildLog>
+      <Path>$(ProjectDir)Log\$(MSBuildProjectName).log</Path>
+    </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -78,21 +84,21 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <None Include="source\asm.s" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\adler32.c" />
-    <ClCompile Include="source\ascii.c" />
-    <ClCompile Include="source\compressedblob.c" />
-    <ClCompile Include="source\crc32.c" />
-    <ClCompile Include="source\file.c" />
-    <ClCompile Include="source\fusiondriver.c" />
-    <ClCompile Include="source\kernel.c" />
-    <ClCompile Include="source\loadsprx.c" />
-    <ClCompile Include="source\log.c" />
-    <ClCompile Include="source\main.c" />
-    <ClCompile Include="source\plugins.c" />
-    <ClCompile Include="source\process.c" />
-    <ClCompile Include="source\tinfgzip.c" />
-    <ClCompile Include="source\tinflate.c" />
-    <ClCompile Include="source\tinfzlib.c" />
+    <ClCompile Include="source\adler32.cpp" />
+    <ClCompile Include="source\ascii.cpp" />
+    <ClCompile Include="source\compressedblob.cpp" />
+    <ClCompile Include="source\crc32.cpp" />
+    <ClCompile Include="source\file.cpp" />
+    <ClCompile Include="source\fusiondriver.cpp" />
+    <ClCompile Include="source\kernel.cpp" />
+    <ClCompile Include="source\loadsprx.cpp" />
+    <ClCompile Include="source\log.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\plugins.cpp" />
+    <ClCompile Include="source\process.cpp" />
+    <ClCompile Include="source\tinfgzip.cpp" />
+    <ClCompile Include="source\tinflate.cpp" />
+    <ClCompile Include="source\tinfzlib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ascii.h" />
@@ -101,7 +107,9 @@ wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildComma
     <ClInclude Include="include\compressedblob.h" />
     <ClInclude Include="include\file.h" />
     <ClInclude Include="include\fusiondriver.h" />
+    <ClInclude Include="include\IniParser.h" />
     <ClInclude Include="include\kernel.h" />
+    <ClInclude Include="include\libkernel.h" />
     <ClInclude Include="include\loadsprx.h" />
     <ClInclude Include="include\log.h" />
     <ClInclude Include="include\daemon.h" />

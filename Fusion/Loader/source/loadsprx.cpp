@@ -29,7 +29,7 @@ int StartPThread(int processId, uint64_t entryPoint)
 	}
 
 	uint64_t environ = 0;
-	res = Resolve(processId, 8193, 0, "environ", 0, &environ);
+	res = Resolve(processId, 8193, "libkernel", "environ", 0, &environ);
 	if (res != 0)
 	{
 		klog("%s: Failed to resolve 'environ'... [%llX] Can not continue.\n", __FUNCTION__, res);
@@ -91,9 +91,9 @@ int StartPThread(int processId, uint64_t entryPoint)
 	return 0;
 }
 
-int LoadSprx(char* processName, const char* path)
+int LoadSprx(const char* processName, const char* path)
 {
-	int processId = GetPidByName(processName);
+	int processId = GetPidByName((char*)processName);
 	if (processId == -1)
 	{
 		klog("%s: Failed to find process '%s'... Can not continue.\n", __FUNCTION__, processName);
@@ -104,14 +104,14 @@ int LoadSprx(char* processName, const char* path)
 	shellCodeHeader->ModuleHandle = -1;
 	strcpy(shellCodeHeader->Path, (char*)path);
 
-	int res = Resolve(processId, 8193, 0, "sceKernelLoadStartModule", 0, &shellCodeHeader->sceKernelLoadStartModule);
+	int res = Resolve(processId, 8193, "libkernel", "sceKernelLoadStartModule", 0, &shellCodeHeader->sceKernelLoadStartModule);
 	if (res != 0)
 	{
 		klog("%s: Failed to resolve sceKernelLoadStartModule.\n", __FUNCTION__);
 		return -1;
 	}
 
-	res = Resolve(processId, 8193, 0, "scePthreadExit", 0, &shellCodeHeader->scePthreadExit);
+	res = Resolve(processId, 8193, "libkernel", "scePthreadExit", 0, &shellCodeHeader->scePthreadExit);
 	if (res != 0)
 	{
 		klog("%s: Failed to resolve scePthreadExit.\n", __FUNCTION__);

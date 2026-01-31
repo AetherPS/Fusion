@@ -97,4 +97,5 @@ _Static_assert(sizeof(struct kinfo_proc) == 0x448, "kinfo_proc size is not 0x448
 #define KERN_PROC_PROC 8
 #define KERN_PROC_PID 1
 
-int GetPidByName(char* processName);
+int GetProcessList(std::vector<kinfo_proc>& ProcessList);
+int GetPidByName(const char* ProcessName);

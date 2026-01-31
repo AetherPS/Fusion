@@ -10,3 +10,6 @@
 [submodule "External/Fusion-Plugins"]
 	path = External/Fusion-Plugins
 	url = https://github.com/AetherPS/Fusion-Plugins
+[submodule "External/PS4-PAYLOAD-SDK"]
+	path = External/PS4-PAYLOAD-SDK
+	url = https://github.com/ps4-payload-dev/sdk

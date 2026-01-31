@@ -22,6 +22,9 @@
     <Filter Include="source\tinf">
       <UniqueIdentifier>{5bcd7a49-94c9-4f6d-b861-1788b201cd7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\sce">
+      <UniqueIdentifier>{96f70c83-4f2c-482e-b533-bba7dcea0d51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
@@ -39,49 +42,49 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\main.c">
+    <ClCompile Include="source\main.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\file.c">
+    <ClCompile Include="source\file.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\compressedblob.c">
+    <ClCompile Include="source\compressedblob.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\adler32.c">
+    <ClCompile Include="source\adler32.cpp">
       <Filter>source\tinf</Filter>
     </ClCompile>
-    <ClCompile Include="source\crc32.c">
+    <ClCompile Include="source\crc32.cpp">
       <Filter>source\tinf</Filter>
     </ClCompile>
-    <ClCompile Include="source\tinfgzip.c">
+    <ClCompile Include="source\tinfgzip.cpp">
       <Filter>source\tinf</Filter>
     </ClCompile>
-    <ClCompile Include="source\tinflate.c">
+    <ClCompile Include="source\tinflate.cpp">
       <Filter>source\tinf</Filter>
     </ClCompile>
-    <ClCompile Include="source\tinfzlib.c">
+    <ClCompile Include="source\tinfzlib.cpp">
       <Filter>source\tinf</Filter>
     </ClCompile>
-    <ClCompile Include="source\ascii.c">
+    <ClCompile Include="source\ascii.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\log.c">
+    <ClCompile Include="source\log.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\loadsprx.c">
+    <ClCompile Include="source\loadsprx.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\process.c">
+    <ClCompile Include="source\process.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\fusiondriver.c">
+    <ClCompile Include="source\fusiondriver.cpp">
       <Filter>source\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="source\plugins.c">
+    <ClCompile Include="source\plugins.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\kernel.c">
+    <ClCompile Include="source\kernel.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -124,6 +127,12 @@
     </ClInclude>
     <ClInclude Include="include\plugins.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\libkernel.h">
+      <Filter>include\sce</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IniParser.h">
+      <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

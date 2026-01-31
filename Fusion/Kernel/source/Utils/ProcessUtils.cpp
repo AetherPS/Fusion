@@ -133,13 +133,13 @@ int dynlib_dlsym(proc* p, int handle, char* symbol, char* library, unsigned int 
 			sx_xunlock(&dynlib->bind_lock);
 
 			printf("Could not find obj by handle %d.\n", handle);
-			return ESRCH;
+			return EINVAL;
 		}
 
 		*addr = do_dlsym(dynlib, obj, symbol, library, flags);
 		if (!*addr) {
 			sx_xunlock(&dynlib->bind_lock);
-			return ESRCH;
+			return EINVAL;
 		}
 	}
 	sx_xunlock(&dynlib->bind_lock);
