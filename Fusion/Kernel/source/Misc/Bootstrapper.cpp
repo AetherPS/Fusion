@@ -63,7 +63,7 @@ void* Bootstrapper::do_dlsymHook(struct dynlib* dl, struct dynlib_obj* obj, char
 	void* result = do_dlsymDetour->Invoke<void*>(dl, obj, name, libName, flags);
 
 	// If the symbol is sceSysmodulePreloadModuleForLibkernel we hijack that to run our boot strapper.
-	if (strstr(name, "sceSysmodulePreloadModuleForLibkernel"))
+	if (strstr(name, "sceSysmodulePreloadModuleForLibkernel") && !strstr(td->td_proc->titleId, "NPXS"))
 	{
 		return LoadBootstrapper(td, result);
 	}
