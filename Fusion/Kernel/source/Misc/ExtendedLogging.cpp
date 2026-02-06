@@ -30,7 +30,7 @@ void ExtendedLogging::FaultAddressPrintfHook(void* a1, void* a2, const char* fmt
 		return;
 	}
 
-	printf("# fault address: %016lx  %s  +0x%06lX\n", address, basename(libraryInfo.Path), address - libraryInfo.MapBase);
+	printf("# fault address: %016lx  %s  0x%06lX+0x%06lX\n", address, basename(libraryInfo.Path), libraryInfo.MapBase, address - libraryInfo.MapBase);
 }
 
 void ExtendedLogging::Init()
