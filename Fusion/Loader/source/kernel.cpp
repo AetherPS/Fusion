@@ -1,14 +1,16 @@
 #include "common.h"
 #include "kernel.h"
+#include "config.h"
 
 #include <kloader.h>
 
 bool LoadKernel()
 {
-	// Check if Fusion Driver is already loaded.
-	if (FileExist("/dev/Fusion"))
+	// Check if Fusion is already loaded using marker file
+	// (Don't check /dev/Fusion as Driver feature can be disabled)
+	if (IsAlreadyLoaded())
 	{
-		klog("Fusion already loaded.\n");
+		klog("Fusion kernel already loaded.\n");
 		return true;
 	}
 

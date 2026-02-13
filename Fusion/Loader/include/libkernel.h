@@ -2,8 +2,9 @@
 
 extern "C"
 {
+#define SIGKILL 9
 
-	/* Memory protection flags */
+/* Memory protection flags */
 #define SCE_KERNEL_PROT_CPU_READ   0x01
 #define SCE_KERNEL_PROT_CPU_WRITE  0x02
 #define SCE_KERNEL_PROT_CPU_EXEC   0x04
@@ -36,6 +37,7 @@ extern "C"
 #define KERN_PROC_PID   1
 #define KERN_PROC_PATHNAME  12
 
+	int kill(int pid, int how);
 	int sysctl(const int* name, unsigned int namelen, void* oldp, size_t* oldlenp, const void* newp, size_t newlen);
 	int sysctlbyname(const char* name, void* oldp, size_t* oldlenp, const void* newp, size_t newlen);
 	int ioctl(int fd, unsigned long request, ...);

@@ -37,7 +37,7 @@ Detour* Detour::CreateDetour(DetourType type, void* address, void* destination)
 	}
 
 #ifdef DEBUG
-	kprintf("[Detour] InstructionLength = %i\n", instructionLength);
+	printf("[Detour] InstructionLength = %i\n", instructionLength);
 #endif
 
 	auto originalBytes = (uint8_t*)_malloc(instructionLength);

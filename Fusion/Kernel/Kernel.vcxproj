@@ -55,11 +55,9 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <NMakePreprocessorDefinitions>DEBUG=1</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) all</NMakeBuildCommandLine>
     <NMakeReBuildCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions)
-wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) copy</NMakeReBuildCommandLine>
+wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) all</NMakeReBuildCommandLine>
     <NMakeCleanCommandLine>wsl -d Ubuntu-24.04 make $(NMakePreprocessorDefinitions) clean
 del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine>
     <NMakeOutput>Kernel.elf</NMakeOutput>

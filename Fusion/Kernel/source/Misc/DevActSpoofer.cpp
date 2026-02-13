@@ -38,7 +38,7 @@ int DevActSpoofer::DevActOnIoctlHook(cdev* dev, unsigned long cmd, caddr_t data,
 
 	default:
 #ifdef DEBUG
-		kprintf("devact_ioctl: %llX\n", cmd);
+		printf("devact_ioctl: %llX\n", cmd);
 #endif
 		return DevActOnIoctlDetour->Invoke<int>(dev, cmd, data, fflag, td);
 	}

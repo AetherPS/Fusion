@@ -76,4 +76,24 @@ void ApplyFeatureConfiguration()
 			klog("Failed to enable: %s\n", feature.sysctlName);
 		}
 	}
+
+	// Apply DirectMemoryPages setting
+	int memPages = config.GetInt("Advanced", "DirectMemoryPages", 300);
+	size_t len = sizeof(memPages);
+	if (sysctlbyname("Fusion.DirectMemoryReservationSize", NULL, 0, &memPages, len) != 0)
+	{
+		klog("Failed to set DirectMemoryPages\n");
+	}
+}
+
+bool IsAlreadyLoaded()
+{
+	return FileExist(LOADED_MARKER_PATH);
+}
+
+void MarkAsLoaded()
+{
+	// Create marker file to indicate Fusion is loaded
+	const char* marker = "Fusion loaded\n";
+	WriteFile(LOADED_MARKER_PATH, (uint8_t*)marker, strlen(marker));
 }
