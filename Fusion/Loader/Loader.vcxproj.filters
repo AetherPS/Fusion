@@ -87,6 +87,9 @@
     <ClCompile Include="source\kernel.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\config.cpp">
+      <Filter>source\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\common.h">
@@ -132,6 +135,9 @@
       <Filter>include\sce</Filter>
     </ClInclude>
     <ClInclude Include="include\IniParser.h">
+      <Filter>include\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="include\config.h">
       <Filter>include\Utils</Filter>
     </ClInclude>
   </ItemGroup>

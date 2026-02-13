@@ -3,13 +3,13 @@
 
 #include <kloader.h>
 
-int LoadKernel()
+bool LoadKernel()
 {
 	// Check if Fusion Driver is already loaded.
 	if (FileExist("/dev/Fusion"))
 	{
 		klog("Fusion already loaded.\n");
-		return 0;
+		return true;
 	}
 
 	// Decompress the Kernel.elf
@@ -19,7 +19,7 @@ int LoadKernel()
 	if (!decompressedKernel)
 	{
 		klog("Failed to decompress Kernel.elf\n");
-		return 1;
+		return false;
 	}
 
 	kloader_load(decompressedKernel, decompressedSize);
@@ -28,5 +28,5 @@ int LoadKernel()
 	// Free the decompressed buffer
 	free(decompressedKernel);
 
-	return 0;
+	return true;
 }

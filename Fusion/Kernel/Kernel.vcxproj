@@ -85,7 +85,6 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <ClCompile Include="source\Driver\DriverKernel.cpp" />
     <ClCompile Include="source\Driver\DriverProc.cpp" />
     <ClCompile Include="source\Driver\FusionDriver.cpp" />
-    <ClCompile Include="source\FeatureFlags.cpp" />
     <ClCompile Include="source\Fusion.cpp" />
     <ClCompile Include="source\Homebrew\FakePkgs.cpp" />
     <ClCompile Include="source\Homebrew\FakeSelfs.cpp" />
@@ -112,7 +111,6 @@ del /q "$(SolutionDir)Fusion\Loader\resources\Kernel.elf"</NMakeCleanCommandLine
     <ClInclude Include="include\Driver\DriverKernel.h" />
     <ClInclude Include="include\Driver\DriverProc.h" />
     <ClInclude Include="include\Driver\FusionDriver.h" />
-    <ClInclude Include="include\FeatureFlags.h" />
     <ClInclude Include="include\Fusion.h" />
     <ClInclude Include="include\Homebrew\FakePkgs.h" />
     <ClInclude Include="include\Homebrew\FakeSelfs.h" />

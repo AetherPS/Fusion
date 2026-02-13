@@ -5,7 +5,6 @@
 #include <metadata.h>
 #include <offsets/offsets.h>
 
-#include "FeatureFlags.h"
 #include "DriverDefinitions.h"
 #include "hde64.h"
 #include "Heap.h"

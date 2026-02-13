@@ -1,5 +1,16 @@
 #include "Common.h"
 #include "FusionSysctl.h"
+#include "TrapFatalExtension.h"
+#include "FakePkgs.h"
+#include "FakeSelfs.h"
+#include "FusionDriver.h"
+#include "ExtendedLogging.h"
+#include "Bootstrapper.h"
+#include "DirectMemory.h"
+#include "DevActSpoofer.h"
+#include "DipSwitchSpoofer.h"
+#include "LibraryReplacer.h"
+#include "TTYRedirector.h"
 
 /*
  * Fusion Sysctl Implementation
@@ -18,16 +29,26 @@
  */
 
 // Static member definitions
-char FusionSysctl::fusion_version[64] = "1.5.17";
+char FusionSysctl::fusion_version[64] = "1.5.26";
 char FusionSysctl::fusion_build_date[64] = __DATE__;
 char FusionSysctl::fusion_build_time[64] = __TIME__;
 int FusionSysctl::fusion_direct_memory_pages = 300;
-int FusionSysctl::fusion_feature_jit = 1;
-int FusionSysctl::fusion_feature_direct_memory = 1;
-int FusionSysctl::fusion_feature_library_replacer = 1;
-int FusionSysctl::fusion_feature_devact = 1;
-int FusionSysctl::fusion_feature_dipsw = 1;
+
+// Feature state tracking (0 = disabled/not initialized, 1 = enabled/initialized)
+// All features disabled by default, loader sets them based on Settings.ini
+int FusionSysctl::fusion_feature_jit = 0;
+int FusionSysctl::fusion_feature_extended_logging = 0;
+int FusionSysctl::fusion_feature_bootstrapper = 0;
+int FusionSysctl::fusion_feature_direct_memory = 0;
+int FusionSysctl::fusion_feature_library_replacer = 0;
+int FusionSysctl::fusion_feature_devact = 0;
+int FusionSysctl::fusion_feature_dipsw = 0;
 int FusionSysctl::fusion_feature_tty_redirect = 0;
+int FusionSysctl::fusion_feature_homebrew = 0;
+int FusionSysctl::fusion_feature_driver = 0;
+int FusionSysctl::fusion_feature_fuse = 0;
+int FusionSysctl::fusion_feature_traphooks = 0;
+
 sysctl_ctx_list FusionSysctl::sysctl_ctx = { nullptr };
 sysctl_oid* FusionSysctl::oid_fusion_root = nullptr;
 sysctl_oid* FusionSysctl::oid_fusion_featureflag = nullptr;
@@ -72,30 +93,67 @@ void FusionSysctl::Init()
 		return;
 	}
 
-	// Add feature flags
-	SYSCTL_ADD_INT(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
-		OID_AUTO, "Jit", CTLFLAG_RW,
-		&fusion_feature_jit, 0, "ShellUI JIT support enabled");
+	// Add feature flags with handlers
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "Jit", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_jit, 0, (int (*)())SysctlHandlerJit, "I",
+		"ShellUI JIT support enabled");
 
-	SYSCTL_ADD_INT(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
-		OID_AUTO, "DirectMemory", CTLFLAG_RW,
-		&fusion_feature_direct_memory, 0, "Direct memory support enabled");
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "ExtendedLogging", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_extended_logging, 0, (int (*)())SysctlHandlerExtendedLogging, "I",
+		"Extended logging enabled");
 
-	SYSCTL_ADD_INT(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
-		OID_AUTO, "LibraryReplace", CTLFLAG_RW,
-		&fusion_feature_library_replacer, 0, "Library replacer enabled");
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "Bootstrapper", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_bootstrapper, 0, (int (*)())SysctlHandlerBootstrapper, "I",
+		"Bootstrapper enabled");
 
-	SYSCTL_ADD_INT(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
-		OID_AUTO, "DevAct", CTLFLAG_RW,
-		&fusion_feature_devact, 0, "Dev activation spoofer enabled");
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "DirectMemory", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_direct_memory, 0, (int (*)())SysctlHandlerDirectMemory, "I",
+		"Direct memory support enabled");
 
-	SYSCTL_ADD_INT(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
-		OID_AUTO, "Dipsw", CTLFLAG_RW,
-		&fusion_feature_dipsw, 0, "Dip switch spoofer enabled");
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "LibraryReplace", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_library_replacer, 0, (int (*)())SysctlHandlerLibraryReplacer, "I",
+		"Library replacer enabled");
 
-	SYSCTL_ADD_INT(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
-		OID_AUTO, "TTYRedirect", CTLFLAG_RW,
-		&fusion_feature_tty_redirect, 0, "TTY redirector enabled");
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "DevAct", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_devact, 0, (int (*)())SysctlHandlerDevAct, "I",
+		"Dev activation spoofer enabled");
+
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "Dipsw", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_dipsw, 0, (int (*)())SysctlHandlerDipsw, "I",
+		"Dip switch spoofer enabled");
+
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "TTYRedirect", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_tty_redirect, 0, (int (*)())SysctlHandlerTTYRedirect, "I",
+		"TTY redirector enabled");
+
+	// Add major features with dynamic init/term handlers
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "Homebrew", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_homebrew, 0, (int (*)())SysctlHandlerHomebrew, "I",
+		"Enable/disable homebrew (FakePkgs + FakeSelf)");
+
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "Driver", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_driver, 0, (int (*)())SysctlHandlerDriver, "I",
+		"Enable/disable Fusion driver (/dev/Fusion)");
+
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "Fuse", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_fuse, 0, (int (*)())SysctlHandlerFuse, "I",
+		"Enable/disable Fuse filesystem");
+
+	SYSCTL_ADD_PROC(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_featureflag),
+		OID_AUTO, "TrapHooks", CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_MPSAFE,
+		&fusion_feature_traphooks, 0, (int (*)())SysctlHandlerTrapHooks, "I",
+		"Enable/disable fatal trap hooks");
 
 	// Add direct memory reservation size
 	SYSCTL_ADD_INT(&sysctl_ctx, SYSCTL_CHILDREN(oid_fusion_root),
@@ -138,4 +196,417 @@ void FusionSysctl::EnableSysctlRecursive(struct sysctl_oid_list* parentList)
 			}
 		}
 	}
+}
+
+// Sysctl handler for Homebrew feature (FakePkgs + FakeSelf)
+int FusionSysctl::SysctlHandlerHomebrew(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_homebrew;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	// Validate: only 0 or 1
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	// No change needed
+	if (value == fusion_feature_homebrew)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling Homebrew...\n");
+		FakePkgs::Init();
+		FakeSelf::Init();
+		fusion_feature_homebrew = 1;
+		printf("[FusionSysctl] Homebrew enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling Homebrew...\n");
+		FakeSelf::Term();
+		FakePkgs::Term();
+		fusion_feature_homebrew = 0;
+		printf("[FusionSysctl] Homebrew disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for Driver feature
+int FusionSysctl::SysctlHandlerDriver(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_driver;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	// Validate: only 0 or 1
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	// No change needed
+	if (value == fusion_feature_driver)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling Driver...\n");
+		FusionDriver::Init();
+		fusion_feature_driver = 1;
+		printf("[FusionSysctl] Driver enabled (/dev/Fusion created).\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling Driver...\n");
+		FusionDriver::Term();
+		fusion_feature_driver = 0;
+		printf("[FusionSysctl] Driver disabled (/dev/Fusion removed).\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for Fuse feature
+int FusionSysctl::SysctlHandlerFuse(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_fuse;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	// Validate: only 0 or 1
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	// No change needed
+	if (value == fusion_feature_fuse)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling Fuse...");
+		int result = fuse_loader(NULL, 0, NULL);
+		if (result == 0)
+		{
+			fusion_feature_fuse = 1;
+			printf("Done.\n");
+		}
+		else
+		{
+			printf("Failed (error %d).\n", result);
+			return EIO;
+		}
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling Fuse...\n");
+		fusion_feature_fuse = 0;
+		printf("[FusionSysctl] Fuse disabled (warning: teardown may be incomplete).\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for TrapHooks feature
+int FusionSysctl::SysctlHandlerTrapHooks(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_traphooks;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	// Validate: only 0 or 1
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	// No change needed
+	if (value == fusion_feature_traphooks)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling TrapHooks...\n");
+		TrapFatalExtension::Init();
+		fusion_feature_traphooks = 1;
+		printf("[FusionSysctl] TrapHooks enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling TrapHooks...\n");
+		TrapFatalExtension::Term();
+		fusion_feature_traphooks = 0;
+		printf("[FusionSysctl] TrapHooks disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for JIT feature
+int FusionSysctl::SysctlHandlerJit(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_jit;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	if (value == fusion_feature_jit)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling JIT...\n");
+		*(uint8_t*)(g_KernelAddrs.QAFlags + 0x58) |= 0x14;
+		fusion_feature_jit = 1;
+		printf("[FusionSysctl] JIT enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling JIT...\n");
+		*(uint8_t*)(g_KernelAddrs.QAFlags + 0x58) &= ~0x14;
+		fusion_feature_jit = 0;
+		printf("[FusionSysctl] JIT disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for ExtendedLogging feature
+int FusionSysctl::SysctlHandlerExtendedLogging(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_extended_logging;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	if (value == fusion_feature_extended_logging)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling ExtendedLogging...\n");
+		ExtendedLogging::Init();
+		fusion_feature_extended_logging = 1;
+		printf("[FusionSysctl] ExtendedLogging enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling ExtendedLogging...\n");
+		ExtendedLogging::Term();
+		fusion_feature_extended_logging = 0;
+		printf("[FusionSysctl] ExtendedLogging disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for Bootstrapper feature
+int FusionSysctl::SysctlHandlerBootstrapper(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_bootstrapper;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	if (value == fusion_feature_bootstrapper)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling Bootstrapper...\n");
+		Bootstrapper::Init();
+		fusion_feature_bootstrapper = 1;
+		printf("[FusionSysctl] Bootstrapper enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling Bootstrapper...\n");
+		Bootstrapper::Term();
+		fusion_feature_bootstrapper = 0;
+		printf("[FusionSysctl] Bootstrapper disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for DirectMemory feature
+int FusionSysctl::SysctlHandlerDirectMemory(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_direct_memory;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	if (value == fusion_feature_direct_memory)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling DirectMemory...\n");
+		DirectMemory::Init();
+		fusion_feature_direct_memory = 1;
+		printf("[FusionSysctl] DirectMemory enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling DirectMemory...\n");
+		DirectMemory::Term();
+		fusion_feature_direct_memory = 0;
+		printf("[FusionSysctl] DirectMemory disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for LibraryReplacer feature
+int FusionSysctl::SysctlHandlerLibraryReplacer(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_library_replacer;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	if (value == fusion_feature_library_replacer)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling LibraryReplacer...\n");
+		LibraryReplacer::Init();
+		fusion_feature_library_replacer = 1;
+		printf("[FusionSysctl] LibraryReplacer enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling LibraryReplacer...\n");
+		LibraryReplacer::Term();
+		fusion_feature_library_replacer = 0;
+		printf("[FusionSysctl] LibraryReplacer disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for DevAct feature
+int FusionSysctl::SysctlHandlerDevAct(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_devact;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	if (value == fusion_feature_devact)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling DevActSpoofer...\n");
+		DevActSpoofer::Init();
+		fusion_feature_devact = 1;
+		printf("[FusionSysctl] DevActSpoofer enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling DevActSpoofer...\n");
+		DevActSpoofer::Term();
+		fusion_feature_devact = 0;
+		printf("[FusionSysctl] DevActSpoofer disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for Dipsw feature
+int FusionSysctl::SysctlHandlerDipsw(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_dipsw;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	if (value == fusion_feature_dipsw)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling DipSwitchSpoofer...\n");
+		DipSwitchSpoofer::Init();
+		fusion_feature_dipsw = 1;
+		printf("[FusionSysctl] DipSwitchSpoofer enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling DipSwitchSpoofer...\n");
+		DipSwitchSpoofer::Term();
+		fusion_feature_dipsw = 0;
+		printf("[FusionSysctl] DipSwitchSpoofer disabled.\n");
+	}
+
+	return 0;
+}
+
+// Sysctl handler for TTYRedirect feature
+int FusionSysctl::SysctlHandlerTTYRedirect(SYSCTL_HANDLER_ARGS)
+{
+	int error, value = fusion_feature_tty_redirect;
+
+	error = ((int (*)(struct sysctl_oid*, void*, intptr_t, struct sysctl_req*))sysctl_handle_int)(oidp, &value, 0, req);
+	if (error != 0 || req->newptr == NULL)
+		return error;
+
+	if (value != 0 && value != 1)
+		return EINVAL;
+
+	if (value == fusion_feature_tty_redirect)
+		return 0;
+
+	if (value == 1)
+	{
+		printf("[FusionSysctl] Enabling TTYRedirect...\n");
+		TTYRedirector::Init();
+		fusion_feature_tty_redirect = 1;
+		printf("[FusionSysctl] TTYRedirect enabled.\n");
+	}
+	else
+	{
+		printf("[FusionSysctl] Disabling TTYRedirect...\n");
+		TTYRedirector::Term();
+		fusion_feature_tty_redirect = 0;
+		printf("[FusionSysctl] TTYRedirect disabled.\n");
+	}
+
+	return 0;
 }
